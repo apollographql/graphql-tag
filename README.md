@@ -44,7 +44,7 @@ console.log(query);
 
 You can easily explore GraphQL ASTs on [astexplorer.net](https://astexplorer.net/#/drYr8X1rnP/1).
 
-This package is the way to pass queries
+This package is the way to pass queries into [Apollo Client](https://github.com/apollostack/apollo-client). If you're building a GraphQL client, you can use it too!
 
 ### Why use this?
 
