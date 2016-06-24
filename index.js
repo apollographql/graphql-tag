@@ -23,7 +23,8 @@ function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
 
   var literals = args[0];
-  var substitutions = args.shift();
+  args.shift();
+  var substitutions = args;
 
   var result = '';
 
