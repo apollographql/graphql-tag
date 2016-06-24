@@ -39,4 +39,7 @@ function gql(/* arguments */) {
   return parseDocument(result);
 }
 
+// Support typescript, which isn't as nice as Babel about default exports
+gql.default = gql;
+
 module.exports = gql;
