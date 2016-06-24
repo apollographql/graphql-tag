@@ -1,12 +1,12 @@
-var gql = require('./index');
-var assert = require('chai').assert;
+import gql from './index';
+import { assert } from 'chai';
 
-describe('gql', function () {
-  it('parses queries', function () {
+describe('gql', () => {
+  it('parses queries', () => {
     assert.equal(gql`{ testQuery }`.kind, 'Document');
   });
 
-  it('returns the same object for the same query', function () {
+  it('returns the same object for the same query', () => {
     assert.isTrue(gql`{ sameQuery }` === gql`{ sameQuery }`);
   });
 });
