@@ -4,7 +4,7 @@
   "description": "A JavaScript template literal tag that parses GraphQL queries",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/apollostack/graphql-tag/issues"
   },
-  "homepage": "https://github.com/apollostack/graphql-tag#readme"
+  "homepage": "https://github.com/apollostack/graphql-tag#readme",
+  "dependencies": {
+    "graphql": "^0.6.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  }
 }
