@@ -1,5 +1,3 @@
-//var parse = require('graphql/language/parser').parse;
-
 var parse = require('./parser').parse;
 
 var cache = {};
