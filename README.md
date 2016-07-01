@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/apollostack/graphql-tag.svg?branch=master)](https://travis-ci.org/apollostack/graphql-tag)
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollostack.com/#slack)
 
-A JavaScript template literal tag that parses GraphQL queries into the standard GraphQL AST.
+A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
 
 ```js
 import gql from 'graphql-tag';
