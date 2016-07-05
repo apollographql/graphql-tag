@@ -4,7 +4,7 @@
   "description": "A JavaScript template literal tag that parses GraphQL queries",
   "main": "index.js",
   "scripts": {
-    "prepublish": "webpack",
+    "compile": "webpack",
     "test": "mocha --require babel-register"
   },
   "repository": {
