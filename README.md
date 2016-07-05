@@ -4,7 +4,15 @@
 [![Build Status](https://travis-ci.org/apollostack/graphql-tag.svg?branch=master)](https://travis-ci.org/apollostack/graphql-tag)
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollostack.com/#slack)
 
-A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
+GraphQL printing and parsing with bundled dependencies. Includes:
+
+- `gql` A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
+- `/parser` A bundled version of `graphql/language/parser`, that builds correctly in React Native.
+- `/printer` A bundled version of `graphql/language/printer`, that builds correctly in React Native.
+
+### gql
+
+This is a template literal tag you can use to concisely write a GraphQL query that is parsed into the standard GraphQL AST:
 
 ```js
 import gql from 'graphql-tag';
@@ -46,12 +54,25 @@ You can easily explore GraphQL ASTs on [astexplorer.net](https://astexplorer.net
 
 This package is the way to pass queries into [Apollo Client](https://github.com/apollostack/apollo-client). If you're building a GraphQL client, you can use it too!
 
-### Why use this?
+#### Why use this?
 
 GraphQL strings are the right way to write queries in your code, because they can be statically analyzed using tools like [eslint-plugin-graphql](https://github.com/apollostack/eslint-plugin-graphql). However, strings are inconvenient to manipulate, if you are trying to do things like add extra fields, merge multiple queries together, or other interesting stuff.
 
 That's where this package comes in - it lets you write your queries with [ES2015 template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) and compile them into an AST with the `gql` tag.
 
-### Caching parse results
+#### Caching parse results
 
 This package only has one feature - it caches previous parse results in a simple dictionary. This means that if you call the tag on the same query multiple times, it doesn't waste time parsing it again. It also means you can use `===` to compare queries to check if they are identical.
+
+### Parser and printer
+
+This package also includes two submodules: `graphql-tag/printer` and `graphql-tag/parser`, which are bundled versions of the corresponding modules from the standard `graphql` package. These are included because the `graphql` package currently doesn't build in **React Native**. Use them the same way you would use the relevant modules from `graphql`:
+
+```js
+import { parse } from 'graphql-tag/parser';
+import { print } from 'graphql-tag/printer';
+```
+
+#### Why are these included in the source on GitHub?
+
+We generate the bundles for the printer and parser with Webpack from the `graphql` package. You might notice the bundles are included in the package source on GitHub. This is to enable easy installation from a Git URL in cases where that is helpful. In the case of updates to `graphql` printing or parsing (which should be very rare since the syntax is stable at this point), we will be able to easily run the build script and republish.
