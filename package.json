@@ -1,6 +1,6 @@
 {
   "name": "graphql-tag",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "A JavaScript template literal tag that parses GraphQL queries",
   "main": "index.js",
   "scripts": {
