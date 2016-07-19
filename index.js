@@ -7,7 +7,7 @@ function parseDocument(doc) {
     return cache[doc];
   }
 
-  const parsed = parse(doc);
+  var parsed = parse(doc);
 
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
