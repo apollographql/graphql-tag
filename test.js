@@ -1,6 +1,6 @@
 var gqlRequire = require('./index');
 var gqlDefault = require('./index').default;
-import { assert } from 'chai';
+var assert = require('chai').assert;
 
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
