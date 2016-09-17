@@ -23,7 +23,6 @@
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
     "graphql": "^0.6.0",
-    "lodash": "^4.13.1",
     "mocha": "^2.5.3",
     "webpack": "^1.13.1"
   }
