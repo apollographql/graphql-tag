@@ -2,38 +2,38 @@ var parse = require('./parser').parse;
 
 var cache = {};
 
-function stripLoc(doc) {
-	var docType = Object.prototype.toString.call(doc);
+function stripLoc (doc) {
+  var docType = Object.prototype.toString.call(doc);
 
-	if (docType === '[object Array]') {
-		return doc.map(stripLoc);
-	}
+  if (docType === '[object Array]') {
+    return doc.map(stripLoc);
+  }
 
-	if (docType !== '[object Object]') {
-		throw new Error('Unexpected input.');
-	}
+  if (docType !== '[object Object]') {
+    throw new Error('Unexpected input.');
+  }
 
-	if (doc.loc) {
-		delete doc.loc;
-	}
+  if (doc.loc) {
+    delete doc.loc;
+  }
 
-	var keys = Object.keys(doc);
-	var key;
-	var value;
-	var valueType;
+  var keys = Object.keys(doc);
+  var key;
+  var value;
+  var valueType;
 
-	for (key in keys) {
-		if (keys.hasOwnProperty(key)) {
-			value = doc[keys[key]];
-			valueType = Object.prototype.toString.call(value);
+  for (key in keys) {
+    if (keys.hasOwnProperty(key)) {
+      value = doc[keys[key]];
+      valueType = Object.prototype.toString.call(value);
 
-			if (valueType === '[object Object]' || valueType === '[object Array]') {
-				doc[keys[key]] = stripLoc(value);
-			}
-		}
-	}
+      if (valueType === '[object Object]' || valueType === '[object Array]') {
+        doc[keys[key]] = stripLoc(value);
+      }
+    }
+  }
 
-	return doc;
+  return doc;
 }
 
 function parseDocument(doc) {
