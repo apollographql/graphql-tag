@@ -2,6 +2,40 @@ var parse = require('./parser').parse;
 
 var cache = {};
 
+function stripLoc (doc) {
+	var docType = Object.prototype.toString.call(doc);
+
+	if (docType === '[object Array]') {
+		return doc.map(stripLoc);
+	}
+
+	if (docType !== '[object Object]') {
+		throw new Error('Unexpected input.');
+	}
+
+	if (doc.loc) {
+		delete doc.loc;
+	}
+
+	var keys = Object.keys(doc);
+	var key;
+	var value;
+	var valueType;
+
+	for (key in keys) {
+		if (keys.hasOwnProperty(key)) {
+			value = doc[keys[key]];
+			valueType = Object.prototype.toString.call(value);
+
+			if (valueType === '[object Object]' || valueType === '[object Array]') {
+				doc[keys[key]] = stripLoc(value);
+			}
+		}
+	}
+
+	return doc;
+}
+
 function parseDocument(doc) {
   if (cache[doc]) {
     return cache[doc];
@@ -12,6 +46,8 @@ function parseDocument(doc) {
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
+
+  parsed = stripLoc(parsed);
 
   cache[doc] = parsed;
 
