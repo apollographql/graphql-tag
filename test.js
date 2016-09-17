@@ -1,7 +1,6 @@
 var gqlRequire = require('./index');
 var gqlDefault = require('./index').default;
 import { assert } from 'chai';
-import _ from 'lodash';
 
 function stripLoc(obj) {
   if (_.isArray(obj)) {
