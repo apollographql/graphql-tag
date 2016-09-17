@@ -2,22 +2,6 @@ var gqlRequire = require('./index');
 var gqlDefault = require('./index').default;
 import { assert } from 'chai';
 
-function stripLoc(obj) {
-  if (_.isArray(obj)) {
-    return obj.map(stripLoc);
-  }
-
-  if (! _.isObject(obj)) {
-    return obj;
-  }
-
-  const omitted = _.omit(obj, ['loc']);
-
-  return _.mapValues(omitted, (value) => {
-    return stripLoc(value);
-  });
-}
-
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
     it('parses queries', () => {
@@ -29,14 +13,14 @@ function stripLoc(obj) {
     });
 
     it('is correct for a simple query', () => {
-      const ast = stripLoc(gql`
+      const ast = gql`
         {
           user(id: 5) {
             firstName
             lastName
           }
         }
-      `);
+      `;
 
       assert.deepEqual(ast, {
         "kind": "Document",
