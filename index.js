@@ -2,7 +2,7 @@ var parse = require('./parser').parse;
 
 var cache = {};
 
-function stripLoc (doc) {
+function stripLoc(doc) {
 	var docType = Object.prototype.toString.call(doc);
 
 	if (docType === '[object Array]') {
