@@ -49,9 +49,9 @@ function parseDocument(doc) {
 
   parsed = stripLoc(parsed);
 
-  cache[doc] = parsed;
+  cache[doc] = parsed.definitions;
 
-  return parsed;
+  return cache[doc];
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
@@ -62,18 +62,48 @@ function gql(/* arguments */) {
   args.shift();
   var substitutions = args;
 
+  var fragments = []
   var result = '';
 
   // run the loop only for the substitution count
   for (var i = 0; i < substitutions.length; i++) {
-      result += literals[i];
+    var substitution = substitutions[i]
+    var substitutionType = typeof substitution
+
+    result += literals[i];
+
+    if (substitutionType === 'string') {
+      console.warn('gql: Interpolation of arbitrary strings is deprecated')
       result += substitutions[i];
+    } else if (
+      substitutionType === 'object' && substitution.kind === 'Document'
+    ) {
+      var fragment = substitution.definitions[0]
+      if (fragment.kind !== 'FragmentDefinition') {
+        throw new Error('gql: Only fragments may be interpolated, saw ' + fragment.kind)
+      }
+      result += '...' + fragment.name.value
+
+      for (var j = 0; j < substitution.definitions.length; j++) {
+        var frag = substitution.definitions[j]
+        if (fragments.indexOf(frag) === -1) {
+          fragments.push(frag)
+        }
+      }
+    } else {
+      throw new Error('gql: Invalid value interpolated in gql tagged template: ' + substitutionType)
+    }
   }
 
   // add the last literal
   result += literals[literals.length - 1];
 
-  return parseDocument(result);
+  var definitions = parseDocument(result);
+
+  return {
+    kind: 'Document',
+    definitions: definitions.concat(fragments)
+  }
 }
 
 // Support typescript, which isn't as nice as Babel about default exports
