@@ -1,11 +1,19 @@
-var gqlRequire = require('./index');
-var gqlDefault = require('./index').default;
-var assert = require('chai').assert;
+const gqlRequire = require('./');
+const gqlDefault = require('./').default;
+const loader = require('./loader');
+const assert = require('chai').assert;
 
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
     it('parses queries', () => {
       assert.equal(gql`{ testQuery }`.kind, 'Document');
+    });
+
+    it('parses queries through webpack loader', () => {
+      const source = loader('{ testQuery }');
+      const ast = JSON.parse(source.replace('module.exports = ', '').slice(0, -1));
+
+      assert.equal(ast.kind, 'Document');
     });
 
     it('returns the same object for the same query', () => {
