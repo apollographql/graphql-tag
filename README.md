@@ -66,12 +66,12 @@ This package only has one feature - it caches previous parse results in a simple
 
 ### Webpack preprocessing
 
-This package also includes a [webpack loader](https://webpack.github.io/docs/loaders.html). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side, optimizes bundle size and enable queries to be separated from script over `.gql` files.
+This package also includes a [webpack loader](https://webpack.github.io/docs/loaders.html). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side, optimizes bundle size and enable queries to be separated from script over `.graphql` files.
 
 ```js
 loaders: [
   {
-    test: /\.gql$/,
+    test: /\.(graphql|gql)$/,
     exclude: /node_modules/,
     loader: 'graphql-tag/loader'
   }
