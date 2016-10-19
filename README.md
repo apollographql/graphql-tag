@@ -81,7 +81,7 @@ loaders: [
 then:
 
 ```js
-import query from './query.gql';
+import query from './query.graphql';
 
 console.log(query);
 // {
