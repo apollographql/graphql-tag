@@ -64,6 +64,31 @@ That's where this package comes in - it lets you write your queries with [ES2015
 
 This package only has one feature - it caches previous parse results in a simple dictionary. This means that if you call the tag on the same query multiple times, it doesn't waste time parsing it again. It also means you can use `===` to compare queries to check if they are identical.
 
+### Webpack preprocessing
+
+This package also includes a [webpack loader](https://webpack.github.io/docs/loaders.html). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side, optimizes bundle size and enable queries to be separated from script over `.graphql` files.
+
+```js
+loaders: [
+  {
+    test: /\.(graphql|gql)$/,
+    exclude: /node_modules/,
+    loader: 'graphql-tag/loader'
+  }
+]
+```
+
+then:
+
+```js
+import query from './query.graphql';
+
+console.log(query);
+// {
+//   "kind": "Document",
+// ...
+```
+
 ### Parser and printer
 
 This package also includes two submodules: `graphql-tag/printer` and `graphql-tag/parser`, which are bundled versions of the corresponding modules from the standard `graphql` package. These are included because the `graphql` package currently doesn't build in **React Native**. Use them the same way you would use the relevant modules from `graphql`:
