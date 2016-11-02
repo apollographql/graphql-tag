@@ -10,7 +10,7 @@ const assert = require('chai').assert;
     });
 
     it('parses queries through webpack loader', () => {
-      const source = loader('{ testQuery }');
+      const source = loader.call({ cacheable() {} }, '{ testQuery }');
       const ast = JSON.parse(source.replace('module.exports = ', '').slice(0, -1));
 
       assert.equal(ast.kind, 'Document');

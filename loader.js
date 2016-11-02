@@ -1,3 +1,6 @@
 const gql = require('./');
 
-module.exports = source => `module.exports = ${JSON.stringify(gql`${source}`)};`;
+module.exports = function(source) {
+  this.cacheable();
+  return `module.exports = ${JSON.stringify(gql`${source}`)};`;
+};
