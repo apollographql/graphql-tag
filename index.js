@@ -1,4 +1,5 @@
 var parse = require('./parser').parse;
+var print = require('./printer').print;
 
 var cache = {};
 
@@ -67,7 +68,12 @@ function gql(/* arguments */) {
   // run the loop only for the substitution count
   for (var i = 0; i < substitutions.length; i++) {
       result += literals[i];
-      result += substitutions[i];
+
+      if (substitutions[i].kind && substitutions[i].kind === 'Document') {
+        result += print(substitutions[i]);
+      } else {
+        result += substitutions[i];
+      }
   }
 
   // add the last literal

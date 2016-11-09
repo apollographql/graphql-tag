@@ -96,6 +96,112 @@ const assert = require('chai').assert;
           }
         ]
       })
-    })
+    });
+
+    const userFragmentDocument = {
+      "kind": "Document",
+      "definitions": [
+        {
+          "kind": "FragmentDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "UserFragment"
+          },
+          "typeCondition": {
+            kind: "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "User"
+            }
+          },
+          "directives": [],
+          "selectionSet": {
+            "kind": "SelectionSet",
+            "selections": [
+              {
+                "kind": "Field",
+                "alias": null,
+                "name": {
+                  "kind": "Name",
+                  "value": "firstName"
+                },
+                "arguments": [],
+                "directives": [],
+                "selectionSet": null
+              },
+              {
+                "kind": "Field",
+                "alias": null,
+                "name": {
+                  "kind": "Name",
+                  "value": "lastName"
+                },
+                "arguments": [],
+                "directives": [],
+                "selectionSet": null
+              }
+            ]
+          }
+        }
+      ]
+    };
+
+    it('is correct for a fragment', () => {
+      const ast = gql`
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `;
+
+      assert.deepEqual(ast, userFragmentDocument);
+    });
+
+    it.only('can reference a fragment passed as a document', () => {
+      const ast = gql`
+        {
+          user(id: 5) {
+            ...UserFragment
+          }
+        }
+        ${userFragmentDocument}
+      `;
+
+      assert.deepEqual(ast, gql`
+        {
+          user(id: 5) {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `);
+    });
+
+    // How to make this work?
+    // it.only('can reference a fragment passed as a document via shorthand', () => {
+    //   const ast = gql`
+    //     {
+    //       user(id: 5) {
+    //         ...${userFragmentDocument}
+    //       }
+    //     }
+    //   `;
+    //
+    //   assert.deepEqual(ast, gql`
+    //     {
+    //       user(id: 5) {
+    //         ...UserFragment
+    //       }
+    //     }
+    //     fragment UserFragment on User {
+    //       firstName
+    //       lastName
+    //     }
+    //   `);
+    // });
+
   });
 });
