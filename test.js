@@ -32,6 +32,14 @@ const assert = require('chai').assert;
 
       assert.deepEqual(ast, {
         "kind": "Document",
+        "loc": {
+          "start": 9,
+          "end": 106,
+          "source": {
+            "name": "GraphQL",
+            "body": "\n        {\n          user(id: 5) {\n            firstName\n            lastName\n          }\n        }\n      "
+          }
+        },
         "definitions": [
           {
             "kind": "OperationDefinition",
@@ -98,53 +106,10 @@ const assert = require('chai').assert;
       })
     });
 
-    const userFragmentDocument = {
-      "kind": "Document",
-      "definitions": [
-        {
-          "kind": "FragmentDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "UserFragment"
-          },
-          "typeCondition": {
-            kind: "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "User"
-            }
-          },
-          "directives": [],
-          "selectionSet": {
-            "kind": "SelectionSet",
-            "selections": [
-              {
-                "kind": "Field",
-                "alias": null,
-                "name": {
-                  "kind": "Name",
-                  "value": "firstName"
-                },
-                "arguments": [],
-                "directives": [],
-                "selectionSet": null
-              },
-              {
-                "kind": "Field",
-                "alias": null,
-                "name": {
-                  "kind": "Name",
-                  "value": "lastName"
-                },
-                "arguments": [],
-                "directives": [],
-                "selectionSet": null
-              }
-            ]
-          }
-        }
-      ]
-    };
+    it('returns the same object for the same fragment', () => {
+      assert.isTrue(gql`fragment same on Same { sameQuery }` ===
+        gql`fragment same on Same { sameQuery }`);
+    });
 
     it('is correct for a fragment', () => {
       const ast = gql`
@@ -154,17 +119,76 @@ const assert = require('chai').assert;
         }
       `;
 
-      assert.deepEqual(ast, userFragmentDocument);
+      assert.deepEqual(ast, {
+        "kind": "Document",
+        "loc": {
+          "start": 9,
+          "end": 96,
+          "source": {
+            "name": "GraphQL",
+            "body": "\n        fragment UserFragment on User {\n          firstName\n          lastName\n        }\n      "
+          }
+        },
+        "definitions": [
+          {
+            "kind": "FragmentDefinition",
+            "name": {
+              "kind": "Name",
+              "value": "UserFragment"
+            },
+            "typeCondition": {
+              kind: "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "User"
+              }
+            },
+            "directives": [],
+            "selectionSet": {
+              "kind": "SelectionSet",
+              "selections": [
+                {
+                  "kind": "Field",
+                  "alias": null,
+                  "name": {
+                    "kind": "Name",
+                    "value": "firstName"
+                  },
+                  "arguments": [],
+                  "directives": [],
+                  "selectionSet": null
+                },
+                {
+                  "kind": "Field",
+                  "alias": null,
+                  "name": {
+                    "kind": "Name",
+                    "value": "lastName"
+                  },
+                  "arguments": [],
+                  "directives": [],
+                  "selectionSet": null
+                }
+              ]
+            }
+          }
+        ]
+      });
     });
 
-    it.only('can reference a fragment passed as a document', () => {
+    // NOTE extra spaces to line up with the fragement below
+    const fragmentAst = gql`fragment UserFragment on User {
+          firstName
+          lastName
+        }`;
+    it('can reference a fragment passed as a document', () => {
       const ast = gql`
         {
           user(id: 5) {
             ...UserFragment
           }
         }
-        ${userFragmentDocument}
+        ${fragmentAst}
       `;
 
       assert.deepEqual(ast, gql`
@@ -178,6 +202,13 @@ const assert = require('chai').assert;
           lastName
         }
       `);
+    });
+
+    it('returns the same object for the same document with sub', () => {
+      // We know that calling `gql` on a fragment string will always return
+      // the same document, so we can reuse `fragmentAst`
+      assert.isTrue(gql`{ ...UserFragment } ${fragmentAst}` ===
+        gql`{ ...UserFragment } ${fragmentAst}`);
     });
 
     // How to make this work?

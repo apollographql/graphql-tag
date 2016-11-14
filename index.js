@@ -3,18 +3,20 @@ var print = require('./printer').print;
 
 var cache = {};
 
-function stripLoc (doc) {
+function stripLoc (doc, removeRoot) {
   var docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]') {
-    return doc.map(stripLoc);
+    return doc.map(function(d) { return stripLoc(d, removeRoot); });
   }
 
   if (docType !== '[object Object]') {
     throw new Error('Unexpected input.');
   }
 
-  if (doc.loc) {
+  // We don't want to remove the root loc field so we can use it
+  // for fragment substitution (see below)
+  if (removeRoot && doc.loc) {
     delete doc.loc;
   }
 
@@ -29,7 +31,7 @@ function stripLoc (doc) {
       valueType = Object.prototype.toString.call(value);
 
       if (valueType === '[object Object]' || valueType === '[object Array]') {
-        doc[keys[key]] = stripLoc(value);
+        doc[keys[key]] = stripLoc(value, true);
       }
     }
   }
@@ -48,7 +50,7 @@ function parseDocument(doc) {
     throw new Error('Not a valid GraphQL document.');
   }
 
-  parsed = stripLoc(parsed);
+  parsed = stripLoc(parsed, false);
 
   cache[doc] = parsed;
 
@@ -70,7 +72,7 @@ function gql(/* arguments */) {
       result += literals[i];
 
       if (substitutions[i].kind && substitutions[i].kind === 'Document') {
-        result += print(substitutions[i]);
+        result += substitutions[i].loc.source.body;
       } else {
         result += substitutions[i];
       }
