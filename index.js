@@ -2,18 +2,20 @@ var parse = require('./parser').parse;
 
 var cache = {};
 
-function stripLoc (doc) {
+function stripLoc (doc, removeLocAtThisLevel) {
   var docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]') {
-    return doc.map(stripLoc);
+    return doc.map(function(d) { return stripLoc(d, removeLocAtThisLevel); });
   }
 
   if (docType !== '[object Object]') {
     throw new Error('Unexpected input.');
   }
 
-  if (doc.loc) {
+  // We don't want to remove the root loc field so we can use it
+  // for fragment substitution (see below)
+  if (removeLocAtThisLevel && doc.loc) {
     delete doc.loc;
   }
 
@@ -28,7 +30,7 @@ function stripLoc (doc) {
       valueType = Object.prototype.toString.call(value);
 
       if (valueType === '[object Object]' || valueType === '[object Array]') {
-        doc[keys[key]] = stripLoc(value);
+        doc[keys[key]] = stripLoc(value, true);
       }
     }
   }
@@ -47,7 +49,7 @@ function parseDocument(doc) {
     throw new Error('Not a valid GraphQL document.');
   }
 
-  parsed = stripLoc(parsed);
+  parsed = stripLoc(parsed, false);
 
   cache[doc] = parsed;
 
@@ -67,7 +69,12 @@ function gql(/* arguments */) {
   // run the loop only for the substitution count
   for (var i = 0; i < substitutions.length; i++) {
       result += literals[i];
-      result += substitutions[i];
+
+      if (substitutions[i].kind && substitutions[i].kind === 'Document') {
+        result += substitutions[i].loc.source.body;
+      } else {
+        result += substitutions[i];
+      }
   }
 
   // add the last literal
