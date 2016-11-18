@@ -211,6 +211,36 @@ const assert = require('chai').assert;
         gql`{ ...UserFragment } ${fragmentAst}`);
     });
 
+    it('can reference a fragment that references as fragment', () => {
+      const secondFragmentAst = gql`fragment SecondUserFragment on User {
+          ...UserFragment
+        }
+        ${fragmentAst}`;
+      const ast = gql`
+        {
+          user(id: 5) {
+            ...SecondUserFragment
+          }
+        }
+        ${secondFragmentAst}
+      `;
+
+      assert.deepEqual(ast, gql`
+        {
+          user(id: 5) {
+            ...SecondUserFragment
+          }
+        }
+        fragment SecondUserFragment on User {
+          ...UserFragment
+        }
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `);
+    });
+
     // How to make this work?
     // it.only('can reference a fragment passed as a document via shorthand', () => {
     //   const ast = gql`

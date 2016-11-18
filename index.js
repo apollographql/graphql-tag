@@ -1,13 +1,12 @@
 var parse = require('./parser').parse;
-var print = require('./printer').print;
 
 var cache = {};
 
-function stripLoc (doc, removeRoot) {
+function stripLoc (doc, removeLocAtThisLevel) {
   var docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]') {
-    return doc.map(function(d) { return stripLoc(d, removeRoot); });
+    return doc.map(function(d) { return stripLoc(d, removeLocAtThisLevel); });
   }
 
   if (docType !== '[object Object]') {
@@ -16,7 +15,7 @@ function stripLoc (doc, removeRoot) {
 
   // We don't want to remove the root loc field so we can use it
   // for fragment substitution (see below)
-  if (removeRoot && doc.loc) {
+  if (removeLocAtThisLevel && doc.loc) {
     delete doc.loc;
   }
 
