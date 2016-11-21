@@ -61,24 +61,19 @@ function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
 
   var literals = args[0];
-  args.shift();
-  var substitutions = args;
 
-  var result = '';
+  // We always get literals[0] and then matching post literals for each arg given
+  var result = literals[0];
 
-  // run the loop only for the substitution count
-  for (var i = 0; i < substitutions.length; i++) {
-      result += literals[i];
-
-      if (substitutions[i].kind && substitutions[i].kind === 'Document') {
-        result += substitutions[i].loc.source.body;
+  for (var i = 1; i < args.length; i++) {
+      if (args[i].kind && args[i].kind === 'Document') {
+        result += args[i].loc.source.body;
       } else {
-        result += substitutions[i];
+        result += args[i];
       }
-  }
 
-  // add the last literal
-  result += literals[literals.length - 1];
+      result += literals[i];
+  }
 
   return parseDocument(result);
 }
