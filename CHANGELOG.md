@@ -1,5 +1,9 @@
 # Change log
 
+### v1.0.0
+
+Releasing 0.1.17 as 1.0.0 in order to be explicit about Semantic Versioning.
+
 ### v0.1.17
 
 - Allow embedding fragments inside document strings, as in
