@@ -1,6 +1,62 @@
 var parse = require('./parser').parse;
 
-var cache = {};
+// Strip insignificant whitespace
+// Note that this could do a lot more, such as reorder fields etc.
+function normalize(string) {
+  return string.replace(/[\s,]+/g, ' ').trim();
+}
+
+// A map docString -> graphql document
+var docCache = {};
+
+// A map fragmentName -> [normalized source]
+var fragmentSourceMap = {};
+
+function cacheKeyFromLoc(loc) {
+  return normalize(loc.source.body.substring(loc.start, loc.end));
+}
+
+// For testing.
+function resetCaches() {
+  docCache = {};
+  fragmentSourceMap = {};
+}
+
+// Take a unstripped parsed document (query/mutation or even fragment), and
+// check all fragment definitions, checking for name->source uniqueness
+var printFragmentWarnings = true;
+function checkFragments(ast) {
+  for (var i = 0; i < ast.definitions.length; i++) {
+    var fragmentDefinition = ast.definitions[i];
+    if (fragmentDefinition.kind === 'FragmentDefinition') {
+      var fragmentName = fragmentDefinition.name.value;
+      var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
+
+      // We know something about this fragment
+      if (fragmentSourceMap.hasOwnProperty(fragmentName) &&
+            !fragmentSourceMap[fragmentName][sourceKey]) {
+
+        // this is a problem because the app developer is trying to register another fragment with
+        // the same name as one previously registered. So, we tell them about it.
+        if (printFragmentWarnings) {
+          console.warn("Warning: fragment with name " + fragmentName + " already exists.\n"
+            + "graphql-tag enforces all fragment names across your application to be unique; read more about\n"
+            + "this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names");
+        }
+
+        fragmentSourceMap[fragmentName][sourceKey] = true;
+
+      } else if (!fragmentSourceMap.hasOwnProperty(fragmentName)) {
+        fragmentSourceMap[fragmentName] = {};
+        fragmentSourceMap[fragmentName][sourceKey] = true;
+      }
+    }
+  }
+}
+
+function disableFragmentWarnings() {
+  printFragmentWarnings = false;
+}
 
 function stripLoc (doc, removeLocAtThisLevel) {
   var docType = Object.prototype.toString.call(doc);
@@ -39,19 +95,22 @@ function stripLoc (doc, removeLocAtThisLevel) {
 }
 
 function parseDocument(doc) {
-  if (cache[doc]) {
-    return cache[doc];
+  var cacheKey = normalize(doc);
+
+  if (docCache[cacheKey]) {
+    return docCache[cacheKey];
   }
 
   var parsed = parse(doc);
-
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
 
+  // check that all "new" fragments inside the documents are consistent with
+  // existing fragments of the same name
+  checkFragments(parsed);
   parsed = stripLoc(parsed, false);
-
-  cache[doc] = parsed;
+  docCache[cacheKey] = parsed;
 
   return parsed;
 }
@@ -80,5 +139,7 @@ function gql(/* arguments */) {
 
 // Support typescript, which isn't as nice as Babel about default exports
 gql.default = gql;
+gql.resetCaches = resetCaches;
+gql.disableFragmentWarnings = disableFragmentWarnings;
 
 module.exports = gql;

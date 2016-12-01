@@ -20,6 +20,10 @@ const assert = require('chai').assert;
       assert.isTrue(gql`{ sameQuery }` === gql`{ sameQuery }`);
     });
 
+    it('returns the same object for the same query, even with whitespace differences', () => {
+      assert.isTrue(gql`{ sameQuery }` === gql`  { sameQuery,   }`);
+    });
+
     it('is correct for a simple query', () => {
       const ast = gql`
         {
@@ -30,80 +34,70 @@ const assert = require('chai').assert;
         }
       `;
 
-      assert.deepEqual(ast, {
-        "kind": "Document",
-        "loc": {
-          "start": 9,
-          "end": 106,
-          "source": {
-            "name": "GraphQL",
-            "body": "\n        {\n          user(id: 5) {\n            firstName\n            lastName\n          }\n        }\n      "
-          }
-        },
-        "definitions": [
-          {
-            "kind": "OperationDefinition",
-            "operation": "query",
-            "name": null,
-            "variableDefinitions": null,
-            "directives": [],
-            "selectionSet": {
-              "kind": "SelectionSet",
-              "selections": [
-                {
-                  "kind": "Field",
-                  "alias": null,
-                  "name": {
-                    "kind": "Name",
-                    "value": "user"
-                  },
-                  "arguments": [
+      assert.equal(ast.kind, "Document");
+      assert.deepEqual(ast.definitions, [
+        {
+          "kind": "OperationDefinition",
+          "operation": "query",
+          "name": null,
+          "variableDefinitions": null,
+          "directives": [],
+          "selectionSet": {
+            "kind": "SelectionSet",
+            "selections": [
+              {
+                "kind": "Field",
+                "alias": null,
+                "name": {
+                  "kind": "Name",
+                  "value": "user"
+                },
+                "arguments": [
+                  {
+                    "kind": "Argument",
+                    "name": {
+                      "kind": "Name",
+                      "value": "id"
+                    },
+                    "value": {
+                      "kind": "IntValue",
+                      "value": "5"
+                    }
+                  }
+                ],
+                "directives": [],
+                "selectionSet": {
+                  "kind": "SelectionSet",
+                  "selections": [
                     {
-                      "kind": "Argument",
+                      "kind": "Field",
+                      "alias": null,
                       "name": {
                         "kind": "Name",
-                        "value": "id"
+                        "value": "firstName"
                       },
-                      "value": {
-                        "kind": "IntValue",
-                        "value": "5"
-                      }
+                      "arguments": [],
+                      "directives": [],
+                      "selectionSet": null
+                    },
+                    {
+                      "kind": "Field",
+                      "alias": null,
+                      "name": {
+                        "kind": "Name",
+                        "value": "lastName"
+                      },
+                      "arguments": [],
+                      "directives": [],
+                      "selectionSet": null
                     }
-                  ],
-                  "directives": [],
-                  "selectionSet": {
-                    "kind": "SelectionSet",
-                    "selections": [
-                      {
-                        "kind": "Field",
-                        "alias": null,
-                        "name": {
-                          "kind": "Name",
-                          "value": "firstName"
-                        },
-                        "arguments": [],
-                        "directives": [],
-                        "selectionSet": null
-                      },
-                      {
-                        "kind": "Field",
-                        "alias": null,
-                        "name": {
-                          "kind": "Name",
-                          "value": "lastName"
-                        },
-                        "arguments": [],
-                        "directives": [],
-                        "selectionSet": null
-                      }
-                    ]
-                  }
+                  ]
                 }
-              ]
-            }
+              }
+            ]
           }
-        ]
-      })
+        }
+      ]);
     });
 
     it('returns the same object for the same fragment', () => {
@@ -119,68 +113,59 @@ const assert = require('chai').assert;
         }
       `;
 
-      assert.deepEqual(ast, {
-        "kind": "Document",
-        "loc": {
-          "start": 9,
-          "end": 96,
-          "source": {
-            "name": "GraphQL",
-            "body": "\n        fragment UserFragment on User {\n          firstName\n          lastName\n        }\n      "
-          }
-        },
-        "definitions": [
-          {
-            "kind": "FragmentDefinition",
+      assert.equal(ast.kind, "Document");
+      assert.deepEqual(ast.definitions, [
+        {
+          "kind": "FragmentDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "UserFragment"
+          },
+          "typeCondition": {
+            kind: "NamedType",
             "name": {
               "kind": "Name",
-              "value": "UserFragment"
-            },
-            "typeCondition": {
-              kind: "NamedType",
-              "name": {
-                "kind": "Name",
-                "value": "User"
-              }
-            },
-            "directives": [],
-            "selectionSet": {
-              "kind": "SelectionSet",
-              "selections": [
-                {
-                  "kind": "Field",
-                  "alias": null,
-                  "name": {
-                    "kind": "Name",
-                    "value": "firstName"
-                  },
-                  "arguments": [],
-                  "directives": [],
-                  "selectionSet": null
-                },
-                {
-                  "kind": "Field",
-                  "alias": null,
-                  "name": {
-                    "kind": "Name",
-                    "value": "lastName"
-                  },
-                  "arguments": [],
-                  "directives": [],
-                  "selectionSet": null
-                }
-              ]
+              "value": "User"
             }
+          },
+          "directives": [],
+          "selectionSet": {
+            "kind": "SelectionSet",
+            "selections": [
+              {
+                "kind": "Field",
+                "alias": null,
+                "name": {
+                  "kind": "Name",
+                  "value": "firstName"
+                },
+                "arguments": [],
+                "directives": [],
+                "selectionSet": null
+              },
+              {
+                "kind": "Field",
+                "alias": null,
+                "name": {
+                  "kind": "Name",
+                  "value": "lastName"
+                },
+                "arguments": [],
+                "directives": [],
+                "selectionSet": null
+              }
+            ]
           }
-        ]
-      });
+        }
+      ]);
     });
 
-    // NOTE extra spaces to line up with the fragement below
-    const fragmentAst = gql`fragment UserFragment on User {
-          firstName
-          lastName
-        }`;
+    const fragmentAst = gql`
+      fragment UserFragment on User {
+        firstName
+        lastName
+      }
+    `;
     it('can reference a fragment passed as a document', () => {
       const ast = gql`
         {
@@ -204,7 +189,7 @@ const assert = require('chai').assert;
       `);
     });
 
-    it('returns the same object for the same document with sub', () => {
+    it('returns the same object for the same document with substitution', () => {
       // We know that calling `gql` on a fragment string will always return
       // the same document, so we can reuse `fragmentAst`
       assert.isTrue(gql`{ ...UserFragment } ${fragmentAst}` ===
@@ -212,10 +197,13 @@ const assert = require('chai').assert;
     });
 
     it('can reference a fragment that references as fragment', () => {
-      const secondFragmentAst = gql`fragment SecondUserFragment on User {
+      const secondFragmentAst = gql`
+        fragment SecondUserFragment on User {
           ...UserFragment
         }
-        ${fragmentAst}`;
+        ${fragmentAst}
+      `;
+
       const ast = gql`
         {
           user(id: 5) {
@@ -239,6 +227,52 @@ const assert = require('chai').assert;
           lastName
         }
       `);
+    });
+
+    describe('fragment warnings', () => {
+      let warnings = [];
+      const oldConsoleWarn = console.warn;
+      beforeEach(() => {
+        gqlRequire.resetCaches();
+        warnings = [];
+        console.warn = (w) => warnings.push(w);
+      });
+      afterEach(() => {
+        console.warn = oldConsoleWarn;
+      });
+
+      it('warns if you use the same fragment name for different fragments', () => {
+        const frag1 = gql`fragment TestSame on Bar { fieldOne }`;
+        const frag2 = gql`fragment TestSame on Bar { fieldTwo }`;
+
+        assert.isFalse(frag1 === frag2);
+        assert.equal(warnings.length, 1);
+      });
+
+      it('does not warn if you use the same fragment name for the same fragment', () => {
+        const frag1 = gql`fragment TestDifferent on Bar { fieldOne }`;
+        const frag2 = gql`fragment TestDifferent on Bar { fieldOne }`;
+
+        assert.isTrue(frag1 === frag2);
+        assert.equal(warnings.length, 0);
+      });
+
+      it('does not warn if you use the same embedded fragment in two different queries', () => {
+        const frag1 = gql`fragment TestEmbedded on Bar { field }`;
+        const query1 = gql`{ bar { fieldOne ...TestEmbedded } } ${frag1}`;
+        const query2 = gql`{ bar { fieldTwo ...TestEmbedded } } ${frag1}`;
+
+        assert.isFalse(query1 === query2);
+        assert.equal(warnings.length, 0);
+      });
+
+      it('does not warn if you use the same fragment name for embedded and non-embedded fragments', () => {
+        const frag1 = gql`fragment TestEmbeddedTwo on Bar { field }`;
+        const query1 = gql`{ bar { ...TestEmbedded } } ${frag1}`;
+        const query2 = gql`{ bar { ...TestEmbedded } } fragment TestEmbeddedTwo on Bar { field }`;
+
+        assert.equal(warnings.length, 0);
+      });
     });
 
     // How to make this work?

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "compile": "webpack",
-    "test": "mocha"
+    "test": "mocha --require babel-register"
   },
   "repository": {
     "type": "git",
