@@ -1,5 +1,10 @@
 # Change log
 
+### v1.1.1
+
+Added typescript definitions for the below.
+
+
 ### v1.1.0
 
 We now emit warnings if you use the same name for two different fragments.
