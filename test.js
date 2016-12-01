@@ -9,6 +9,11 @@ const assert = require('chai').assert;
       assert.equal(gql`{ testQuery }`.kind, 'Document');
     });
 
+    it('parses queries with undefined substitution', () => {
+      const obj = {};
+      assert.equal(gql`{ field(input: "${obj.missing}") }`.kind, 'Document');
+    });
+
     it('parses queries through webpack loader', () => {
       const source = loader.call({ cacheable() {} }, '{ testQuery }');
       const ast = JSON.parse(source.replace('module.exports = ', '').slice(0, -1));
