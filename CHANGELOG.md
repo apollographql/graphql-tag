@@ -1,9 +1,12 @@
 # Change log
 
+### v1.1.2
+
+Fix issue with interpolating undefined values [Issue #19](https://github.com/apollostack/graphql-tag/issues/19)
+
 ### v1.1.1
 
 Added typescript definitions for the below.
-
 
 ### v1.1.0
 
