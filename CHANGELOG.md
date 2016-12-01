@@ -1,5 +1,17 @@
 # Change log
 
+### v1.1.0
+
+We now emit warnings if you use the same name for two different fragments.
+
+You can disable this with:
+
+```js
+import { disableFragmentWarnings } from 'graphql-tag';
+
+disableFragmentWarnings()
+```
+
 ### v1.0.0
 
 Releasing 0.1.17 as 1.0.0 in order to be explicit about Semantic Versioning.
