@@ -125,7 +125,7 @@ function gql(/* arguments */) {
   var result = literals[0];
 
   for (var i = 1; i < args.length; i++) {
-      if (args[i].kind && args[i].kind === 'Document') {
+      if (args[i] && args[i].kind && args[i].kind === 'Document') {
         result += args[i].loc.source.body;
       } else {
         result += args[i];
