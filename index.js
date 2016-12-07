@@ -26,8 +26,8 @@ function resetCaches() {
 // check all fragment definitions, checking for name->source uniqueness
 var printFragmentWarnings = true;
 function checkFragments(ast) {
-  for (var i = 0; i < ast.definitions.length; i++) {
-    var fragmentDefinition = ast.definitions[i];
+  const astFragmentMap = {};
+  ast.definitions = ast.definitions.filter(fragmentDefinition => {
     if (fragmentDefinition.kind === 'FragmentDefinition') {
       var fragmentName = fragmentDefinition.name.value;
       var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
@@ -51,7 +51,14 @@ function checkFragments(ast) {
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
     }
-  }
+
+    if (!astFragmentMap[sourceKey]) {
+      astFragmentMap[sourceKey] = true;
+      return true;
+    } else {
+      return false;
+    }
+  });
 }
 
 function disableFragmentWarnings() {
