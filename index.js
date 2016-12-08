@@ -1,3 +1,4 @@
+var assign = require('lodash/assign');
 var parse = require('./parser').parse;
 
 // Strip insignificant whitespace
@@ -23,11 +24,13 @@ function resetCaches() {
 }
 
 // Take a unstripped parsed document (query/mutation or even fragment), and
-// check all fragment definitions, checking for name->source uniqueness
+// check all fragment definitions, checking for name->source uniqueness.
+// We also want to make sure only unique fragments exist in the document.
 var printFragmentWarnings = true;
 function checkFragments(ast) {
-  const astFragmentMap = {};
-  ast.definitions = ast.definitions.filter(fragmentDefinition => {
+  var astFragmentMap = {};
+
+  var uniqueFragmentDefinitions = ast.definitions.filter(fragmentDefinition => {
     if (fragmentDefinition.kind === 'FragmentDefinition') {
       var fragmentName = fragmentDefinition.name.value;
       var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
@@ -50,14 +53,22 @@ function checkFragments(ast) {
         fragmentSourceMap[fragmentName] = {};
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
-    }
 
-    if (!astFragmentMap[sourceKey]) {
-      astFragmentMap[sourceKey] = true;
-      return true;
+      if (!astFragmentMap[sourceKey]) {
+        astFragmentMap[sourceKey] = true;
+        return true;
+      } else {
+        // This fragmentDefinition already exists in the AST, no need to add it again.
+        return false;
+      }
     } else {
-      return false;
+      // This definition is not a fragment.
+      return true;
     }
+  });
+
+  return assign({}, ast, {
+    definitions: uniqueFragmentDefinitions
   });
 }
 
@@ -115,7 +126,7 @@ function parseDocument(doc) {
 
   // check that all "new" fragments inside the documents are consistent with
   // existing fragments of the same name
-  checkFragments(parsed);
+  parsed = checkFragments(parsed);
   parsed = stripLoc(parsed, false);
   docCache[cacheKey] = parsed;
 
