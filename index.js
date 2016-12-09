@@ -28,7 +28,10 @@ function resetCaches() {
 // check all fragment definitions, checking for name->source uniqueness.
 // We also want to make sure only unique fragments exist in the document.
 var printFragmentWarnings = true;
-function checkFragments(ast) {
+function processFragments(ast) {
+  var astFragmentMap = {};
+  var definitions = [];
+
   for (var i = 0; i < ast.definitions.length; i++) {
     var fragmentDefinition = ast.definitions[i];
 
@@ -54,12 +57,18 @@ function checkFragments(ast) {
         fragmentSourceMap[fragmentName] = {};
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
+
+      if (!astFragmentMap[sourceKey]) {
+        astFragmentMap[sourceKey] = true;
+        definitions.push(fragmentDefinition);
+      }
+    } else {
+      definitions.push(fragmentDefinition);
     }
   }
 
-  return assign({}, ast, {
-    definitions: uniqBy(ast.definitions, (definition) => cacheKeyFromLoc(definition.loc))
-  });
+  ast.definitions = definitions;
+  return ast;
 }
 
 function disableFragmentWarnings() {
@@ -116,7 +125,7 @@ function parseDocument(doc) {
 
   // check that all "new" fragments inside the documents are consistent with
   // existing fragments of the same name
-  parsed = checkFragments(parsed);
+  parsed = processFragments(parsed);
   parsed = stripLoc(parsed, false);
   docCache[cacheKey] = parsed;
 
