@@ -1,4 +1,5 @@
 var assign = require('lodash/assign');
+var uniqBy = require('lodash/uniqBy');
 var parse = require('./parser').parse;
 
 // Strip insignificant whitespace
@@ -28,9 +29,9 @@ function resetCaches() {
 // We also want to make sure only unique fragments exist in the document.
 var printFragmentWarnings = true;
 function checkFragments(ast) {
-  var astFragmentMap = {};
+  for (var i = 0; i < ast.definitions.length; i++) {
+    var fragmentDefinition = ast.definitions[i];
 
-  var uniqueFragmentDefinitions = ast.definitions.filter(fragmentDefinition => {
     if (fragmentDefinition.kind === 'FragmentDefinition') {
       var fragmentName = fragmentDefinition.name.value;
       var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
@@ -53,22 +54,11 @@ function checkFragments(ast) {
         fragmentSourceMap[fragmentName] = {};
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
-
-      if (!astFragmentMap[sourceKey]) {
-        astFragmentMap[sourceKey] = true;
-        return true;
-      } else {
-        // This fragmentDefinition already exists in the AST, no need to add it again.
-        return false;
-      }
-    } else {
-      // This definition is not a fragment.
-      return true;
     }
-  });
+  }
 
   return assign({}, ast, {
-    definitions: uniqueFragmentDefinitions
+    definitions: uniqBy(ast.definitions, (definition) => cacheKeyFromLoc(definition.loc))
   });
 }
 
