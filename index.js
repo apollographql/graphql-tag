@@ -1,5 +1,3 @@
-var assign = require('lodash/assign');
-var uniqBy = require('lodash/uniqBy');
 var parse = require('./parser').parse;
 
 // Strip insignificant whitespace
