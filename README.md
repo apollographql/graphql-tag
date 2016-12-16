@@ -89,6 +89,9 @@ console.log(query);
 // ...
 ```
 
+Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
+
+
 ### Parser and printer
 
 This package also includes two submodules: `graphql-tag/printer` and `graphql-tag/parser`, which are bundled versions of the corresponding modules from the standard `graphql` package. These are included because the `graphql` package currently doesn't build in **React Native**. Use them the same way you would use the relevant modules from `graphql`:
