@@ -35,18 +35,18 @@ const assert = require('chai').assert;
       const module = { exports: undefined };
       const require = (path) => {
         assert.equal(path, './fragment_definition.graphql');
-        return loader.call(
-          { cacheable() {} },
-          `
+        return gql`
           fragment authorDetails on Author {
             firstName
             lastName
-          }`,
-        );
+          }`;
       };
       eval(jsSource);
       assert.equal(module.exports.kind, 'Document');
-      assert.equal(module.exports.definitions.length, 2);
+      const definitions = module.exports.definitions;
+      assert.equal(definitions.length, 2);
+      assert.equal(definitions[0].kind, 'OperationDefinition');
+      assert.equal(definitions[1].kind, 'FragmentDefinition');
     });
 
     it('does not complain when presented with normal comments', (done) => {
