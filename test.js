@@ -17,12 +17,43 @@ const assert = require('chai').assert;
     });
 
     it('parses queries through webpack loader', () => {
-      const source = loader.call({ cacheable() {} }, '{ testQuery }');
-      const ast = JSON.parse(source.replace('module.exports = ', '').slice(0, -1));
-
-      assert.equal(ast.kind, 'Document');
+      const jsSource = loader.call({ cacheable() {} }, '{ testQuery }');
+      const module = { exports: undefined };
+      eval(jsSource);
+      assert.equal(module.exports.kind, 'Document');
     });
 
+    it('correctly imports other files through the webpack loader', () => {
+      const query = `#import "./fragment_definition.graphql"
+        query {
+          author {
+            ...authorDetails
+          }
+        }`;
+      const jsSource = loader.call({ cacheable() {} }, query);
+      const lines = jsSource.split('\n');
+      assert.equal(lines.length, 4);
+      assert.include(lines[0], 'const doc =');
+      assert.include(lines[1], 'doc.definitions');
+      assert.include(lines[3], 'module.exports = doc');
+    });
+
+    it('does not complain when presented with normal comments', (done) => {
+      assert.doesNotThrow(() => {
+        const query = `#normal comment
+          query {
+            author {
+              ...authorDetails
+            }
+          }`;
+        const jsSource = loader.call({ cacheable() {} }, query);
+        const module = { exports: undefined };
+        eval(jsSource);
+        assert.equal(module.exports.kind, 'Document');
+        done();
+      });
+    });
+    
     it('returns the same object for the same query', () => {
       assert.isTrue(gql`{ sameQuery }` === gql`{ sameQuery }`);
     });
