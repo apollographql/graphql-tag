@@ -1,5 +1,9 @@
 # Change log
 
+### v1.2.0
+
+Added ability to import other GraphQL documents with fragments using `#import` comments. [PR #33](https://github.com/apollostack/graphql-tag/pull/33)
+
 ### v1.1.2
 
 Fix issue with interpolating undefined values [Issue #19](https://github.com/apollostack/graphql-tag/issues/19)
