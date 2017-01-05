@@ -36,7 +36,23 @@ const assert = require('chai').assert;
       assert.include(lines[0], 'const doc =');
       assert.include(lines[1], 'doc.definitions');
       assert.include(lines[3], 'module.exports = doc');
-    });                                    
+    });
+
+    it('does not complain when presented with normal comments', (done) => {
+      assert.doesNotThrow(() => {
+        const query = `#normal comment
+          query {
+            author {
+              ...authorDetails
+            }
+          }`;
+        const jsSource = loader.call({ cacheable() {} }, query);
+        const module = { exports: undefined };
+        eval(jsSource);
+        assert.equal(module.exports.kind, 'Document');
+        done();
+      });
+    });
     
     it('returns the same object for the same query', () => {
       assert.isTrue(gql`{ sameQuery }` === gql`{ sameQuery }`);

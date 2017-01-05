@@ -8,7 +8,7 @@ function expandImports(source, doc) {
   let outputCode = "";
   
   lines.some((line) => {
-    if (line[0] === '#') {
+    if (line[0] === '#' && line.slice(1).split(' ')[0] === 'import') {
       const importFile = line.slice(1).split(' ')[1];
       const parseDocument = `require(${importFile})`;
       const appendDef = `doc.definitions.append(${parseDocument}.definitions);`;
