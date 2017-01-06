@@ -1,5 +1,8 @@
 # Change log
 
+### v1.2.1
+Fixed an issue with fragment imports. [PR #35](https://github.com/apollostack/graphql-tag/issues/35).
+
 ### v1.2.0
 
 Added ability to import other GraphQL documents with fragments using `#import` comments. [PR #33](https://github.com/apollostack/graphql-tag/pull/33)
