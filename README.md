@@ -9,6 +9,7 @@ GraphQL printing and parsing with bundled dependencies. Includes:
 - `gql` A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
 - `/parser` A bundled version of `graphql/language/parser`, that builds correctly in React Native.
 - `/printer` A bundled version of `graphql/language/printer`, that builds correctly in React Native.
+- `/loader` A webpack loader to preprocess queries
 
 ### gql
 
