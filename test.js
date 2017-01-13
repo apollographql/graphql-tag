@@ -324,6 +324,24 @@ const assert = require('chai').assert;
       });
     });
 
+    describe('unique fragments', () => {
+      beforeEach(() => {
+        gqlRequire.resetCaches();
+      });
+
+      it('strips duplicate fragments from the document', () => {
+        const frag1 = gql`fragment TestDuplicate on Bar { field }`;
+        const query1 = gql`{ bar { fieldOne ...TestDuplicate } } ${frag1} ${frag1}`;
+        const query2 = gql`{ bar { fieldOne ...TestDuplicate } } ${frag1}`;
+
+        assert.equal(query1.definitions.length, 2);
+        assert.equal(query1.definitions[1].kind, 'FragmentDefinition');
+        // We don't test strict equality between the two queries because the source.body parsed from the
+        // document is not the same, but the set of definitions should be.
+        assert.deepEqual(query1.definitions, query2.definitions);
+      });
+    });
+
     // How to make this work?
     // it.only('can reference a fragment passed as a document via shorthand', () => {
     //   const ast = gql`
