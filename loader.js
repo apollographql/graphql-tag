@@ -1,3 +1,5 @@
+"use strict";
+
 const gql = require('./');
 
 // Takes `source` (the source GraphQL query string)
@@ -6,7 +8,7 @@ const gql = require('./');
 function expandImports(source, doc) {
   const lines = source.split('\n');
   let outputCode = "";
-  
+
   lines.some((line) => {
     if (line[0] === '#' && line.slice(1).split(' ')[0] === 'import') {
       const importFile = line.slice(1).split(' ')[1];
@@ -25,6 +27,6 @@ module.exports = function(source) {
   const doc = gql`${source}`;
   const outputCode = `var doc = ${JSON.stringify(doc)};`;
   const importOutputCode = expandImports(source, doc);
-    
+
   return outputCode + "\n" + importOutputCode + "\n" + `module.exports = doc;`;
 };
