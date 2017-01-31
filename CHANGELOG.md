@@ -1,4 +1,6 @@
 # Change log
+### v1.2.2
+Restore Node < 6 compatibility. [DragosRotaru](https://github.com/DragosRotaru) in [PR #41](https://github.com/apollographql/graphql-tag/pull/41) addressing [#39](https://github.com/apollographql/graphql-tag/issues/39)
 
 ### v1.2.1
 Fixed an issue with fragment imports. [PR #35](https://github.com/apollostack/graphql-tag/issues/35).
