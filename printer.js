@@ -103,9 +103,9 @@ module.exports =
 
 
 	  VariableDefinition: function VariableDefinition(_ref) {
-	    var variable = _ref.variable;
-	    var type = _ref.type;
-	    var defaultValue = _ref.defaultValue;
+	    var variable = _ref.variable,
+	        type = _ref.type,
+	        defaultValue = _ref.defaultValue;
 	    return variable + ': ' + type + wrap(' = ', defaultValue);
 	  },
 
@@ -115,40 +115,40 @@ module.exports =
 	  },
 
 	  Field: function Field(_ref3) {
-	    var alias = _ref3.alias;
-	    var name = _ref3.name;
-	    var args = _ref3.arguments;
-	    var directives = _ref3.directives;
-	    var selectionSet = _ref3.selectionSet;
+	    var alias = _ref3.alias,
+	        name = _ref3.name,
+	        args = _ref3.arguments,
+	        directives = _ref3.directives,
+	        selectionSet = _ref3.selectionSet;
 	    return join([wrap('', alias, ': ') + name + wrap('(', join(args, ', '), ')'), join(directives, ' '), selectionSet], ' ');
 	  },
 
 	  Argument: function Argument(_ref4) {
-	    var name = _ref4.name;
-	    var value = _ref4.value;
+	    var name = _ref4.name,
+	        value = _ref4.value;
 	    return name + ': ' + value;
 	  },
 
 	  // Fragments
 
 	  FragmentSpread: function FragmentSpread(_ref5) {
-	    var name = _ref5.name;
-	    var directives = _ref5.directives;
+	    var name = _ref5.name,
+	        directives = _ref5.directives;
 	    return '...' + name + wrap(' ', join(directives, ' '));
 	  },
 
 	  InlineFragment: function InlineFragment(_ref6) {
-	    var typeCondition = _ref6.typeCondition;
-	    var directives = _ref6.directives;
-	    var selectionSet = _ref6.selectionSet;
+	    var typeCondition = _ref6.typeCondition,
+	        directives = _ref6.directives,
+	        selectionSet = _ref6.selectionSet;
 	    return join(['...', wrap('on ', typeCondition), join(directives, ' '), selectionSet], ' ');
 	  },
 
 	  FragmentDefinition: function FragmentDefinition(_ref7) {
-	    var name = _ref7.name;
-	    var typeCondition = _ref7.typeCondition;
-	    var directives = _ref7.directives;
-	    var selectionSet = _ref7.selectionSet;
+	    var name = _ref7.name,
+	        typeCondition = _ref7.typeCondition,
+	        directives = _ref7.directives,
+	        selectionSet = _ref7.selectionSet;
 	    return 'fragment ' + name + ' on ' + typeCondition + ' ' + wrap('', join(directives, ' '), ' ') + selectionSet;
 	  },
 
@@ -170,6 +170,9 @@ module.exports =
 	    var value = _ref11.value;
 	    return JSON.stringify(value);
 	  },
+	  NullValue: function NullValue() {
+	    return 'null';
+	  },
 	  EnumValue: function EnumValue(_ref12) {
 	    var value = _ref12.value;
 	    return value;
@@ -183,16 +186,16 @@ module.exports =
 	    return '{' + join(fields, ', ') + '}';
 	  },
 	  ObjectField: function ObjectField(_ref15) {
-	    var name = _ref15.name;
-	    var value = _ref15.value;
+	    var name = _ref15.name,
+	        value = _ref15.value;
 	    return name + ': ' + value;
 	  },
 
 	  // Directive
 
 	  Directive: function Directive(_ref16) {
-	    var name = _ref16.name;
-	    var args = _ref16.arguments;
+	    var name = _ref16.name,
+	        args = _ref16.arguments;
 	    return '@' + name + wrap('(', join(args, ', '), ')');
 	  },
 
@@ -214,78 +217,78 @@ module.exports =
 	  // Type System Definitions
 
 	  SchemaDefinition: function SchemaDefinition(_ref20) {
-	    var directives = _ref20.directives;
-	    var operationTypes = _ref20.operationTypes;
+	    var directives = _ref20.directives,
+	        operationTypes = _ref20.operationTypes;
 	    return join(['schema', join(directives, ' '), block(operationTypes)], ' ');
 	  },
 
 	  OperationTypeDefinition: function OperationTypeDefinition(_ref21) {
-	    var operation = _ref21.operation;
-	    var type = _ref21.type;
+	    var operation = _ref21.operation,
+	        type = _ref21.type;
 	    return operation + ': ' + type;
 	  },
 
 	  ScalarTypeDefinition: function ScalarTypeDefinition(_ref22) {
-	    var name = _ref22.name;
-	    var directives = _ref22.directives;
+	    var name = _ref22.name,
+	        directives = _ref22.directives;
 	    return join(['scalar', name, join(directives, ' ')], ' ');
 	  },
 
 	  ObjectTypeDefinition: function ObjectTypeDefinition(_ref23) {
-	    var name = _ref23.name;
-	    var interfaces = _ref23.interfaces;
-	    var directives = _ref23.directives;
-	    var fields = _ref23.fields;
+	    var name = _ref23.name,
+	        interfaces = _ref23.interfaces,
+	        directives = _ref23.directives,
+	        fields = _ref23.fields;
 	    return join(['type', name, wrap('implements ', join(interfaces, ', ')), join(directives, ' '), block(fields)], ' ');
 	  },
 
 	  FieldDefinition: function FieldDefinition(_ref24) {
-	    var name = _ref24.name;
-	    var args = _ref24.arguments;
-	    var type = _ref24.type;
-	    var directives = _ref24.directives;
+	    var name = _ref24.name,
+	        args = _ref24.arguments,
+	        type = _ref24.type,
+	        directives = _ref24.directives;
 	    return name + wrap('(', join(args, ', '), ')') + ': ' + type + wrap(' ', join(directives, ' '));
 	  },
 
 	  InputValueDefinition: function InputValueDefinition(_ref25) {
-	    var name = _ref25.name;
-	    var type = _ref25.type;
-	    var defaultValue = _ref25.defaultValue;
-	    var directives = _ref25.directives;
+	    var name = _ref25.name,
+	        type = _ref25.type,
+	        defaultValue = _ref25.defaultValue,
+	        directives = _ref25.directives;
 	    return join([name + ': ' + type, wrap('= ', defaultValue), join(directives, ' ')], ' ');
 	  },
 
 	  InterfaceTypeDefinition: function InterfaceTypeDefinition(_ref26) {
-	    var name = _ref26.name;
-	    var directives = _ref26.directives;
-	    var fields = _ref26.fields;
+	    var name = _ref26.name,
+	        directives = _ref26.directives,
+	        fields = _ref26.fields;
 	    return join(['interface', name, join(directives, ' '), block(fields)], ' ');
 	  },
 
 	  UnionTypeDefinition: function UnionTypeDefinition(_ref27) {
-	    var name = _ref27.name;
-	    var directives = _ref27.directives;
-	    var types = _ref27.types;
+	    var name = _ref27.name,
+	        directives = _ref27.directives,
+	        types = _ref27.types;
 	    return join(['union', name, join(directives, ' '), '= ' + join(types, ' | ')], ' ');
 	  },
 
 	  EnumTypeDefinition: function EnumTypeDefinition(_ref28) {
-	    var name = _ref28.name;
-	    var directives = _ref28.directives;
-	    var values = _ref28.values;
+	    var name = _ref28.name,
+	        directives = _ref28.directives,
+	        values = _ref28.values;
 	    return join(['enum', name, join(directives, ' '), block(values)], ' ');
 	  },
 
 	  EnumValueDefinition: function EnumValueDefinition(_ref29) {
-	    var name = _ref29.name;
-	    var directives = _ref29.directives;
+	    var name = _ref29.name,
+	        directives = _ref29.directives;
 	    return join([name, join(directives, ' ')], ' ');
 	  },
 
 	  InputObjectTypeDefinition: function InputObjectTypeDefinition(_ref30) {
-	    var name = _ref30.name;
-	    var directives = _ref30.directives;
-	    var fields = _ref30.fields;
+	    var name = _ref30.name,
+	        directives = _ref30.directives,
+	        fields = _ref30.fields;
 	    return join(['input', name, join(directives, ' '), block(fields)], ' ');
 	  },
 
@@ -295,9 +298,9 @@ module.exports =
 	  },
 
 	  DirectiveDefinition: function DirectiveDefinition(_ref32) {
-	    var name = _ref32.name;
-	    var args = _ref32.arguments;
-	    var locations = _ref32.locations;
+	    var name = _ref32.name,
+	        args = _ref32.arguments,
+	        locations = _ref32.locations;
 	    return 'directive @' + name + wrap('(', join(args, ', '), ')') + ' on ' + join(locations, ' | ');
 	  }
 	};
@@ -372,6 +375,7 @@ module.exports =
 	  FloatValue: [],
 	  StringValue: [],
 	  BooleanValue: [],
+	  NullValue: [],
 	  EnumValue: [],
 	  ListValue: ['values'],
 	  ObjectValue: ['fields'],
