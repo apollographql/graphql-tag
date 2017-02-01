@@ -25,5 +25,8 @@
     "graphql": "^0.9.1",
     "mocha": "^2.5.3",
     "webpack": "^1.13.1"
+  },
+  "peerDependencies": {
+    "graphql": "^0.9.x"
   }
 }
