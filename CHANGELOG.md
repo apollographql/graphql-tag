@@ -1,5 +1,5 @@
 # Change log
-### v1.2.2
+### v1.2.4
 Restore Node < 6 compatibility. [DragosRotaru](https://github.com/DragosRotaru) in [PR #41](https://github.com/apollographql/graphql-tag/pull/41) addressing [#39](https://github.com/apollographql/graphql-tag/issues/39)
 
 ### v1.2.1
