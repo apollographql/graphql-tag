@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "compile": "webpack",
-    "test": "mocha --require babel-register"
+    "test": "mocha --require babel-register",
+    "browser": "browserify index.js --standalone graphqlTag -o=graphqlTag.js"
   },
   "repository": {
     "type": "git",
