@@ -84,10 +84,17 @@ function stripLoc (doc, removeLocAtThisLevel) {
     throw new Error('Unexpected input.');
   }
 
+  var startToken;
+  var endToken;
   // We don't want to remove the root loc field so we can use it
   // for fragment substitution (see below)
   if (removeLocAtThisLevel && doc.loc) {
     delete doc.loc;
+  } else if (doc.loc) {
+    startToken = doc.loc.startToken;
+    endToken = doc.loc.endToken;
+    doc.loc.startToken = undefined;
+    doc.loc.endToken = undefined;
   }
 
   var keys = Object.keys(doc);
@@ -104,6 +111,11 @@ function stripLoc (doc, removeLocAtThisLevel) {
         doc[keys[key]] = stripLoc(value, true);
       }
     }
+  }
+
+  if (doc.loc) {
+    doc.loc.startToken = startToken;
+    doc.loc.endToken = endToken;  
   }
 
   return doc;
