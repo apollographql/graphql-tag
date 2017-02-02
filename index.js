@@ -134,7 +134,7 @@ function parseDocument(doc) {
   parsed = processFragments(parsed);
   parsed = stripLoc(parsed, false);
   docCache[cacheKey] = parsed;
-  
+
   return parsed;
 }
 
@@ -165,6 +165,6 @@ gql.default = gql;
 gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
 gql.print = require('graphql/language/printer');
-gql.parser = parser
+gql.parse = parse;
 
 module.exports = gql;
