@@ -93,6 +93,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
     delete doc.loc;
   }
 
+  // https://github.com/apollographql/graphql-tag/issues/40
   if (doc.loc) {
     delete doc.loc.startToken;
     delete doc.loc.endToken;
