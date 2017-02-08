@@ -6,8 +6,6 @@
 GraphQL printing and parsing with bundled dependencies. Includes:
 
 - `gql` A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
-- `/parser` A bundled version of `graphql/language/parser`, that builds correctly in React Native.
-- `/printer` A bundled version of `graphql/language/printer`, that builds correctly in React Native.
 - `/loader` A webpack loader to preprocess queries
 
 ### gql
@@ -90,17 +88,3 @@ console.log(query);
 ```
 
 Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
-
-
-### Parser and printer
-
-This package also includes two submodules: `graphql-tag/printer` and `graphql-tag/parser`, which are bundled versions of the corresponding modules from the standard `graphql` package. These are included because the `graphql` package currently doesn't build in **React Native**. Use them the same way you would use the relevant modules from `graphql`:
-
-```js
-import { parse } from 'graphql-tag/parser';
-import { print } from 'graphql-tag/printer';
-```
-
-#### Why are these included in the source on GitHub?
-
-We generate the bundles for the printer and parser with Webpack from the `graphql` package. You might notice the bundles are included in the package source on GitHub. This is to enable easy installation from a Git URL in cases where that is helpful. In the case of updates to `graphql` printing or parsing (which should be very rare since the syntax is stable at this point), we will be able to easily run the build script and republish.
