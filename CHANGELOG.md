@@ -1,4 +1,8 @@
 # Change log
+### v1.3.0
+Restore dependence on `graphql` module [abhiaiyer91](https://github.com/abhiaiyer91) in [PR #46](https://github.com/apollographql/graphql-tag/pull/46) addressing [#6](https://github.com/apollographql/graphql-tag/issues/6)
+  - Added `graphql` as a [peerDependency](https://github.com/apollographql/graphql-tag/commit/ac061dd16440e75c166c85b4bff5ba06c79c9356)
+
 ### v1.2.4
 Restore Node < 6 compatibility. [DragosRotaru](https://github.com/DragosRotaru) in [PR #41](https://github.com/apollographql/graphql-tag/pull/41) addressing [#39](https://github.com/apollographql/graphql-tag/issues/39)
 
