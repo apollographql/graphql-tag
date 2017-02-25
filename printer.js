@@ -1,10 +1,8 @@
 var printer = require('./bundledPrinter');
 
-exports.print = function() {
-  console.warn(
-    "Warning - the `printer` exports from `graphql-tag` will be removed in the next major version." +
-    "\nSee https://github.com/apollographql/graphql-tag/issues/54 for more information."
-  );
+console.warn(
+  "Warning - the `printer` exports from `graphql-tag` will be removed in the next major version." +
+  "\nSee https://github.com/apollographql/graphql-tag/issues/54 for more information."
+);
 
-  return printer.print.apply(undefined, arguments);
-}
+module.exports = printer;
