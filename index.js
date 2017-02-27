@@ -1,6 +1,4 @@
-var parser = require('graphql/language/parser');
-
-var parse = parser.parse;
+var parse = require('./parser').parse;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
