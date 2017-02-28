@@ -1,4 +1,6 @@
 # Change log
+### vNext
+
 ### v1.3.0
 - Bump bundled `graphql` packages to v0.9.1 [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55).
 - Deprecate the `graphql/language/parser` and `graphql/language/printer` exports [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55)
