@@ -3,7 +3,7 @@ var webpack = require('webpack');
 module.exports = [
   {
     entry: {
-      parser: ['./node_modules/graphql/language/parser'],
+      bundledParser: ['./node_modules/graphql/language/parser'],
     },
     output: {
       library: 'gql',
@@ -13,7 +13,7 @@ module.exports = [
   },
   {
     entry: {
-      printer: ['./node_modules/graphql/language/printer'],
+      bundledPrinter: ['./node_modules/graphql/language/printer'],
     },
     output: {
       library: 'gql',
