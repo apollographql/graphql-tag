@@ -38,8 +38,7 @@ function processFragments(ast) {
       var sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
 
       // We know something about this fragment
-      if (fragmentSourceMap.hasOwnProperty(fragmentName) &&
-            !fragmentSourceMap[fragmentName][sourceKey]) {
+      if (fragmentSourceMap.hasOwnProperty(fragmentName) && !fragmentSourceMap[fragmentName][sourceKey]) {
 
         // this is a problem because the app developer is trying to register another fragment with
         // the same name as one previously registered. So, we tell them about it.
@@ -73,11 +72,13 @@ function disableFragmentWarnings() {
   printFragmentWarnings = false;
 }
 
-function stripLoc (doc, removeLocAtThisLevel) {
+function stripLoc(doc, removeLocAtThisLevel) {
   var docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]') {
-    return doc.map(function(d) { return stripLoc(d, removeLocAtThisLevel); });
+    return doc.map(function (d) {
+      return stripLoc(d, removeLocAtThisLevel);
+    });
   }
 
   if (docType !== '[object Object]') {
@@ -88,6 +89,11 @@ function stripLoc (doc, removeLocAtThisLevel) {
   // for fragment substitution (see below)
   if (removeLocAtThisLevel && doc.loc) {
     delete doc.loc;
+  }
+
+  if (doc.loc) {
+    delete doc.loc.startToken;
+    delete doc.loc.endToken;
   }
 
   var keys = Object.keys(doc);
@@ -140,13 +146,13 @@ function gql(/* arguments */) {
   var result = literals[0];
 
   for (var i = 1; i < args.length; i++) {
-      if (args[i] && args[i].kind && args[i].kind === 'Document') {
-        result += args[i].loc.source.body;
-      } else {
-        result += args[i];
-      }
+    if (args[i] && args[i].kind && args[i].kind === 'Document') {
+      result += args[i].loc.source.body;
+    } else {
+      result += args[i];
+    }
 
-      result += literals[i];
+    result += literals[i];
   }
 
   return parseDocument(result);

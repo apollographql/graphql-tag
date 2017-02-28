@@ -1,4 +1,10 @@
 # Change log
+### vNext
+
+### v1.3.0
+- Bump bundled `graphql` packages to v0.9.1 [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55).
+- Deprecate the `graphql/language/parser` and `graphql/language/printer` exports [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55)
+
 ### v1.2.4
 Restore Node < 6 compatibility. [DragosRotaru](https://github.com/DragosRotaru) in [PR #41](https://github.com/apollographql/graphql-tag/pull/41) addressing [#39](https://github.com/apollographql/graphql-tag/issues/39)
 
