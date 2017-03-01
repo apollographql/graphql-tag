@@ -1,4 +1,4 @@
-var parse = require('./parser').parse;
+var parse = require('./bundledParser').parse;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.

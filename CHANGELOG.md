@@ -1,6 +1,9 @@
 # Change log
 ### vNext
 
+### v1.3.1
+- Making sure not to log deprecation warnings for internal use of deprecated module [jnwng](https://github.com/jnwng) addressing [#54](https://github.com/apollographql/graphql-tag/issues/54#issuecomment-283301475)
+
 ### v1.3.0
 - Bump bundled `graphql` packages to v0.9.1 [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55).
 - Deprecate the `graphql/language/parser` and `graphql/language/printer` exports [jnwng](https://github.com/jnwng) in [PR #55](https://github.com/apollographql/graphql-tag/pull/55)
