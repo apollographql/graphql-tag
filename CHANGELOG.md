@@ -1,5 +1,6 @@
 # Change log
 ### vNext
+- ...
 
 ### v1.3.1
 - Making sure not to log deprecation warnings for internal use of deprecated module [jnwng](https://github.com/jnwng) addressing [#54](https://github.com/apollographql/graphql-tag/issues/54#issuecomment-283301475)
