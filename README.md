@@ -1,5 +1,7 @@
 # graphql-tag
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/apollographql/graphql-tag.svg)](https://greenkeeper.io/)
+
 [![npm version](https://badge.fury.io/js/graphql-tag.svg)](https://badge.fury.io/js/graphql-tag)
 [![Build Status](https://travis-ci.org/apollographql/graphql-tag.svg?branch=master)](https://travis-ci.org/apollographql/graphql-tag)
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollodata.com/#slack)
