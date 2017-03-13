@@ -1,6 +1,6 @@
 export default {
   entry: 'src/index.js',
-  dest: 'lib/apollo.umd.js',
+  dest: 'lib/graphql-tag.umd.js',
   format: 'umd',
   sourceMap: true,
   moduleName: 'graphql-tag',
