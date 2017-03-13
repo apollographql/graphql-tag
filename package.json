@@ -11,7 +11,8 @@
     "bundle": "rollup -c",
 >>>>>>> 9f29ca6... Adding UMD version of `graphql-tag`
     "compile": "webpack",
-    "test": "mocha --require babel-register"
+    "test": "mocha --require babel-register",
+    "prepublish": "npm run bundle"
   },
   "repository": {
     "type": "git",
