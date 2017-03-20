@@ -1,5 +1,7 @@
 # Change log
 ### vNext
+
+### v1.3.2
 - Add typescript definitions for the bundledPrinter [PR #63](https://github.com/apollographql/graphql-tag/pull/63)
 
 ### v1.3.1
