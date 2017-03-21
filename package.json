@@ -23,8 +23,8 @@
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
     "graphql": "^0.9.1",
-    "mocha": "^2.5.3",
-    "webpack": "^1.13.1"
+    "mocha": "^3.2.0",
+    "webpack": "^2.2.1"
   },
   "peerDependencies": {
     "graphql": "^0.9.x"
