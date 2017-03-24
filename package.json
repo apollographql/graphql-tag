@@ -6,14 +6,7 @@
   "module": "./src/index.js",
   "jsnext:main": "./src/index.js",
   "scripts": {
-<<<<<<< HEAD
-=======
     "bundle": "rollup -c",
-<<<<<<< HEAD
->>>>>>> 9f29ca6... Adding UMD version of `graphql-tag`
-    "compile": "webpack",
-=======
->>>>>>> 0e84c73... Removing `webpack`
     "test": "mocha --require babel-register",
     "prepublish": "npm run bundle"
   },
