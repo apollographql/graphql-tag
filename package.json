@@ -9,8 +9,11 @@
 <<<<<<< HEAD
 =======
     "bundle": "rollup -c",
+<<<<<<< HEAD
 >>>>>>> 9f29ca6... Adding UMD version of `graphql-tag`
     "compile": "webpack",
+=======
+>>>>>>> 0e84c73... Removing `webpack`
     "test": "mocha --require babel-register",
     "prepublish": "npm run bundle"
   },
@@ -31,7 +34,6 @@
     "chai": "^3.5.0",
     "graphql": "^0.9.1",
     "mocha": "^3.2.0",
-    "webpack": "^2.2.1",
     "rollup": "^0.41.5"
   },
   "peerDependencies": {
