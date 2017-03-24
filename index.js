@@ -165,7 +165,5 @@ function gql(/* arguments */) {
 gql.default = gql;
 gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
-gql.print = require('graphql/language/printer');
-gql.parse = parse;
 
 module.exports = gql;
