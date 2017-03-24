@@ -1,7 +1,11 @@
 # Change log
+
 ### vNEXT
 Restore dependence on `graphql` module [abhiaiyer91](https://github.com/abhiaiyer91) in [PR #46](https://github.com/apollographql/graphql-tag/pull/46) addressing [#6](https://github.com/apollographql/graphql-tag/issues/6)
   - Added `graphql` as a [peerDependency](https://github.com/apollographql/graphql-tag/commit/ac061dd16440e75c166c85b4bff5ba06c79c9356)
+
+### v1.3.2
+- Add typescript definitions for the bundledPrinter [PR #63](https://github.com/apollographql/graphql-tag/pull/63)
 
 ### v1.3.1
 - Making sure not to log deprecation warnings for internal use of deprecated module [jnwng](https://github.com/jnwng) addressing [#54](https://github.com/apollographql/graphql-tag/issues/54#issuecomment-283301475)
