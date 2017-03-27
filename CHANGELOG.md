@@ -1,7 +1,7 @@
 # Change log
 ### vNEXT
 
-### v2.0.0-0
+### v2.0.0
 Restore dependence on `graphql` module [abhiaiyer91](https://github.com/abhiaiyer91) in [PR #46](https://github.com/apollographql/graphql-tag/pull/46) addressing [#6](https://github.com/apollographql/graphql-tag/issues/6)
   - Added `graphql` as a [peerDependency](https://github.com/apollographql/graphql-tag/commit/ac061dd16440e75c166c85b4bff5ba06c79c9356)
 
