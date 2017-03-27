@@ -2,4 +2,5 @@
 .babelrc
 .travis.yml
 test.js
-webpack.config.js
+CHANGELOG.md
+rollup.config.js

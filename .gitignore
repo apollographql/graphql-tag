@@ -1,2 +1,7 @@
 node_modules
 .idea/
+
+# don't commit compiled files
+lib
+
+yarn.lock

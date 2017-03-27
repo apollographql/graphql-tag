@@ -1,5 +1,5 @@
-const gqlRequire = require('./');
-const gqlDefault = require('./').default;
+const gqlRequire = require('./src');
+const gqlDefault = require('./src').default;
 const loader = require('./loader');
 const assert = require('chai').assert;
 
@@ -64,7 +64,7 @@ const assert = require('chai').assert;
         done();
       });
     });
-    
+
     it('returns the same object for the same query', () => {
       assert.isTrue(gql`{ sameQuery }` === gql`{ sameQuery }`);
     });
