@@ -9,6 +9,10 @@ const assert = require('chai').assert;
       assert.equal(gql`{ testQuery }`.kind, 'Document');
     });
 
+    it('parses queries when called as a function', () => {
+      assert.equal(gql('{ testQuery }').kind, 'Document');
+    });
+
     it('parses queries with weird substitutions', () => {
       const obj = {};
       assert.equal(gql`{ field(input: "${obj.missing}") }`.kind, 'Document');
