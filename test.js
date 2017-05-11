@@ -28,6 +28,9 @@ const assert = require('chai').assert;
 
       const document = gql`query { ...SomeFragmentName } ${module.exports}`;
       assert.equal(document.kind, 'Document');
+      assert.equal(document.definitions.length, 2);
+      assert.equal(document.definitions[0].kind, 'OperationDefinition');
+      assert.equal(document.definitions[1].kind, 'FragmentDefinition');
     });
 
     it('parses queries through webpack loader', () => {

@@ -25,7 +25,10 @@ function expandImports(source, doc) {
 module.exports = function(source) {
   this.cacheable();
   const doc = gql`${source}`;
-  const outputCode = `var doc = ${JSON.stringify(doc)};`;
+  const outputCode = `
+    var doc = ${JSON.stringify(doc)};
+    doc.loc.source = ${JSON.stringify(doc.loc.source)};
+  `;
   const importOutputCode = expandImports(source, doc);
 
   return outputCode + "\n" + importOutputCode + "\n" + `module.exports = doc;`;
