@@ -146,7 +146,7 @@ function gql(/* arguments */) {
   var literals = args[0];
 
   // We always get literals[0] and then matching post literals for each arg given
-  var result = literals[0];
+  var result = (typeof(literals) === "string") ? literals : literals[0];
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {

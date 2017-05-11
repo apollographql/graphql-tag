@@ -1,5 +1,6 @@
 # Change log
 ### vNEXT
+- Add support for calling `gql` as a function [matthewerwin](https://github.com/matthewerwin) in [PR #66](https://github.com/apollographql/graphql-tag/pull/66)
 
 ### v2.0.0
 Restore dependence on `graphql` module [abhiaiyer91](https://github.com/abhiaiyer91) in [PR #46](https://github.com/apollographql/graphql-tag/pull/46) addressing [#6](https://github.com/apollographql/graphql-tag/issues/6)
