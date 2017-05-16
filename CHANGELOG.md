@@ -1,6 +1,9 @@
 # Change log
-### vNEXT
+### v2.1.0
 - Add support for calling `gql` as a function [matthewerwin](https://github.com/matthewerwin) in [PR #66](https://github.com/apollographql/graphql-tag/pull/66)
+- Including yarn.lock file [PowerKiKi](https://github.com/PowerKiKi) in [PR #72](https://github.com/apollographql/graphql-tag/pull/72)
+- Ignore duplicate fragments when using the Webpack loader [czert](https://github.com/czert) in [PR #52](https://github.com/apollographql/graphql-tag/pull/52)
+- Fixing `graphql-tag/loader` by properly stringifying GraphQL Source [jnwng](https://github.com/jnwng) in [PR #65](https://github.com/apollographql/graphql-tag/pull/65)
 
 ### v2.0.0
 Restore dependence on `graphql` module [abhiaiyer91](https://github.com/abhiaiyer91) in [PR #46](https://github.com/apollographql/graphql-tag/pull/46) addressing [#6](https://github.com/apollographql/graphql-tag/issues/6)
