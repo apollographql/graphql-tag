@@ -26,7 +26,7 @@
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
     "graphql": "^0.9.1",
-    "mocha": "^3.2.0",
+    "mocha": "^3.4.1",
     "rollup": "^0.41.5"
   },
   "peerDependencies": {
