@@ -344,6 +344,53 @@ const assert = require('chai').assert;
         // document is not the same, but the set of definitions should be.
         assert.deepEqual(query1.definitions, query2.definitions);
       });
+
+      it('ignores duplicate fragments from second-level imports when using the webpack loader', () => {
+        // take a require function and a query string, use the webpack loader to process it
+        const load = (require, query) => {
+          const jsSource = loader.call({ cacheable() {} }, query);
+          const module = { exports: undefined };
+          eval(jsSource);
+          return module.exports;
+        }
+
+        const test_require = (path) => {
+          switch (path) {
+          case './friends.graphql':
+            return load(test_require, [
+              '#import "./person.graphql"',
+              'fragment friends on Hero { friends { ...person } }',
+            ].join('\n'));
+          case './enemies.graphql':
+            return load(test_require, [
+              '#import "./person.graphql"',
+              'fragment enemies on Hero { enemies { ...person } }',
+            ].join('\n'));
+          case './person.graphql':
+            return load(test_require, 'fragment person on Person { name }\n');
+          default:
+            return null;
+          };
+        };
+
+        const result = load(test_require, [
+          '#import "./friends.graphql"',
+          '#import "./enemies.graphql"',
+          'query { hero { ...friends ...enemies } }',
+        ].join('\n'));
+
+        assert.equal(result.kind, 'Document');
+        assert.equal(result.definitions.length, 4, 'after deduplication, only 4 fragments should remain');
+        assert.equal(result.definitions[0].kind, 'OperationDefinition');
+
+        // the rest of the definitions should be fragments and contain one of
+        // each: "friends", "enemies", "person". Order does not matter
+        const fragments = result.definitions.slice(1)
+        assert(fragments.every(fragment => fragment.kind === 'FragmentDefinition'))
+        assert(fragments.some(fragment => fragment.name.value === 'friends'))
+        assert(fragments.some(fragment => fragment.name.value === 'enemies'))
+        assert(fragments.some(fragment => fragment.name.value === 'person'))
+      });
     });
 
     // How to make this work?
