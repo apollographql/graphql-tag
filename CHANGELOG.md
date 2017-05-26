@@ -1,4 +1,8 @@
 # Change log
+
+### v2.2.0
+- Bumping `graphql` peer dependency to ^0.10.0 [dotansimha](https://github.com/dotansimha) in [PR #85](https://github.com/apollographql/graphql-tag/pull/85)
+
 ### v2.1.0
 - Add support for calling `gql` as a function [matthewerwin](https://github.com/matthewerwin) in [PR #66](https://github.com/apollographql/graphql-tag/pull/66)
 - Including yarn.lock file [PowerKiKi](https://github.com/PowerKiKi) in [PR #72](https://github.com/apollographql/graphql-tag/pull/72)
