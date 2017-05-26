@@ -30,6 +30,6 @@
     "rollup": "^0.41.5"
   },
   "peerDependencies": {
-    "graphql": "^0.9.x"
+    "graphql": "^0.7.0 || ^0.8.0 || ^0.9.0 || ^0.10.0"
   }
 }
