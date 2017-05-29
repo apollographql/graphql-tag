@@ -47,8 +47,8 @@ function processFragments(ast) {
         // the same name as one previously registered. So, we tell them about it.
         if (printFragmentWarnings) {
           console.warn("Warning: fragment with name " + fragmentName + " already exists." + os.EOL +
-            + "graphql-tag enforces all fragment names across your application to be unique; read more about" + os.EOL +
-            + "this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names");
+            "graphql-tag enforces all fragment names across your application to be unique; read more about" + os.EOL +
+            "this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names");
         }
 
         fragmentSourceMap[fragmentName][sourceKey] = true;
