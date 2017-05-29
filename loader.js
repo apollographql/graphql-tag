@@ -1,12 +1,13 @@
 "use strict";
 
+const os = require('os');
 const gql = require('./src');
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
 // the imported definitions.
 function expandImports(source, doc) {
-  const lines = source.split('\n');
+  const lines = source.split(os.EOL);
   let outputCode = `
     var names = {};
     function unique(defs) {
@@ -30,7 +31,7 @@ function expandImports(source, doc) {
       const importFile = line.slice(1).split(' ')[1];
       const parseDocument = `require(${importFile})`;
       const appendDef = `doc.definitions = doc.definitions.concat(unique(${parseDocument}.definitions));`;
-      outputCode += appendDef + "\n";
+      outputCode += appendDef + os.EOL;
     }
     return (line.length !== 0 && line[0] !== '#');
   });
@@ -47,5 +48,5 @@ module.exports = function(source) {
   `;
   const importOutputCode = expandImports(source, doc);
 
-  return outputCode + "\n" + importOutputCode + "\n" + `module.exports = doc;`;
+  return outputCode + os.EOL + importOutputCode + os.EOL + `module.exports = doc;`;
 };

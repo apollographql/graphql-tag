@@ -1,3 +1,4 @@
+const os = require('os');
 var parser = require('graphql/language/parser');
 
 var parse = parser.parse;
@@ -45,8 +46,8 @@ function processFragments(ast) {
         // this is a problem because the app developer is trying to register another fragment with
         // the same name as one previously registered. So, we tell them about it.
         if (printFragmentWarnings) {
-          console.warn("Warning: fragment with name " + fragmentName + " already exists.\n"
-            + "graphql-tag enforces all fragment names across your application to be unique; read more about\n"
+          console.warn("Warning: fragment with name " + fragmentName + " already exists." + os.EOL +
+            + "graphql-tag enforces all fragment names across your application to be unique; read more about" + os.EOL +
             + "this in the docs: http://dev.apollodata.com/core/fragments.html#unique-names");
         }
 
