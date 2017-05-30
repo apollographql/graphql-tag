@@ -1,5 +1,8 @@
 # Change log
 
+### v2.2.1
+- Fix #61: split('/n') does not work on Windows [dnalborczyk](https://github.com/dnalborczyk) in [PR #89](https://github.com/apollographql/graphql-tag/pull/89)
+
 ### v2.2.0
 - Bumping `graphql` peer dependency to ^0.10.0 [dotansimha](https://github.com/dotansimha) in [PR #85](https://github.com/apollographql/graphql-tag/pull/85)
 
