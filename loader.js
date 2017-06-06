@@ -7,7 +7,7 @@ const gql = require('./src');
 // and `doc` (the parsed GraphQL document) and tacks on
 // the imported definitions.
 function expandImports(source, doc) {
-  const lines = source.split(os.EOL);
+  const lines = source.split(/\r\n|\r|\n/);
   let outputCode = `
     var names = {};
     function unique(defs) {
