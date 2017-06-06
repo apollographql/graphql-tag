@@ -1,5 +1,8 @@
 # Change log
 
+### v2.2.2
+- Make parsing line endings kind agnostic [vlasenko](https://github.com/vlasenko) in [PR #95](https://github.com/apollographql/graphql-tag/pull/95)
+
 ### v2.2.1
 - Fix #61: split('/n') does not work on Windows [dnalborczyk](https://github.com/dnalborczyk) in [PR #89](https://github.com/apollographql/graphql-tag/pull/89)
 
