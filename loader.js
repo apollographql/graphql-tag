@@ -3,11 +3,13 @@
 const os = require('os');
 const gql = require('./src');
 
+const ANY_EOL = /\r?\n/
+
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
 // the imported definitions.
 function expandImports(source, doc) {
-  const lines = source.split(os.EOL);
+  const lines = source.split(ANY_EOL);
   let outputCode = `
     var names = {};
     function unique(defs) {
