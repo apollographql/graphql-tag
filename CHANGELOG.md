@@ -1,5 +1,8 @@
 # Change log
 
+### v2.3.0
+- Add flow support [michalkvasnicak](https://github.com/michalkvasnicak) in [PR #98](https://github.com/apollographql/graphql-tag/pull/98)
+
 ### v2.2.2
 - Make parsing line endings kind agnostic [vlasenko](https://github.com/vlasenko) in [PR #95](https://github.com/apollographql/graphql-tag/pull/95)
 
