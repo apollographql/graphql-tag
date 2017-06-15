@@ -6,7 +6,7 @@
   "module": "./src/index.js",
   "jsnext:main": "./src/index.js",
   "scripts": {
-    "bundle": "rollup -c",
+    "bundle": "rollup -c && cp src/index.js.flow lib/graphql-tag.umd.js.flow",
     "test": "mocha --require babel-register",
     "prepublish": "npm run bundle"
   },
