@@ -1,5 +1,8 @@
 # Change log
 
+### v2.4.0
+- Add support for descriptors [jamiter](https://github.com/jamiter) in [PR #99](https://github.com/apollographql/graphql-tag/pull/99)
+
 ### v2.3.0
 - Add flow support [michalkvasnicak](https://github.com/michalkvasnicak) in [PR #98](https://github.com/apollographql/graphql-tag/pull/98)
 
