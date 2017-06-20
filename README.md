@@ -88,3 +88,13 @@ console.log(query);
 ```
 
 Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
+
+### Warnings
+
+This package will emit a warning if you have multiple fragments of the same name. You can disable this with:
+
+```js
+import { disableFragmentWarnings } from 'graphql-tag';
+
+disableFragmentWarnings()
+```
