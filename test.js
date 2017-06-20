@@ -70,6 +70,34 @@ const assert = require('chai').assert;
       assert.equal(definitions[1].kind, 'FragmentDefinition');
     });
 
+    it('correctly resolves imports through the webpack loader when separated by legal line terminators', () => {
+        const query =
+            '#import "./user_details.graphql"\n' +
+            '#import "./address_details.graphql"\r\n\r\n' + `
+        {
+          users(skip: 0, limit: 10) {
+            ...userDetails
+          }
+        }`;
+        const jsSource = loader.call({ cacheable() {} }, query);
+        const module = { exports: undefined };
+        const require = path => {
+            return {
+              './user_details.graphql': gql`fragment userDetails on User {
+                id
+                name
+              }`,
+              './address_details.graphql': gql`fragment addressDetails on User {
+                houseNumber
+                streetName
+              }`
+            }[path];
+        };
+        eval(jsSource);
+        assert.equal(module.exports.kind, 'Document');
+        assert.equal(module.exports.definitions.length, 3);
+    });
+
     it('does not complain when presented with normal comments', (done) => {
       assert.doesNotThrow(() => {
         const query = `#normal comment
