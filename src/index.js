@@ -157,10 +157,12 @@ function gql(/* arguments */) {
 
   // We always get literals[0] and then matching post literals for each arg given
   var result = (typeof(literals) === "string") ? literals : literals[0];
+  var definitions = [];
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
       result += args[i].loc.source.body;
+      definitions = definitions.concat(args[i].definitions)
     } else {
       result += args[i];
     }
@@ -168,7 +170,21 @@ function gql(/* arguments */) {
     result += literals[i];
   }
 
-  return parseDocument(result);
+  var doc = parseDocument(result);
+
+  var names = {};
+  doc.definitions = doc.definitions.concat(definitions).filter(function(def) {
+    if (def.kind !== 'FragmentDefinition') return true;
+    var name = def.name.value
+    if (names[name]) {
+      return false;
+    } else {
+      names[name] = true;
+      return true;
+    }
+  })
+
+  return doc;
 }
 
 // Support typescript, which isn't as nice as Babel about default exports
