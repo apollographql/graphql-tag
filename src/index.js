@@ -128,7 +128,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
   return doc;
 }
 
-function parseDocument(doc) {
+function parseDocument(doc, asImport) {
   var cacheKey = normalize(doc);
 
   if (docCache[cacheKey]) {
@@ -143,7 +143,12 @@ function parseDocument(doc) {
   // check that all "new" fragments inside the documents are consistent with
   // existing fragments of the same name
   parsed = processFragments(parsed);
-  parsed = stripLoc(parsed, false);
+  if (asImport) {
+    parsed.definitions = stripLoc(parsed.definitions, false);
+  }
+  else {
+    parsed = stripLoc(parsed, false);
+  }
   docCache[cacheKey] = parsed;
 
   return parsed;
@@ -152,6 +157,10 @@ function parseDocument(doc) {
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
+  var asImport = args[args.length - 1] === true;
+  if (asImport) {
+    args = args.slice(0, -1);
+  }
 
   var literals = args[0];
 
@@ -170,19 +179,17 @@ function gql(/* arguments */) {
     result += literals[i];
   }
 
-  var doc = parseDocument(result);
-
-  var names = {};
-  doc.definitions = doc.definitions.concat(definitions).filter(function(def) {
-    if (def.kind !== 'FragmentDefinition') return true;
-    var name = def.name.value
-    if (names[name]) {
-      return false;
-    } else {
-      names[name] = true;
-      return true;
-    }
+  definitions = definitions.filter(function (def) {
+    return def.kind === 'FragmentDefinition' && def.loc
   })
+
+  var doc = parseDocument(result, asImport || definitions.length);
+
+
+  if (definitions.length > 0) {
+    doc.definitions = doc.definitions.concat(definitions)
+    doc = processFragments(doc)
+  }
 
   return doc;
 }

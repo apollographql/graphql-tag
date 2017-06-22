@@ -71,10 +71,11 @@ const assert = require('chai').assert;
     });
 
     it('correctly interpolates imports of other files through the webpack loader', () => {
-      const query = `#import "./fragment_definition.graphql"
+      const query =`#import "./fragment_definition.graphql"
+
           fragment BooksAuthor on Book {
             author {
-              ...authorDetails
+              ...AuthorDetails
             }
           }
         `;
@@ -84,11 +85,11 @@ const assert = require('chai').assert;
       const module = { exports: undefined };
       const require = (path) => {
         assert.equal(path, './fragment_definition.graphql');
-        return gql`
-          fragment authorDetails on Author {
+        return gql(`
+          fragment AuthorDetails on Author {
             firstName
             lastName
-          }`;
+          }`, true);
       };
 
       eval(jsSource);
