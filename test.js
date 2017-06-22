@@ -433,21 +433,5 @@ const assert = require('chai').assert;
     //   `);
     // });
 
-    describe('descriptors', function() {
-      it('adds comments as descriptors', function() {
-        const ast = gql`
-          # This is a type descriptor
-          type Foo {
-            # This is a field descriptor
-            bar: String
-            baz: Int
-          }
-        `;
-        assert.equal(ast.definitions[0].description, 'This is a type descriptor');
-        assert.equal(ast.definitions[0].fields[0].description, 'This is a field descriptor');
-        assert.equal(ast.definitions[0].fields[1].description, undefined);
-      })
-    })
-
   });
 });
