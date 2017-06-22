@@ -1,4 +1,6 @@
 # Change log
+### v2.4.1
+- Temporarily reverting [PR #99](https://github.com/apollographql/graphql-tag/pull/99) to investigate issues with bundling
 
 ### v2.4.0
 - Add support for descriptors [jamiter](https://github.com/jamiter) in [PR #99](https://github.com/apollographql/graphql-tag/pull/99)
