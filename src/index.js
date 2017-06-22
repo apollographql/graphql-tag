@@ -1,8 +1,6 @@
 var parser = require('graphql/language/parser');
-var buildASTSchema = require('graphql/utilities/buildASTSchema');
 
 var parse = parser.parse;
-var getDescription = buildASTSchema.getDescription;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -83,14 +81,6 @@ function stripLoc(doc, removeLocAtThisLevel) {
     return doc.map(function (d) {
       return stripLoc(d, removeLocAtThisLevel);
     });
-  }
-
-  if (!doc.description) {
-    var description = getDescription(doc);
-
-    if (description) {
-      doc.description = description;
-    }
   }
 
   if (docType !== '[object Object]') {
