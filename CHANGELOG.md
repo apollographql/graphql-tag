@@ -1,5 +1,5 @@
 # Change log
-### v2.4.1
+### v2.4.{1,2}
 - Temporarily reverting [PR #99](https://github.com/apollographql/graphql-tag/pull/99) to investigate issues with bundling
 
 ### v2.4.0
