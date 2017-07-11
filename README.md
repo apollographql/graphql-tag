@@ -64,7 +64,7 @@ This package only has one feature - it caches previous parse results in a simple
 
 ### Babel preprocessing
 
-GraphQL queries can be compiled at the build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling the queries decreases the script initialization time and reduces the bundle size.
+GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling queries decreases the script initialization time and reduces the bundle size by potentially removing the need for `graphql-tag` at runtime.
 
 ### Webpack preprocessing
 
