@@ -62,6 +62,10 @@ That's where this package comes in - it lets you write your queries with [ES2015
 
 This package only has one feature - it caches previous parse results in a simple dictionary. This means that if you call the tag on the same query multiple times, it doesn't waste time parsing it again. It also means you can use `===` to compare queries to check if they are identical.
 
+### Babel preprocessing
+
+GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling queries decreases the script initialization time and reduces the bundle size by potentially removing the need for `graphql-tag` at runtime.
+
 ### Webpack preprocessing
 
 This package also includes a [webpack loader](https://webpack.github.io/docs/loaders.html). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side and enable queries to be separated from script over `.graphql` files.
