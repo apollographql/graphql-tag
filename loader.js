@@ -39,6 +39,37 @@ function expandImports(source, doc) {
   return outputCode;
 }
 
+function removeUnusedFragments(doc) {
+  let outputCode = `
+    var usedFragments = [];
+    function findFragmentSpreads(doc, visitor) {
+      function traverse(selectionSet) {
+        selectionSet.selections.forEach(function(selection) {
+          if (selection.kind === "FragmentSpread") {
+            usedFragments.push(selection.name.value);
+          } else if (selection.selectionSet) {
+            traverse(selection.selectionSet);
+          }
+        });
+      }
+
+      doc.definitions.forEach(function(def) {
+        if (def.kind === "OperationDefinition") {
+          traverse(def.selectionSet);
+        }
+      });
+    }
+
+    findFragmentSpreads(doc);
+
+    function rejectUnusedFragments(def) {
+      return def.kind !== "FragmentDefinition" || usedFragments.indexOf(def.name.value) !== -1;
+    }
+  `;
+  const appendDef = `doc.definitions = doc.definitions.filter(rejectUnusedFragments);`;
+  return outputCode + os.EOL + appendDef;
+}
+
 module.exports = function(source) {
   this.cacheable();
   const doc = gql`${source}`;
@@ -47,6 +78,7 @@ module.exports = function(source) {
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
   `;
   const importOutputCode = expandImports(source, doc);
+  const filteredOutputCode = removeUnusedFragments(importOutputCode, doc);
 
-  return outputCode + os.EOL + importOutputCode + os.EOL + `module.exports = doc;`;
+  return outputCode + os.EOL + importOutputCode + os.EOL + filteredOutputCode + os.EOL + `module.exports = doc;`;
 };
