@@ -80,7 +80,7 @@ class ProductsPage extends React.Component {
 
 ### Webpack preprocessing
 
-This package also includes a [webpack loader](https://webpack.github.io/docs/loaders.html). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side and enable queries to be separated from script over `.graphql` files.
+This package also includes a [webpack loader](https://webpack.js.org/concepts/loaders). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side and enable queries to be separated from script over `.graphql` files.
 
 ```js
 loaders: [
