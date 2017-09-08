@@ -44,6 +44,98 @@ const assert = require('chai').assert;
       assert.equal(module.exports.kind, 'Document');
     });
 
+    it('parses multiple queries through webpack loader', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        query Q1 { testQuery }
+        query Q2 { testQuery2 }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.exists(module.exports.Q1);
+      assert.exists(module.exports.Q2);
+      assert.equal(module.exports.Q1.kind, 'Document');
+      assert.equal(module.exports.Q2.kind, 'Document');
+      assert.equal(module.exports.Q1.definitions.length, 1);
+      assert.equal(module.exports.Q2.definitions.length, 1);
+    });
+
+    it('tracks fragment dependencies from multiple queries through webpack loader', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        fragment F1 on F { testQuery }
+        fragment F2 on F { testQuery2 }
+        fragment F3 on F { testQuery3 }
+        query Q1 { ...F1 }
+        query Q2 { ...F2 }
+        query Q3 { 
+          ...F1
+          ...F2
+        }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.exists(module.exports.Q1);
+      assert.exists(module.exports.Q2);
+      assert.exists(module.exports.Q3);
+      const Q1 = module.exports.Q1.definitions;
+      const Q2 = module.exports.Q2.definitions;
+      const Q3 = module.exports.Q3.definitions;
+
+      assert.equal(Q1.length, 2);
+      assert.equal(Q1[0].name.value, 'Q1');
+      assert.equal(Q1[1].name.value, 'F1');
+
+      assert.equal(Q2.length, 2);
+      assert.equal(Q2[0].name.value, 'Q2');
+      assert.equal(Q2[1].name.value, 'F2');
+
+      assert.equal(Q3.length, 3);
+      assert.equal(Q3[0].name.value, 'Q3');
+      assert.equal(Q3[1].name.value, 'F1');
+      assert.equal(Q3[2].name.value, 'F2');
+      
+    });
+
+    it('tracks fragment dependencies across nested fragments', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        fragment F11 on F { testQuery }
+        fragment F22 on F { 
+          ...F11
+          testQuery2 
+        }
+        fragment F33 on F {
+          ...F22
+          testQuery3
+        }
+
+        query Q1 { 
+          ...F33
+        }
+        
+        query Q2 { 
+          id
+        }
+      `);
+
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.exists(module.exports.Q1);
+      assert.exists(module.exports.Q2);
+      
+      const Q1 = module.exports.Q1.definitions;
+      const Q2 = module.exports.Q2.definitions;
+
+      assert.equal(Q1.length, 4);
+      assert.equal(Q1[0].name.value, 'Q1');
+      assert.equal(Q1[1].name.value, 'F33');
+      assert.equal(Q1[2].name.value, 'F22');
+      assert.equal(Q1[3].name.value, 'F11');
+      
+      assert.equal(Q2.length, 1);
+    });
+
     it('correctly imports other files through the webpack loader', () => {
       const query = `#import "./fragment_definition.graphql"
         query {
@@ -68,6 +160,47 @@ const assert = require('chai').assert;
       assert.equal(definitions.length, 2);
       assert.equal(definitions[0].kind, 'OperationDefinition');
       assert.equal(definitions[1].kind, 'FragmentDefinition');
+    });
+
+    it('tracks fragment dependencies across fragments loaded via the webpack loader', () => {
+      const query = `#import "./fragment_definition.graphql"
+        fragment F111 on F {
+          ...F222
+        }
+
+        query Q1 {
+          ...F111
+        }
+
+        query Q2 {
+          a
+        }
+        `;
+      const jsSource = loader.call({ cacheable() {} }, query);
+      const oldRequire = require;
+      const module = { exports: undefined };
+      const require = (path) => {
+        assert.equal(path, './fragment_definition.graphql');
+        return gql`
+          fragment F222 on F {
+            f1
+            f2
+          }`;
+      };
+      eval(jsSource);
+
+      assert.exists(module.exports.Q1);
+      assert.exists(module.exports.Q2);
+      
+      const Q1 = module.exports.Q1.definitions;
+      const Q2 = module.exports.Q2.definitions;
+
+      assert.equal(Q1.length, 3);
+      assert.equal(Q1[0].name.value, 'Q1');
+      assert.equal(Q1[1].name.value, 'F111');
+      assert.equal(Q1[2].name.value, 'F222');
+      
+      assert.equal(Q2.length, 1);
     });
 
     it('does not complain when presented with normal comments', (done) => {
