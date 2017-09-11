@@ -150,7 +150,7 @@ module.exports = function(source) {
       return newDoc;
     }
 
-    module.exports = {};
+    module.exports = doc;
     `
 
     for (const op of doc.definitions) {
