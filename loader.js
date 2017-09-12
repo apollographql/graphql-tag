@@ -123,8 +123,8 @@ module.exports = function(source) {
       // Now, for the operation we're running, find any fragments referenced by
       // it or the fragments it references
       var opRefs = definitionRefs[operationName] || new Set();
-      let allRefs = new Set();
-      let newRefs = new Set(opRefs);
+      var allRefs = new Set();
+      var newRefs = new Set(opRefs);
       while (newRefs.size > 0) {
         var prevRefs = newRefs;
         newRefs = new Set();
