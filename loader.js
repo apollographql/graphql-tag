@@ -78,33 +78,33 @@ module.exports = function(source) {
       }
 
       if (node.selectionSet) {
-        for (var selection of node.selectionSet.selections) {
+        node.selectionSet.selections.forEach(function(selection) {
           collectFragmentReferences(selection, refs);
-        }
+        });
       }
 
       if (node.variableDefinitions) {
-        for (var def of node.variableDefinitions) {
+        node.variableDefinitions.forEach(function(def) {
           collectFragmentReferences(def, refs);
-        }
+        });
       }
 
       if (node.definitions) {
-        for (var def of node.definitions) {
+        node.definitions.forEach(function(def) {
           collectFragmentReferences(def, refs);
-        }
+        });
       }
     }
 
     var definitionRefs = {};
     (function extractReferences() {
-      for (var def of doc.definitions) {
+      doc.definitions.forEach(function(def) {
         if (def.name) {
           var refs = new Set();
           collectFragmentReferences(def, refs);
           definitionRefs[def.name.value] = refs;
         }
-      }
+      });
     })();
 
     function findOperation(doc, name) {
@@ -129,23 +129,23 @@ module.exports = function(source) {
         var prevRefs = newRefs;
         newRefs = new Set();
 
-        for (let refName of prevRefs) {
+        prevRefs.forEach(function(refName) {
           if (!allRefs.has(refName)) {
             allRefs.add(refName);
             var childRefs = definitionRefs[refName] || new Set();
-            for (let childRef of childRefs) {
+            childRefs.forEach(function(childRef) {
               newRefs.add(childRef);
-            }
+            });
           }
-        }
+        });
       }
 
-      for (let refName of allRefs) {
+      allRefs.forEach(function(refName) {
         var op = findOperation(doc, refName);
         if (op) {
           newDoc.definitions.push(op);
         }
-      }
+      });
       
       return newDoc;
     }
