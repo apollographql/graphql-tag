@@ -71,36 +71,36 @@ module.exports = function(source) {
       if (node.kind === "FragmentSpread") {
         refs.add(node.name.value);
       } else if (node.kind === "VariableDefinition") {
-        const type = node.type;
+        var type = node.type;
         if (type.kind === "NamedType") {
           refs.add(type.name.value);
         }
       }
 
       if (node.selectionSet) {
-        for (const selection of node.selectionSet.selections) {
+        for (var selection of node.selectionSet.selections) {
           collectFragmentReferences(selection, refs);
         }
       }
 
       if (node.variableDefinitions) {
-        for (const def of node.variableDefinitions) {
+        for (var def of node.variableDefinitions) {
           collectFragmentReferences(def, refs);
         }
       }
 
       if (node.definitions) {
-        for (const def of node.definitions) {
+        for (var def of node.definitions) {
           collectFragmentReferences(def, refs);
         }
       }
     }
 
-    const definitionRefs = {};
+    var definitionRefs = {};
     (function extractReferences() {
-      for (const def of doc.definitions) {
+      for (var def of doc.definitions) {
         if (def.name) {
-          const refs = new Set();
+          var refs = new Set();
           collectFragmentReferences(def, refs);
           definitionRefs[def.name.value] = refs;
         }
@@ -115,24 +115,24 @@ module.exports = function(source) {
     
     function oneQuery(doc, operationName) {
       // Copy the DocumentNode, but clear out the definitions
-      const newDoc = Object.assign({}, doc);
+      var newDoc = Object.assign({}, doc);
 
-      const op = findOperation(doc, operationName);
+      var op = findOperation(doc, operationName);
       newDoc.definitions = [op];
       
       // Now, for the operation we're running, find any fragments referenced by
       // it or the fragments it references
-      const opRefs = definitionRefs[operationName] || new Set();
+      var opRefs = definitionRefs[operationName] || new Set();
       let allRefs = new Set();
       let newRefs = new Set(opRefs);
       while (newRefs.size > 0) {
-        const prevRefs = newRefs;
+        var prevRefs = newRefs;
         newRefs = new Set();
 
         for (let refName of prevRefs) {
           if (!allRefs.has(refName)) {
             allRefs.add(refName);
-            const childRefs = definitionRefs[refName] || new Set();
+            var childRefs = definitionRefs[refName] || new Set();
             for (let childRef of childRefs) {
               newRefs.add(childRef);
             }
@@ -141,7 +141,7 @@ module.exports = function(source) {
       }
 
       for (let refName of allRefs) {
-        const op = findOperation(doc, refName);
+        var op = findOperation(doc, refName);
         if (op) {
           newDoc.definitions.push(op);
         }
