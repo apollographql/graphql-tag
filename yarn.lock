@@ -764,9 +764,9 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-rollup@^0.42.0:
-  version "0.42.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.42.0.tgz#56e791b3a2f3dd7190bbb80a375675f2fe0f9b23"
+rollup@^0.45.0:
+  version "0.45.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.45.2.tgz#63a284c2b31234656f24e9e9717fabb6a7f0fa43"
   dependencies:
     source-map-support "^0.4.0"
 
