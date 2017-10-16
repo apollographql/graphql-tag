@@ -1,4 +1,7 @@
 # Change log
+### v2.5.0
+- Update graphql to ^0.11.0, add graphql@^0.11.0 to peerDependencies [pleunv](https://github.com/pleunv) in [PR #124](https://github.com/apollographql/graphql-tag/pull/124)
+
 ### v2.4.{1,2}
 - Temporarily reverting [PR #99](https://github.com/apollographql/graphql-tag/pull/99) to investigate issues with bundling
 
