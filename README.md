@@ -3,10 +3,12 @@
 [![Build Status](https://travis-ci.org/apollographql/graphql-tag.svg?branch=master)](https://travis-ci.org/apollographql/graphql-tag)
 [![Get on Slack](https://img.shields.io/badge/slack-join-orange.svg)](http://www.apollodata.com/#slack)
 
-GraphQL printing and parsing with bundled dependencies. Includes:
+Helpful utilities for parsing GraphQL queries. Includes:
 
 - `gql` A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
 - `/loader` A webpack loader to preprocess queries
+
+`graphql-tag` uses [the reference `graphql` library](https://github.com/graphql/graphql-js) under the hood as a peer dependency, so in addition to installing this module, you'll also have to install `graphql-js`.
 
 ### gql
 
@@ -78,7 +80,7 @@ class ProductsPage extends React.Component {
 }
 ```
 
-### Webpack preprocessing
+### Webpack preprocessing with `graphql-tag/loader`
 
 This package also includes a [webpack loader](https://webpack.js.org/concepts/loaders). There are many benefits over this approach, which saves GraphQL ASTs processing time on client-side and enable queries to be separated from script over `.graphql` files.
 
