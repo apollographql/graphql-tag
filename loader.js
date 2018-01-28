@@ -75,6 +75,10 @@ module.exports = function(source) {
         if (type.kind === "NamedType") {
           refs.add(type.name.value);
         }
+
+        if (type.kind === 'NonNullType' && type.type.kind === 'NamedType') {
+          refs.add(type.type.name.value)
+        }
       }
 
       if (node.selectionSet) {
