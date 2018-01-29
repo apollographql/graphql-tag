@@ -68,7 +68,8 @@ This package only has one feature - it caches previous parse results in a simple
 
 GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling queries decreases the script initialization time and reduces the bundle size by potentially removing the need for `graphql-tag` at runtime.
 
-If you are using TypeScript, try this custom transformer: [ts-transform-graphql-tag](https://github.com/firede/ts-transform-graphql-tag).
+#### TypeScript
+Try this custom transformer to pre-compile your GraphQL queries in TypeScript: [ts-transform-graphql-tag](https://github.com/firede/ts-transform-graphql-tag).
 
 #### React Native, Next.js
 Additionally, in certain situations, preprocessing queries via the webpack loader is not possible. [babel-plugin-inline-import-graphql-ast](https://www.npmjs.com/package/babel-plugin-inline-import-graphql-ast) will allow one to import graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
