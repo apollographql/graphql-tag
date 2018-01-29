@@ -83,7 +83,7 @@ class ProductsPage extends React.Component {
 
 #### Create-React-App
 
-[react-app-rewire-inline-import-graphql-ast](https://www.npmjs.com/package/react-app-rewire-inline-import-graphql-ast) is available for users of create-react-app that would like to use graphql files without needing to eject the app first.
+If you're using `create-react-app` and want the ability to preprocess queries without having to "eject", check out [react-app-rewire-inline-import-graphql-ast](https://www.npmjs.com/package/react-app-rewire-inline-import-graphql-ast).
 
 ### Webpack preprocessing with `graphql-tag/loader`
 
