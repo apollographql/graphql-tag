@@ -20,7 +20,9 @@
     "url": "https://github.com/apollostack/graphql-tag/issues"
   },
   "homepage": "https://github.com/apollostack/graphql-tag#readme",
-  "dependencies": {},
+  "dependencies": {
+    "@types/graphql": ">=0.8.6 <=0.11.7"
+  },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.9.0",
