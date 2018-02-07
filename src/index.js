@@ -118,6 +118,13 @@ function stripLoc(doc, removeLocAtThisLevel) {
   return doc;
 }
 
+function stringify(doc){
+  if (doc.loc && doc.loc.source && doc.loc.source.body) {
+    return doc.loc.source.body;
+  } 
+  return '';
+}
+
 function parseDocument(doc) {
   var cacheKey = normalize(doc);
 
@@ -165,5 +172,6 @@ function gql(/* arguments */) {
 gql.default = gql;
 gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
+gql.stringify = stringify;
 
 module.exports = gql;
