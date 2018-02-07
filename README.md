@@ -72,16 +72,23 @@ GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](h
 Try this custom transformer to pre-compile your GraphQL queries in TypeScript: [ts-transform-graphql-tag](https://github.com/firede/ts-transform-graphql-tag).
 
 #### React Native, Next.js
+
 Additionally, in certain situations, preprocessing queries via the webpack loader is not possible. [babel-plugin-inline-import-graphql-ast](https://www.npmjs.com/package/babel-plugin-inline-import-graphql-ast) will allow one to import graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
 
 E.g.:
 ```javascript
 import myImportedQuery from './productsQuery.graphql'
- 
+
 class ProductsPage extends React.Component {
   ...
 }
 ```
+
+#### Create-React-App
+
+`create-react-app@2.0.0` will [support the ability to preprocess queries](https://github.com/facebook/create-react-app/pull/3909) using `graphql-tag/loader` without the need to eject.
+
+If you're using an older version of `create-react-app`, check out [react-app-rewire-inline-import-graphql-ast](https://www.npmjs.com/package/react-app-rewire-inline-import-graphql-ast) to preprocess queries without needing to eject.
 
 ### Webpack preprocessing with `graphql-tag/loader`
 
