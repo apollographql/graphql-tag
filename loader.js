@@ -60,12 +60,12 @@ module.exports = function(source) {
     return accum;
   }, 0);
 
-  if (operationCount <= 1) {
+  if (operationCount < 1) {
     outputCode += `
       module.exports = doc;
     `
   } else {
-    outputCode +=`
+    outputCode += `
     // Collect any fragment/type references from a node, adding them to the refs Set
     function collectFragmentReferences(node, refs) {
       if (node.kind === "FragmentSpread") {
@@ -112,14 +112,14 @@ module.exports = function(source) {
         return op.name ? op.name.value == name : false;
       });
     }
-    
+
     function oneQuery(doc, operationName) {
       // Copy the DocumentNode, but clear out the definitions
       var newDoc = Object.assign({}, doc);
 
       var op = findOperation(doc, operationName);
       newDoc.definitions = [op];
-      
+
       // Now, for the operation we're running, find any fragments referenced by
       // it or the fragments it references
       var opRefs = definitionRefs[operationName] || new Set();
@@ -146,7 +146,7 @@ module.exports = function(source) {
           newDoc.definitions.push(op);
         }
       });
-      
+
       return newDoc;
     }
 
@@ -156,7 +156,11 @@ module.exports = function(source) {
     for (const op of doc.definitions) {
       if (op.kind === "OperationDefinition") {
         if (!op.name) {
-          throw "Query/mutation names are required for a document with multiple definitions";
+          if (operationCount > 1) {
+            throw "Query/mutation names are required for a document with multiple definitions";
+          } else {
+            continue;
+          }
         }
 
         const opName = op.name.value;
