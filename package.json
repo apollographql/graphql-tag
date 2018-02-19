@@ -7,7 +7,7 @@
   "jsnext:main": "./src/index.js",
   "scripts": {
     "bundle": "rollup -c && cp src/index.js.flow lib/graphql-tag.umd.js.flow",
-    "test": "tav --ci && mocha test/graphql.js test/graphql-v0.12.js",
+    "test": "tav --ci --compat && mocha test/graphql.js test/graphql-v0.12.js",
     "prepublish": "npm run bundle"
   },
   "repository": {
