@@ -44,6 +44,29 @@ const assert = require('chai').assert;
       assert.equal(module.exports.kind, 'Document');
     });
 
+    it('parses single query through webpack loader', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        query Q1 { testQuery }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.equal(module.exports.kind, 'Document');
+      assert.exists(module.exports.Q1);
+      assert.equal(module.exports.Q1.kind, 'Document');
+      assert.equal(module.exports.Q1.definitions.length, 1);
+    });
+
+    it('parses single query and exports as default', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        query Q1 { testQuery }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
+    });
+
     it('parses multiple queries through webpack loader', () => {
       const jsSource = loader.call({ cacheable() {} }, `
         query Q1 { testQuery }
@@ -67,7 +90,7 @@ const assert = require('chai').assert;
         fragment F3 on F { testQuery3 }
         query Q1 { ...F1 }
         query Q2 { ...F2 }
-        query Q3 { 
+        query Q3 {
           ...F1
           ...F2
         }
@@ -94,26 +117,26 @@ const assert = require('chai').assert;
       assert.equal(Q3[0].name.value, 'Q3');
       assert.equal(Q3[1].name.value, 'F1');
       assert.equal(Q3[2].name.value, 'F2');
-      
+
     });
 
     it('tracks fragment dependencies across nested fragments', () => {
       const jsSource = loader.call({ cacheable() {} }, `
         fragment F11 on F { testQuery }
-        fragment F22 on F { 
+        fragment F22 on F {
           ...F11
-          testQuery2 
+          testQuery2
         }
         fragment F33 on F {
           ...F22
           testQuery3
         }
 
-        query Q1 { 
+        query Q1 {
           ...F33
         }
-        
-        query Q2 { 
+
+        query Q2 {
           id
         }
       `);
@@ -123,7 +146,7 @@ const assert = require('chai').assert;
 
       assert.exists(module.exports.Q1);
       assert.exists(module.exports.Q2);
-      
+
       const Q1 = module.exports.Q1.definitions;
       const Q2 = module.exports.Q2.definitions;
 
@@ -132,7 +155,7 @@ const assert = require('chai').assert;
       assert.equal(Q1[1].name.value, 'F33');
       assert.equal(Q1[2].name.value, 'F22');
       assert.equal(Q1[3].name.value, 'F11');
-      
+
       assert.equal(Q2.length, 1);
     });
 
@@ -191,7 +214,7 @@ const assert = require('chai').assert;
 
       assert.exists(module.exports.Q1);
       assert.exists(module.exports.Q2);
-      
+
       const Q1 = module.exports.Q1.definitions;
       const Q2 = module.exports.Q2.definitions;
 
@@ -199,7 +222,7 @@ const assert = require('chai').assert;
       assert.equal(Q1[0].name.value, 'Q1');
       assert.equal(Q1[1].name.value, 'F111');
       assert.equal(Q1[2].name.value, 'F222');
-      
+
       assert.equal(Q2.length, 1);
     });
 
