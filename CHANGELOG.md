@@ -1,5 +1,13 @@
 # Change log
 
+### v2.7.0
+
+* Update `graphql` to ^0.13, support testing all compatible versions [jnwng](https://github.com/jnwng) in 
+  [PR #156](https://github.com/apollographql/graphql-tag/pull/156)
+* Export single queries as both default and named [stonexer](https://github.com/stonexer) in
+  [PR #154](https://github.com/apollographql/graphql-tag/pull/154)
+
+
 ### v2.6.0
 
 * Support multiple query definitions when using Webpack loader [jfaust](https://github.com/jfaust) in
