@@ -1,6 +1,6 @@
 {
   "name": "graphql-tag",
-  "version": "2.7.3",
+  "version": "2.8.0",
   "description": "A JavaScript template literal tag that parses GraphQL queries",
   "main": "./lib/graphql-tag.umd.js",
   "module": "./src/index.js",
