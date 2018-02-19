@@ -57,6 +57,16 @@ const assert = require('chai').assert;
       assert.equal(module.exports.Q1.definitions.length, 1);
     });
 
+    it('parses single query and exports as default', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        query Q1 { testQuery }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
+    });
+
     it('parses multiple queries through webpack loader', () => {
       const jsSource = loader.call({ cacheable() {} }, `
         query Q1 { testQuery }
