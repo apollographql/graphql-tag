@@ -4,10 +4,9 @@
 While not necessary, you can help organize our pull requests by labeling this pull request when you open it.  To add a label automatically, simply [x] mark the appropriate box below:
 -->
 
-- [ ] has-reproduction
 - [ ] feature
 - [ ] blocking
-- [ ] good first review
+- [ ] docs
 
 <!--
 You are also able to add labels by placing /label on a new line
