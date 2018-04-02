@@ -83,6 +83,16 @@ const assert = require('chai').assert;
       assert.equal(module.exports.Q2.definitions.length, 1);
     });
 
+    it('parses fragments with variable definitions', () => {
+      gql.enableExperimentalFragmentVariables()
+
+      const parsed = gql`fragment A ($arg: String!) on Type { testQuery }`;
+      assert.equal(parsed.kind, 'Document');
+      assert.exists(parsed.definitions[0].variableDefinitions)
+
+      gql.disableExperimentalFragmentVariables()
+    })
+
     it('tracks fragment dependencies from multiple queries through webpack loader', () => {
       const jsSource = loader.call({ cacheable() {} }, `
         fragment F1 on F { testQuery }
