@@ -126,7 +126,7 @@ function parseDocument(doc) {
     return docCache[cacheKey];
   }
 
-  var parsed = parse(doc, { experimentalFragmentVariables });
+  var parsed = parse(doc, { experimentalFragmentVariables: experimentalFragmentVariables });
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
