@@ -83,6 +83,21 @@ const assert = require('chai').assert;
       assert.equal(module.exports.Q2.definitions.length, 1);
     });
 
+    // see https://github.com/apollographql/graphql-tag/issues/168
+    it('does not nest queries needlessly in named exports', () => {
+      const jsSource = loader.call({ cacheable() {} }, `
+        query Q1 { testQuery }
+        query Q2 { testQuery2 }
+        query Q3 { test Query3 }
+      `);
+      const module = { exports: undefined };
+      eval(jsSource);
+
+      assert.notExists(module.exports.Q2.Q1);
+      assert.notExists(module.exports.Q3.Q1);
+      assert.notExists(module.exports.Q3.Q2);
+    });
+
     it('tracks fragment dependencies from multiple queries through webpack loader', () => {
       const jsSource = loader.call({ cacheable() {} }, `
         fragment F1 on F { testQuery }

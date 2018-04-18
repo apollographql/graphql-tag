@@ -153,6 +153,12 @@ module.exports = function(source) {
     module.exports = doc;
     `
 
+    // Make copy before named exports are added to the doc
+    // see https://github.com/apollographql/graphql-tag/issues/168
+    outputCode += `
+    var docCopy = Object.assign({}, doc);
+    `
+
     for (const op of doc.definitions) {
       if (op.kind === "OperationDefinition") {
         if (!op.name) {
@@ -165,7 +171,7 @@ module.exports = function(source) {
 
         const opName = op.name.value;
         outputCode += `
-        module.exports["${opName}"] = oneQuery(doc, "${opName}");
+        module.exports["${opName}"] = oneQuery(docCopy, "${opName}");
         `
       }
     }
