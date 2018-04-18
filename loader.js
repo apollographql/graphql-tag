@@ -115,10 +115,13 @@ module.exports = function(source) {
 
     function oneQuery(doc, operationName) {
       // Copy the DocumentNode, but clear out the definitions
-      var newDoc = Object.assign({}, doc);
-
-      var op = findOperation(doc, operationName);
-      newDoc.definitions = [op];
+      var newDoc = {
+        kind: doc.kind,
+        definitions: [findOperation(doc, operationName)]
+      };
+      if (doc.hasOwnProperty("loc")) {
+        newDoc.loc = doc.loc;
+      }
 
       // Now, for the operation we're running, find any fragments referenced by
       // it or the fragments it references
@@ -153,12 +156,6 @@ module.exports = function(source) {
     module.exports = doc;
     `
 
-    // Make copy before named exports are added to the doc
-    // see https://github.com/apollographql/graphql-tag/issues/168
-    outputCode += `
-    var docCopy = Object.assign({}, doc);
-    `
-
     for (const op of doc.definitions) {
       if (op.kind === "OperationDefinition") {
         if (!op.name) {
@@ -171,7 +168,7 @@ module.exports = function(source) {
 
         const opName = op.name.value;
         outputCode += `
-        module.exports["${opName}"] = oneQuery(docCopy, "${opName}");
+        module.exports["${opName}"] = oneQuery(doc, "${opName}");
         `
       }
     }
