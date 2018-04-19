@@ -1,5 +1,8 @@
 # Change log
 
+### v2.9.0
+* Remove duplicate exports in named exports by [wacii](https://github.com/wacii) in [#170](https://github.com/apollographql/graphql-tag/pull/170)
+
 ### v2.8.0
 
 * Update `graphql` to ^0.13, support testing all compatible versions [jnwng](https://github.com/jnwng) in
