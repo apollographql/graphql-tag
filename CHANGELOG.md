@@ -2,6 +2,7 @@
 
 ### v2.9.0
 * Remove duplicate exports in named exports by [wacii](https://github.com/wacii) in [#170](https://github.com/apollographql/graphql-tag/pull/170)
+* Add `experimentalFragmentVariables` compatibility by [lucasconstantino](https://github.com/lucasconstantino) in [#167](https://github.com/apollographql/graphql-tag/pull/167/)
 
 ### v2.8.0
 
