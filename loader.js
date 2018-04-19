@@ -115,10 +115,13 @@ module.exports = function(source) {
 
     function oneQuery(doc, operationName) {
       // Copy the DocumentNode, but clear out the definitions
-      var newDoc = Object.assign({}, doc);
-
-      var op = findOperation(doc, operationName);
-      newDoc.definitions = [op];
+      var newDoc = {
+        kind: doc.kind,
+        definitions: [findOperation(doc, operationName)]
+      };
+      if (doc.hasOwnProperty("loc")) {
+        newDoc.loc = doc.loc;
+      }
 
       // Now, for the operation we're running, find any fragments referenced by
       // it or the fragments it references
