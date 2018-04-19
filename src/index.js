@@ -118,6 +118,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
   return doc;
 }
 
+var experimentalFragmentVariables = false;
 function parseDocument(doc) {
   var cacheKey = normalize(doc);
 
@@ -125,7 +126,7 @@ function parseDocument(doc) {
     return docCache[cacheKey];
   }
 
-  var parsed = parse(doc);
+  var parsed = parse(doc, { experimentalFragmentVariables: experimentalFragmentVariables });
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
@@ -137,6 +138,14 @@ function parseDocument(doc) {
   docCache[cacheKey] = parsed;
 
   return parsed;
+}
+
+function enableExperimentalFragmentVariables() {
+  experimentalFragmentVariables = true;
+}
+
+function disableExperimentalFragmentVariables() {
+  experimentalFragmentVariables = false;
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
@@ -165,5 +174,7 @@ function gql(/* arguments */) {
 gql.default = gql;
 gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
+gql.enableExperimentalFragmentVariables = enableExperimentalFragmentVariables;
+gql.disableExperimentalFragmentVariables = disableExperimentalFragmentVariables;
 
 module.exports = gql;

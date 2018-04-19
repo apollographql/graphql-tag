@@ -83,6 +83,16 @@ const assert = require('chai').assert;
       assert.equal(module.exports.Q2.definitions.length, 1);
     });
 
+    it('parses fragments with variable definitions', () => {
+      gql.enableExperimentalFragmentVariables();
+
+      const parsed = gql`fragment A ($arg: String!) on Type { testQuery }`;
+      assert.equal(parsed.kind, 'Document');
+      assert.exists(parsed.definitions[0].variableDefinitions);
+
+      gql.disableExperimentalFragmentVariables()
+    });
+    
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {
       const jsSource = loader.call({ cacheable() {} }, `
