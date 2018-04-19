@@ -146,3 +146,21 @@ import { disableFragmentWarnings } from 'graphql-tag';
 
 disableFragmentWarnings()
 ```
+
+### Experimental Fragment Variables
+
+This package exports an `experimentalFragmentVariables` flag that allows you to use experimental support for [parameterized fragments](https://github.com/facebook/graphql/issues/204).
+
+You can enable / disable this with:
+```js
+import { enableExperimentalFragmentVariables, disableExperimentalFragmentVariables } from 'graphql-tag';
+```
+
+Enabling this feature allows you declare documents of the form
+```graphql
+fragment SomeFragment ($arg: String!) on SomeType {
+  someField
+}
+```
+
+
