@@ -39,8 +39,7 @@ function expandImports(source, doc) {
   return outputCode;
 }
 
-module.exports = function(source) {
-  this.cacheable();
+function transform(source) {
   const doc = gql`${source}`;
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
@@ -52,7 +51,7 @@ module.exports = function(source) {
   // Allow multiple query/mutation definitions in a file. This parses out dependencies
   // at compile time, and then uses those at load time to create minimal query documents
   // We cannot do the latter at compile time due to how the #import code works.
-  let operationCount = doc.definitions.reduce(function(accum, op) {
+  let operationCount = doc.definitions.reduce(function (accum, op) {
     if (op.kind === "OperationDefinition") {
       return accum + 1;
     }
@@ -178,4 +177,14 @@ module.exports = function(source) {
   const allCode = headerCode + os.EOL + importOutputCode + os.EOL + outputCode + os.EOL;
 
   return allCode;
+}
+
+// make graphql transformer available for other bundlers
+exports.transform = transform;
+
+// webpack loader 
+module.exports = function(source) {
+  this.cacheable();
+
+  return transform(source);
 };

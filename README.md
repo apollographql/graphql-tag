@@ -163,4 +163,26 @@ fragment SomeFragment ($arg: String!) on SomeType {
 }
 ```
 
+### Other bundlers with `graphql-tag/loader`
 
+To create a custom loader for other bundlers, just import `transform` function. See below a [rollup](https://rollupjs.org/guide/en) plugin example:
+
+```js
+import { transform } from 'graphql-tag/loader';
+import { createFilter } from 'rollup-pluginutils';
+import { extname } from 'path';
+
+export default function GraphQLPlugin( options = {} ) {
+  var filter = createFilter( options.include, options.exclude );
+
+  return {
+    transform ( code, id ) {
+      if (!filter(id) || /\.(graphql|gql)$/.test(extname)) return;
+
+      return {
+        code: transform(code)
+      };
+    }
+  };
+}
+```
