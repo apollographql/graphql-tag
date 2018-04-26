@@ -108,9 +108,12 @@ module.exports = function(source) {
     })();
 
     function findOperation(doc, name) {
-      return doc.definitions.find(function(op) {
-        return op.name ? op.name.value == name : false;
-      });
+      for (var i = 0; i < doc.definitions.length; i++) {
+        var element = doc.definitions[i];
+        if (element.name && element.name.value == name) {
+          return element;
+        }
+      }
     }
 
     function oneQuery(doc, operationName) {
