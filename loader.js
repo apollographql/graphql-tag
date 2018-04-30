@@ -3,6 +3,9 @@
 const os = require('os');
 const gql = require('./src');
 const shajs = require('sha');
+const fs = require('fs');
+
+const queryMap = {};
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
@@ -43,11 +46,14 @@ function expandImports(source, doc) {
 module.exports = function(source) {
   this.cacheable();
   const doc = gql`${source}`;
+  const queryId = shajs('sha256').update(doc.loc.source).digest('hex');
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
-    doc.queryId = ${shajs('sha256').update(doc.loc.source).digest('hex')};
+    doc.queryId = ${queryId};
   `;
+
+  queryMap[queryId] = doc.loc.source;
 
   let outputCode = "";
 
@@ -180,5 +186,11 @@ module.exports = function(source) {
   const importOutputCode = expandImports(source, doc);
   const allCode = headerCode + os.EOL + importOutputCode + os.EOL + outputCode + os.EOL;
 
-  return allCode;
+  const callback = this.async();
+
+  fs.writeFile('queryMap.json', JSON.stringify(queryMap), (err) => {
+    if (err) throw err;
+
+    callback(null, allCode);
+  });
 };
