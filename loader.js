@@ -55,10 +55,7 @@ function seedQueryMap(existingQueryMapPath) {
       const existingQueryMap = JSON.parse(fs.readFileSync(existingQueryMapPath, 'utf8'));
 
       // Seed queryMap with existingQueryMap
-      queryMap = {
-        ...existingQueryMap,
-        ...queryMap,
-      };
+      Object.assign(queryMap, existingQueryMap, queryMap);
     } catch (err) {
       console.error(err);
     }
