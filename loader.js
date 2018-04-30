@@ -70,7 +70,7 @@ module.exports = function(source) {
 
   // If there is an existing query map file that should be the seed, then load it now
   // (but only if it hasn't already been loaded).
-  if (hashQueries && existingQueryMapPath && Object.entries(queryMap).length === 0) {
+  if (hashQueries && existingQueryMapPath && Object.keys(queryMap).length === 0) {
     seedQueryMap(existingQueryMapPath);
   }
 
