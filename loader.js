@@ -44,12 +44,12 @@ function expandImports(source, doc) {
 }
 
 function seedQueryMap(queryMapPath) {
-  console.log('Seeding query map...');
+  console.info('Seeding query map...');
 
   try {
     fs.statSync(queryMapPath);
 
-    console.log(`Query map path found at: ${queryMapPath}`);
+    console.info(`Query map path found at: ${queryMapPath}`);
 
     try {
       const existingQueryMap = JSON.parse(fs.readFileSync(queryMapPath, 'utf8'));
