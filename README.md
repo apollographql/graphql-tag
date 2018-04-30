@@ -115,6 +115,34 @@ console.log(query);
 // ...
 ```
 
+graphql-tag/loader also supports hashing of queries, to provide support for persisted queries out-of-the-box.
+
+```js
+loaders: [
+  {
+    test: /\.(graphql|gql)$/,
+    exclude: /node_modules/,
+    use: [
+      {
+        loader: 'graphql-tag/loader',
+        options: {
+          // Attach queryId to document (default: true)
+          hashQueries: true,
+
+          // Generate a map file for the server (if you don't want to use auto persisted queries).
+          // See https://dev-blog.apollodata.com/persisted-graphql-queries-with-apollo-client-119fd7e6bba5
+          // and https://www.apollographql.com/docs/engine/auto-persisted-queries.html
+          generateHashMap: true,
+
+          // If you want to seed the queryMap with an existing query map file (default: undefined)
+          queryMapPath: '',
+        },
+      },
+    ],
+  }
+]
+```
+
 Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
 
 #### Support for multiple operations
