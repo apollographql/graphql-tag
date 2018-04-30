@@ -2,10 +2,10 @@
 
 const os = require('os');
 const gql = require('./src');
-const shajs = require('sha');
+const crypto = require('crypto')
 const fs = require('fs');
 
-const queryMap = {};
+let queryMap = {};
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
@@ -43,17 +43,56 @@ function expandImports(source, doc) {
   return outputCode;
 }
 
+function seedQueryMap(queryMapPath) {
+  console.log('Seeding query map...');
+
+  try {
+    fs.statSync(queryMapPath);
+
+    console.log(`Query map path found at: ${queryMapPath}`);
+
+    try {
+      const existingQueryMap = JSON.parse(fs.readFileSync(queryMapPath, 'utf8'));
+
+      // Seed queryMap with existingQueryMap
+      queryMap = {
+        ...existingQueryMap,
+        ...queryMap,
+      };
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  catch (err) {
+    console.error(`Query map path NOT found at: ${queryMapPath}`);
+  }
+}
+
 module.exports = function(source) {
+  // If there is an existing query map file that should be the seed, then load it now
+  // (but only if it hasn't already been loaded).
+  const {hashQueries = true, queryMapPath, generateHashMap = false} = this.query;
+
+  if (hashQueries && queryMapPath && Object.entries(queryMap).length === 0) {
+    seedQueryMap(queryMapPath);
+  }
+
   this.cacheable();
   const doc = gql`${source}`;
-  const queryId = shajs('sha256').update(doc.loc.source).digest('hex');
+
+  let queryId;
+  if (hashQueries) {
+    const sha256 = crypto.createHash('sha256');
+
+    queryId = sha256.update(JSON.stringify(doc.loc.source.body)).digest('hex');
+    queryMap[queryId] = doc.loc.source.body;
+  }
+
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
-    doc.queryId = ${queryId};
+    ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
   `;
-
-  queryMap[queryId] = doc.loc.source;
 
   let outputCode = "";
 
@@ -121,12 +160,12 @@ module.exports = function(source) {
       });
     }
 
-    function oneQuery(doc, operationName) {
+    function oneQuery(doc, operationName) {    
       // Copy the DocumentNode, but clear out the definitions
       var newDoc = {
         kind: doc.kind,
-        definitions: [findOperation(doc, operationName)]
-        queryId: doc.queryId,
+        definitions: [findOperation(doc, operationName)],
+        ${hashQueries ? 'queryId: doc.queryId' : ''}
       };
       if (doc.hasOwnProperty("loc")) {
         newDoc.loc = doc.loc;
@@ -186,11 +225,15 @@ module.exports = function(source) {
   const importOutputCode = expandImports(source, doc);
   const allCode = headerCode + os.EOL + importOutputCode + os.EOL + outputCode + os.EOL;
 
-  const callback = this.async();
+  if (hashQueries && generateHashMap) {
+    const callback = this.async();
 
-  fs.writeFile('queryMap.json', JSON.stringify(queryMap), (err) => {
-    if (err) throw err;
+    fs.writeFile('queryIdMap.json', JSON.stringify(queryMap, null, 2), (err) => {
+      if (err) return callback(err);
 
-    callback(null, allCode);
-  });
+      callback(null, allCode);
+    });
+  } else {
+    return allCode;
+  }
 };
