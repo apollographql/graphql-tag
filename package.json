@@ -28,6 +28,7 @@
     "graphql": "^0.13.0",
     "mocha": "^3.4.1",
     "rollup": "^0.45.0",
+    "sha": "^2.0.1",
     "test-all-versions": "^3.3.2"
   },
   "peerDependencies": {

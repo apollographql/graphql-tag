@@ -2,6 +2,7 @@
 
 const os = require('os');
 const gql = require('./src');
+const shajs = require('sha');
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
@@ -45,6 +46,7 @@ module.exports = function(source) {
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
+    doc.queryId = ${shajs('sha256').update(doc.loc.source).digest('hex')};
   `;
 
   let outputCode = "";
@@ -118,6 +120,7 @@ module.exports = function(source) {
       var newDoc = {
         kind: doc.kind,
         definitions: [findOperation(doc, operationName)]
+        queryId: doc.queryId,
       };
       if (doc.hasOwnProperty("loc")) {
         newDoc.loc = doc.loc;
