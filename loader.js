@@ -43,16 +43,16 @@ function expandImports(source, doc) {
   return outputCode;
 }
 
-function seedQueryMap(queryMapPath) {
+function seedQueryMap(existingQueryMapPath) {
   console.info('Seeding query map...');
 
   try {
-    fs.statSync(queryMapPath);
+    fs.statSync(existingQueryMapPath);
 
-    console.info(`Query map path found at: ${queryMapPath}`);
+    console.info(`Query map path found at: ${existingQueryMapPath}`);
 
     try {
-      const existingQueryMap = JSON.parse(fs.readFileSync(queryMapPath, 'utf8'));
+      const existingQueryMap = JSON.parse(fs.readFileSync(existingQueryMapPath, 'utf8'));
 
       // Seed queryMap with existingQueryMap
       queryMap = {
@@ -64,17 +64,17 @@ function seedQueryMap(queryMapPath) {
     }
   }
   catch (err) {
-    console.error(`Query map path NOT found at: ${queryMapPath}`);
+    console.error(`Query map path NOT found at: ${existingQueryMapPath}`);
   }
 }
 
 module.exports = function(source) {
   // If there is an existing query map file that should be the seed, then load it now
   // (but only if it hasn't already been loaded).
-  const {hashQueries = true, queryMapPath, generateHashMap = false} = this.query;
+  const {hashQueries = true, existingQueryMapPath, generateHashMap = false} = this.query;
 
-  if (hashQueries && queryMapPath && Object.entries(queryMap).length === 0) {
-    seedQueryMap(queryMapPath);
+  if (hashQueries && existingQueryMapPath && Object.entries(queryMap).length === 0) {
+    seedQueryMap(existingQueryMapPath);
   }
 
   this.cacheable();
