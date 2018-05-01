@@ -1,7 +1,12 @@
+const rewire = require('rewire');
 const gqlRequire = require('../src');
 const gqlDefault = require('../src').default;
-const loader = require('../loader');
+const loader = rewire('../loader');
 const assert = require('chai').assert;
+
+loader.__set__('persistgraphql/lib/src/ExtractGQL', {
+
+});
 
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {

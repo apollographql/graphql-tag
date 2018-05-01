@@ -4,6 +4,8 @@ const os = require('os');
 const gql = require('./src');
 const crypto = require('crypto')
 const fs = require('fs');
+const { ExtractGQL } = require('persistgraphql/lib/src/ExtractGQL');
+const queryTransformers = require('persistgraphql/lib/src/queryTransformers');
 
 let queryMap = {};
 
@@ -65,6 +67,17 @@ function seedQueryMap(existingQueryMapPath) {
   }
 }
 
+function addQueryId(queries, index) {
+  const query = queries[index];
+  const sha256 = crypto.createHash('sha256');
+  const queryId = sha256.update(JSON.stringify(query)).digest('hex');
+
+  // Save queryId to query mapping
+  queryMap[queryId] = query;
+
+  return queryId;
+}
+
 module.exports = function(source) {
   const {hashQueries = true, existingQueryMapPath, generateHashMap = false} = this.query;
 
@@ -77,18 +90,16 @@ module.exports = function(source) {
   this.cacheable();
   const doc = gql`${source}`;
 
-  let queryId;
+  let queries = [];
   if (hashQueries) {
-    const sha256 = crypto.createHash('sha256');
-
-    queryId = sha256.update(JSON.stringify(doc.loc.source.body)).digest('hex');
-    queryMap[queryId] = doc.loc.source.body;
+    queries = Object.keys(new ExtractGQL({
+      queryTransformers: [queryTransformers.addTypenameTransformer].filter(Boolean)
+    }).createOutputMapFromString(source));
   }
 
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
-    ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
   `;
 
   let outputCode = "";
@@ -106,7 +117,7 @@ module.exports = function(source) {
 
   if (operationCount < 1) {
     outputCode += `
-      module.exports = doc;
+    module.exports = doc;
     `
   } else {
     outputCode += `
@@ -157,12 +168,12 @@ module.exports = function(source) {
       });
     }
 
-    function oneQuery(doc, operationName) {    
+    function oneQuery(doc, operationName, queryId) {    
       // Copy the DocumentNode, but clear out the definitions
       var newDoc = {
         kind: doc.kind,
         definitions: [findOperation(doc, operationName)],
-        ${hashQueries ? 'queryId: doc.queryId' : ''}
+        ${hashQueries ? 'queryId: queryId' : ''}
       };
       if (doc.hasOwnProperty("loc")) {
         newDoc.loc = doc.loc;
@@ -199,21 +210,35 @@ module.exports = function(source) {
     }
 
     module.exports = doc;
-    `
+    `;
 
-    for (const op of doc.definitions) {
+    for (let i = 0; i < doc.definitions.length; i++) {
+      const op = doc.definitions[i];
+
       if (op.kind === "OperationDefinition") {
+        let queryId;
+
         if (!op.name) {
           if (operationCount > 1) {
             throw "Query/mutation names are required for a document with multiple definitions";
           } else {
+            queryId = addQueryId(queries, 0);
+
+            outputCode += `
+              ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
+            `
             continue;
           }
         }
 
+        if (hashQueries) {
+          queryId = addQueryId(queries, i);
+        }
+
         const opName = op.name.value;
+
         outputCode += `
-        module.exports["${opName}"] = oneQuery(doc, "${opName}");
+        module.exports["${opName}"] = oneQuery(doc, "${opName}", "${queryId}");
         `
       }
     }
