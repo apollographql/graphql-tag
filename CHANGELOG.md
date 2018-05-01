@@ -1,5 +1,8 @@
 # Change log
 
+### v2.9.1 
+* Fix IE11 support by using a regular for-loop by [vitorbal](https://github.com/vitorbal) in [#176](https://github.com/apollographql/graphql-tag/pull/176)
+
 ### v2.9.0
 * Remove duplicate exports in named exports by [wacii](https://github.com/wacii) in [#170](https://github.com/apollographql/graphql-tag/pull/170)
 * Add `experimentalFragmentVariables` compatibility by [lucasconstantino](https://github.com/lucasconstantino) in [#167](https://github.com/apollographql/graphql-tag/pull/167/)
