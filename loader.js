@@ -69,6 +69,7 @@ function seedQueryMap(existingQueryMapPath) {
 
 function addQueryId(queries, index) {
   const query = queries[index];
+
   const sha256 = crypto.createHash('sha256');
   const queryId = sha256.update(JSON.stringify(query)).digest('hex');
 
@@ -222,11 +223,14 @@ module.exports = function(source) {
           if (operationCount > 1) {
             throw "Query/mutation names are required for a document with multiple definitions";
           } else {
-            queryId = addQueryId(queries, 0);
+            if (hashQueries) {
+              queryId = addQueryId(queries, 0);
 
-            outputCode += `
-              ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
-            `
+              outputCode += `
+                ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
+              `;
+            }
+
             continue;
           }
         }

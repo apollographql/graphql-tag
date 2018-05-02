@@ -1,12 +1,7 @@
-const rewire = require('rewire');
+const loader = require('../loader');
 const gqlRequire = require('../src');
 const gqlDefault = require('../src').default;
-const loader = rewire('../loader');
 const assert = require('chai').assert;
-
-loader.__set__('persistgraphql/lib/src/ExtractGQL', {
-
-});
 
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
@@ -43,14 +38,14 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     });
 
     it('parses queries through webpack loader', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, '{ testQuery }');
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, '{ testQuery }');
       const module = { exports: undefined };
       eval(jsSource);
       assert.equal(module.exports.kind, 'Document');
     });
 
     it('parses single query through webpack loader', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         query Q1 { testQuery }
       `);
       const module = { exports: undefined };
@@ -63,7 +58,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     });
 
     it('parses single query and exports as default', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         query Q1 { testQuery }
       `);
       const module = { exports: undefined };
@@ -72,80 +67,8 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
       assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
     });
 
-    it('correctly generates a queryId attached to the doc by default', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
-        query Q1 { testQuery }
-      `);
-
-      const module = { exports: undefined };
-      eval(jsSource);
-
-      assert.exists(module.exports.queryId);
-    });
-
-    it('does not generate a queryId attached to the doc when hashQueries is false', () => {
-      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
-        query Q1 { testQuery }
-      `);
-
-      const module = { exports: undefined };
-      eval(jsSource);
-
-      assert.notExists(module.exports.queryId);
-    });
-
-    it('generates a hashmap when generateHashMap is true', (done) => {
-      const rewire = require('rewire');
-      const stubbedLoader = rewire('../loader');
-
-      const fsStub = {
-        writeFile: function(path, queryMap, callback) {
-          const queryMapParsed = JSON.parse(queryMap);
-
-          assert.equal(Object.keys(queryMapParsed).length, 1);
-
-          done();
-        },
-      };
-
-      stubbedLoader.__set__('fs', fsStub);
-
-      const jsSource = stubbedLoader.call({ cacheable() {}, query: { generateHashMap: true }, async: () => {} }, `
-        query Q1 { testQuery }
-      `);
-
-      eval(jsSource);
-    });
-
-    it('seeds the query map as expected when existingQueryMapPath is provided', (done) => {
-      const rewire = require('rewire');
-      const stubbedLoader = rewire('../loader');
-
-      const fsStub = {
-        statSync: function() {},
-        readFileSync: function() {
-          return '{"123": "query {}"}';
-        },
-        writeFile: function(path, queryMap, callback) {
-          const queryMapParsed = JSON.parse(queryMap);
-
-          assert.equal(Object.keys(queryMapParsed).length, 2);
-
-          done();
-        },
-      };
-
-      stubbedLoader.__set__('fs', fsStub);
-
-      const jsSource = stubbedLoader.call({ cacheable() {}, query: { generateHashMap: true, existingQueryMapPath: 'some/path' }, async: () => {} }, `
-        query Q1 { testQuery }
-      `);
-
-      eval(jsSource);
-    });
-
     it('parses multiple queries through webpack loader', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         query Q1 { testQuery }
         query Q2 { testQuery2 }
       `);
@@ -172,7 +95,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         query Q1 { testQuery }
         query Q2 { testQuery2 }
         query Q3 { test Query3 }
@@ -186,7 +109,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     });
 
     it('tracks fragment dependencies from multiple queries through webpack loader', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         fragment F1 on F { testQuery }
         fragment F2 on F { testQuery2 }
         fragment F3 on F { testQuery3 }
@@ -223,7 +146,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     });
 
     it('tracks fragment dependencies across nested fragments', () => {
-      const jsSource = loader.call({ cacheable() {}, query: {} }, `
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
         fragment F11 on F { testQuery }
         fragment F22 on F {
           ...F11
@@ -268,7 +191,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
             ...authorDetails
           }
         }`;
-      const jsSource = loader.call({ cacheable() {}, query: {} }, query);
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, query);
       const oldRequire = require;
       const module = { exports: undefined };
       const require = (path) => {
@@ -301,7 +224,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
           a
         }
         `;
-      const jsSource = loader.call({ cacheable() {}, query: {} }, query);
+      const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, query);
       const oldRequire = require;
       const module = { exports: undefined };
       const require = (path) => {
@@ -336,7 +259,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
               ...authorDetails
             }
           }`;
-        const jsSource = loader.call({ cacheable() {}, query: {} }, query);
+        const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, query);
         const module = { exports: undefined };
         eval(jsSource);
         assert.equal(module.exports.kind, 'Document');
@@ -470,7 +393,7 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
       it('ignores duplicate fragments from second-level imports when using the webpack loader', () => {
         // take a require function and a query string, use the webpack loader to process it
         const load = (require, query) => {
-          const jsSource = loader.call({ cacheable() {}, query: {} }, query);
+          const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, query);
           const module = { exports: undefined };
           eval(jsSource);
           return module.exports;
@@ -538,5 +461,105 @@ loader.__set__('persistgraphql/lib/src/ExtractGQL', {
     //   `);
     // });
 
+    describe('for queryId attachment', () => {
+      const rewire = require('rewire');
+      let stubbedLoader;
+
+      beforeEach(() => {
+        stubbedLoader = rewire('../loader');
+
+        stubbedLoader.__set__('ExtractGQL', function() {
+          this.createOutputMapFromString = () => ({
+            'query Q1 { testQuery }': 1,
+            'query Q2 { testQuery }': 2,
+          })
+        });
+
+        stubbedLoader.__set__('queryTransformers', {
+          addTypenameTransformer: 'someTransformer',
+        });
+      });
+
+      it('correctly generates a queryId attached to the query by default', () => {
+
+        const jsSource = loader.call({ cacheable() {}, query: {} }, `
+        query Q1 { testQuery }
+      `);
+
+        const module = { exports: undefined };
+        eval(jsSource);
+
+        assert.exists(module.exports.Q1.queryId);
+      });
+
+      it('correctly generates a queryIds attached to multiple queries by default', () => {
+
+        const jsSource = loader.call({ cacheable() {}, query: {} }, `
+        query Q1 { testQuery }
+        query Q2 { testQuery }
+      `);
+
+        const module = { exports: undefined };
+        eval(jsSource);
+
+        assert.exists(module.exports.Q1.queryId);
+        assert.exists(module.exports.Q2.queryId);
+      });
+
+      it('does not generate a queryId attached to the doc when hashQueries is false', () => {
+        const jsSource = loader.call({ cacheable() {}, query: { hashQueries: false } }, `
+        query Q1 { testQuery }
+      `);
+
+        const module = { exports: undefined };
+        eval(jsSource);
+
+        assert.notExists(module.exports.queryId);
+      });
+
+      it('generates a hashmap when generateHashMap is true', (done) => {
+        const fsStub = {
+          writeFile: function(path, queryMap, callback) {
+            const queryMapParsed = JSON.parse(queryMap);
+
+            assert.equal(Object.keys(queryMapParsed).length, 1);
+
+            done();
+          },
+        };
+
+        stubbedLoader.__set__('fs', fsStub);
+
+        const jsSource = stubbedLoader.call({ cacheable() {}, query: { generateHashMap: true }, async: () => {} }, `
+        query Q1 { testQuery }
+      `);
+
+        eval(jsSource);
+      });
+
+      it('seeds the query map as expected when existingQueryMapPath is provided', (done) => {
+        const fsStub = {
+          statSync: function() {},
+          readFileSync: function() {
+            return '{"123": "query {}"}';
+          },
+          writeFile: function(path, queryMap, callback) {
+            const queryMapParsed = JSON.parse(queryMap);
+
+            assert.equal(Object.keys(queryMapParsed).length, 2);
+
+            done();
+          },
+        };
+
+        stubbedLoader.__set__('fs', fsStub);
+
+        const jsSource = stubbedLoader.call({ cacheable() {}, query: { generateHashMap: true, existingQueryMapPath: 'some/path' }, async: () => {} }, `
+        query Q1 { testQuery }
+      `);
+
+        eval(jsSource);
+      });
+    });
   });
 });
