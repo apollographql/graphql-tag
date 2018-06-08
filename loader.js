@@ -130,7 +130,13 @@ module.exports = function(source) {
       // it or the fragments it references
       var opRefs = definitionRefs[operationName] || new Set();
       var allRefs = new Set();
-      var newRefs = new Set(opRefs);
+      var newRefs = new Set();
+
+      // IE 11 doesn't support "new Set(iterable)", so we add the members of opRefs to newRefs one by one
+      opRefs.forEach(function(refName) {
+        newRefs.add(refName);
+      });
+
       while (newRefs.size > 0) {
         var prevRefs = newRefs;
         newRefs = new Set();
