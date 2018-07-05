@@ -13,7 +13,7 @@ function expandImports(source, doc) {
     function unique(defs) {
       return defs.filter(
         function(def) {
-          if (def.kind !== 'FragmentDefinition') return true;
+          if (def.kind !== 'FragmentDefinition' && def.kind !== 'InterfaceTypeDefinition') return true;
           var name = def.name.value
           if (names[name]) {
             return false;
