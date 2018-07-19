@@ -73,7 +73,7 @@ Try this custom transformer to pre-compile your GraphQL queries in TypeScript: [
 
 #### React Native, Next.js
 
-Additionally, in certain situations, preprocessing queries via the webpack loader is not possible. [babel-plugin-inline-import-graphql-ast](https://www.npmjs.com/package/babel-plugin-inline-import-graphql-ast) will allow one to import graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
+Additionally, in certain situations, preprocessing queries via the webpack loader is not possible. [babel-plugin-import-graphql](https://www.npmjs.com/package/babel-plugin-import-graphql) will allow one to import graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
 
 E.g.:
 ```javascript
@@ -162,5 +162,3 @@ fragment SomeFragment ($arg: String!) on SomeType {
   someField
 }
 ```
-
-
