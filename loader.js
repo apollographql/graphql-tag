@@ -2,6 +2,12 @@
 
 const os = require('os');
 const gql = require('./src');
+const crypto = require('crypto')
+const fs = require('fs');
+const { ExtractGQL } = require('persistgraphql/lib/src/ExtractGQL');
+const queryTransformers = require('persistgraphql/lib/src/queryTransformers');
+
+let queryMap = {};
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
@@ -39,9 +45,59 @@ function expandImports(source, doc) {
   return outputCode;
 }
 
+function seedQueryMap(existingQueryMapPath) {
+  console.info('Seeding query map...');
+
+  try {
+    fs.statSync(existingQueryMapPath);
+
+    console.info(`Query map path found at: ${existingQueryMapPath}`);
+
+    try {
+      const existingQueryMap = JSON.parse(fs.readFileSync(existingQueryMapPath, 'utf8'));
+
+      // Seed queryMap with existingQueryMap
+      Object.assign(queryMap, existingQueryMap, queryMap);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  catch (err) {
+    console.error(`Query map path NOT found at: ${existingQueryMapPath}`);
+  }
+}
+
+function addQueryId(queries, index) {
+  const query = queries[index];
+
+  const sha256 = crypto.createHash('sha256');
+  const queryId = sha256.update(JSON.stringify(query)).digest('hex');
+
+  // Save queryId to query mapping
+  queryMap[queryId] = query;
+
+  return queryId;
+}
+
 module.exports = function(source) {
+  const {hashQueries = true, existingQueryMapPath, generateHashMap = false} = this.query;
+
+  // If there is an existing query map file that should be the seed, then load it now
+  // (but only if it hasn't already been loaded).
+  if (hashQueries && existingQueryMapPath && Object.keys(queryMap).length === 0) {
+    seedQueryMap(existingQueryMapPath);
+  }
+
   this.cacheable();
   const doc = gql`${source}`;
+
+  let queries = [];
+  if (hashQueries) {
+    queries = Object.keys(new ExtractGQL({
+      queryTransformers: [queryTransformers.addTypenameTransformer].filter(Boolean)
+    }).createOutputMapFromString(source));
+  }
+
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
     doc.loc.source = ${JSON.stringify(doc.loc.source)};
@@ -62,7 +118,7 @@ module.exports = function(source) {
 
   if (operationCount < 1) {
     outputCode += `
-      module.exports = doc;
+    module.exports = doc;
     `
   } else {
     outputCode += `
@@ -116,11 +172,12 @@ module.exports = function(source) {
       }
     }
 
-    function oneQuery(doc, operationName) {
+    function oneQuery(doc, operationName, queryId) {    
       // Copy the DocumentNode, but clear out the definitions
       var newDoc = {
         kind: doc.kind,
-        definitions: [findOperation(doc, operationName)]
+        definitions: [findOperation(doc, operationName)],
+        ${hashQueries ? 'queryId: queryId' : ''}
       };
       if (doc.hasOwnProperty("loc")) {
         newDoc.loc = doc.loc;
@@ -157,21 +214,38 @@ module.exports = function(source) {
     }
 
     module.exports = doc;
-    `
+    `;
 
-    for (const op of doc.definitions) {
+    for (let i = 0; i < doc.definitions.length; i++) {
+      const op = doc.definitions[i];
+
       if (op.kind === "OperationDefinition") {
+        let queryId;
+
         if (!op.name) {
           if (operationCount > 1) {
             throw "Query/mutation names are required for a document with multiple definitions";
           } else {
+            if (hashQueries) {
+              queryId = addQueryId(queries, 0);
+
+              outputCode += `
+                ${hashQueries ? `doc.queryId = '${queryId}';` : ''}
+              `;
+            }
+
             continue;
           }
         }
 
+        if (hashQueries) {
+          queryId = addQueryId(queries, i);
+        }
+
         const opName = op.name.value;
+
         outputCode += `
-        module.exports["${opName}"] = oneQuery(doc, "${opName}");
+        module.exports["${opName}"] = oneQuery(doc, "${opName}", "${queryId}");
         `
       }
     }
@@ -180,5 +254,15 @@ module.exports = function(source) {
   const importOutputCode = expandImports(source, doc);
   const allCode = headerCode + os.EOL + importOutputCode + os.EOL + outputCode + os.EOL;
 
-  return allCode;
+  if (hashQueries && generateHashMap) {
+    const callback = this.async();
+
+    fs.writeFile('queryIdMap.json', JSON.stringify(queryMap, null, 2), (err) => {
+      if (err) return callback(err);
+
+      callback(null, allCode);
+    });
+  } else {
+    return allCode;
+  }
 };

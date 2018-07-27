@@ -27,6 +27,8 @@
     "chai": "^4.0.2",
     "graphql": "^0.13.0",
     "mocha": "^3.4.1",
+    "persistgraphql": "^0.3.11",
+    "rewire": "^4.0.1",
     "rollup": "^0.45.0",
     "test-all-versions": "^3.3.2"
   },
