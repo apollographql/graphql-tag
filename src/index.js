@@ -1,6 +1,8 @@
 var parser = require('graphql/language/parser');
+var printer = require('graphql/language/printer');
 
 var parse = parser.parse;
+var print = printer.print;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -135,6 +137,7 @@ function parseDocument(doc) {
   // existing fragments of the same name
   parsed = processFragments(parsed);
   parsed = stripLoc(parsed, false);
+  parsed.toString = function() { return print(this); };
   docCache[cacheKey] = parsed;
 
   return parsed;
