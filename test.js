@@ -410,6 +410,13 @@ const assert = require('chai').assert;
       });
     });
 
+    it('returned document toString returns query string', () => {
+      const query = `{ user(id: 5) { firstName lastName } }`;
+      const doc = gql(query);
+
+      assert.equal(doc.toString(), query);
+    });
+
     // How to make this work?
     // it.only('can reference a fragment passed as a document via shorthand', () => {
     //   const ast = gql`

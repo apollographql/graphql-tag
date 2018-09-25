@@ -24,6 +24,12 @@ function resetCaches() {
   fragmentSourceMap = {};
 }
 
+// For defining doc.toString
+function toString(loc) {
+  return loc.source.body;
+
+}
+
 // Take a unstripped parsed document (query/mutation or even fragment), and
 // check all fragment definitions, checking for name->source uniqueness.
 // We also want to make sure only unique fragments exist in the document.
@@ -134,6 +140,7 @@ function parseDocument(doc) {
   // existing fragments of the same name
   parsed = processFragments(parsed);
   parsed = stripLoc(parsed, false);
+  parsed.toString = toString.bind(null, parsed.loc);
   docCache[cacheKey] = parsed;
 
   return parsed;
