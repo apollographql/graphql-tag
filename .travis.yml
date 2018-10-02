@@ -3,6 +3,5 @@ node_js:
   - "10"
   - "8"
   - "6"
-  - "5"
 script:
     - yarn test
