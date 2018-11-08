@@ -1,5 +1,8 @@
 # Change log
 
+### v2.10.0
+* Add support for `graphql@14` by [timsuchanek](https://github.com/timsuchanek) in [#210](https://github.com/apollographql/graphql-tag/pull/210), [#211](https://github.com/apollographql/graphql-tag/pull/211)
+
 ### v2.9.1 
 * Fix IE11 support by using a regular for-loop by [vitorbal](https://github.com/vitorbal) in [#176](https://github.com/apollographql/graphql-tag/pull/176)
 
