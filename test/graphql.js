@@ -438,28 +438,34 @@ const assert = require('chai').assert;
       });
     });
 
-    // How to make this work?
-    // it.only('can reference a fragment passed as a document via shorthand', () => {
-    //   const ast = gql`
-    //     {
-    //       user(id: 5) {
-    //         ...${userFragmentDocument}
-    //       }
-    //     }
-    //   `;
-    //
-    //   assert.deepEqual(ast, gql`
-    //     {
-    //       user(id: 5) {
-    //         ...UserFragment
-    //       }
-    //     }
-    //     fragment UserFragment on User {
-    //       firstName
-    //       lastName
-    //     }
-    //   `);
-    // });
+    it('can reference a fragment passed as a document via shorthand', () => {
+      const userFragmentDocument = gql`
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `
+      
+      const ast = gql`
+        {
+          user(id: 5) {
+            ...${userFragmentDocument}
+          }
+        }
+      `;
+    
+      assert.deepEqual(ast, gql`
+        {
+          user(id: 5) {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `);
+    });
 
   });
 });
