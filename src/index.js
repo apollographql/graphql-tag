@@ -156,16 +156,36 @@ function gql(/* arguments */) {
 
   // We always get literals[0] and then matching post literals for each arg given
   var result = (typeof(literals) === "string") ? literals : literals[0];
+  var inlineFragmentDefinitions = [];
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+      // inline FragmentDefinition: ...${SomeFragmentDefinition}
+      // -> previous literal ends with spread operator, followed by FragmentDefinition
+      if (
+        literals[i - 1].slice(-3) === "..." &&
+        args[i].definitions.length === 1 &&
+        args[i].definitions[0].kind === "FragmentDefinition"
+      ) {
+        // extract fragment definition
+        inlineFragmentDefinitions.push(args[i].loc.source.body);
+
+        // add fragment name to result instead of actual fragment defintion
+        result += args[i].definitions[0].name.value;
+      }
+
+      else {
+        result += args[i].loc.source.body;
+      }
     } else {
       result += args[i];
     }
 
     result += literals[i];
   }
+
+  // append extracted fragment definitions
+  result += inlineFragmentDefinitions.join("");
 
   return parseDocument(result);
 }
