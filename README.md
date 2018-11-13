@@ -137,6 +137,47 @@ And in your JavaScript:
 import { MyQuery1, MyQuery2 } from 'query.gql'
 ```
 
+#### Support for inline/shorthand fragments
+Instead of **Example A** you can do **Example B**:
+
+**Example A (old)**:
+```js
+const userFragmentDocument = gql`
+  fragment UserFragment on User {
+    firstName
+    lastName
+  }
+`
+      
+const ast = gql`
+  {
+    user(id: 5) {
+      ...UserFragment
+    }
+  }
+
+  ${userFragmentDocument}
+`;
+```
+
+**Example B (with inline/shorthand fragments)**:
+```js
+const userFragmentDocument = gql`
+  fragment UserFragment on User {
+    firstName
+    lastName
+  }
+`
+      
+const ast = gql`
+  {
+    user(id: 5) {
+      ...${userFragmentDocument}
+    }
+  }
+`;
+```
+
 ### Warnings
 
 This package will emit a warning if you have multiple fragments of the same name. You can disable this with:
