@@ -1,6 +1,9 @@
 .gitignore
 .babelrc
+.editorconfig
+.flowconfig
 .travis.yml
 test.js
 CHANGELOG.md
 rollup.config.js
+yarn.lock
