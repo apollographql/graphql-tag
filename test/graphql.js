@@ -3,6 +3,8 @@ const gqlDefault = require('../src').default;
 const loader = require('../loader');
 const assert = require('chai').assert;
 
+const oldRequire = require;
+
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
     it('parses queries', () => {
@@ -92,7 +94,7 @@ const assert = require('chai').assert;
 
       gql.disableExperimentalFragmentVariables()
     });
-    
+
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {
       const jsSource = loader.call({ cacheable() {} }, `
@@ -120,6 +122,7 @@ const assert = require('chai').assert;
           ...F2
         }
       `);
+
       const module = { exports: undefined };
       eval(jsSource);
 
@@ -131,17 +134,17 @@ const assert = require('chai').assert;
       const Q3 = module.exports.Q3.definitions;
 
       assert.equal(Q1.length, 2);
-      assert.equal(Q1[0].name.value, 'Q1');
-      assert.equal(Q1[1].name.value, 'F1');
+      assert.equal(Q1[0].name.value, 'F1');
+      assert.equal(Q1[1].name.value, 'Q1');
 
       assert.equal(Q2.length, 2);
-      assert.equal(Q2[0].name.value, 'Q2');
-      assert.equal(Q2[1].name.value, 'F2');
+      assert.equal(Q2[0].name.value, 'F2');
+      assert.equal(Q2[1].name.value, 'Q2');
 
       assert.equal(Q3.length, 3);
-      assert.equal(Q3[0].name.value, 'Q3');
-      assert.equal(Q3[1].name.value, 'F1');
-      assert.equal(Q3[2].name.value, 'F2');
+      assert.equal(Q3[0].name.value, 'F1');
+      assert.equal(Q3[1].name.value, 'F2');
+      assert.equal(Q3[2].name.value, 'Q3');
 
     });
 
@@ -176,10 +179,10 @@ const assert = require('chai').assert;
       const Q2 = module.exports.Q2.definitions;
 
       assert.equal(Q1.length, 4);
-      assert.equal(Q1[0].name.value, 'Q1');
-      assert.equal(Q1[1].name.value, 'F33');
-      assert.equal(Q1[2].name.value, 'F22');
-      assert.equal(Q1[3].name.value, 'F11');
+      assert.equal(Q1[0].name.value, 'F11');
+      assert.equal(Q1[1].name.value, 'F22');
+      assert.equal(Q1[2].name.value, 'F33');
+      assert.equal(Q1[3].name.value, 'Q1');
 
       assert.equal(Q2.length, 1);
     });
@@ -192,9 +195,8 @@ const assert = require('chai').assert;
           }
         }`;
       const jsSource = loader.call({ cacheable() {} }, query);
-      const oldRequire = require;
       const module = { exports: undefined };
-      const require = (path) => {
+      let require = (path) => {
         assert.equal(path, './fragment_definition.graphql');
         return gql`
           fragment authorDetails on Author {
@@ -203,6 +205,7 @@ const assert = require('chai').assert;
           }`;
       };
       eval(jsSource);
+      require = oldRequire;
       assert.equal(module.exports.kind, 'Document');
       const definitions = module.exports.definitions;
       assert.equal(definitions.length, 2);
@@ -225,17 +228,26 @@ const assert = require('chai').assert;
         }
         `;
       const jsSource = loader.call({ cacheable() {} }, query);
-      const oldRequire = require;
       const module = { exports: undefined };
-      const require = (path) => {
-        assert.equal(path, './fragment_definition.graphql');
-        return gql`
+
+      const paths = []
+      let require = (path) => {
+        paths.push(path);
+        if (path === './fragment_definition.graphql') {
+          return gql`
           fragment F222 on F {
             f1
             f2
           }`;
+        } else {
+          return oldRequire(path);
+        }
       };
+
       eval(jsSource);
+      require = oldRequire;
+
+      assert.include(paths, './fragment_definition.graphql');
 
       assert.exists(module.exports.Q1);
       assert.exists(module.exports.Q2);
@@ -244,8 +256,8 @@ const assert = require('chai').assert;
       const Q2 = module.exports.Q2.definitions;
 
       assert.equal(Q1.length, 3);
-      assert.equal(Q1[0].name.value, 'Q1');
-      assert.equal(Q1[1].name.value, 'F111');
+      assert.equal(Q1[0].name.value, 'F111');
+      assert.equal(Q1[1].name.value, 'Q1');
       assert.equal(Q1[2].name.value, 'F222');
 
       assert.equal(Q2.length, 1);
