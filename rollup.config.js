@@ -15,7 +15,6 @@ function cjs(input, output) {
     dest: output,
     format: 'cjs',
     sourceMap: true,
-    moduleName: 'graphql-tag',
     onwarn
   }
 }
@@ -26,7 +25,6 @@ function esm(input, output) {
     dest: output,
     format: 'es',
     sourceMap: true,
-    moduleName: 'graphql-tag',
     onwarn
   }
 }
