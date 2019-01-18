@@ -2,7 +2,7 @@
 
 ### v2.10.1
 
-* Fix failures in IE11 by avoiding unsupported (by IE11) constructor arguments to `Set`. [#190](https://github.com/apollographql/graphql-tag/pull/190).
+* Fix failures in IE11 by avoiding unsupported (by IE11) constructor arguments to `Set` by [rocwang](https://github.com/rocwang) in [#190](https://github.com/apollographql/graphql-tag/pull/190)
 
 ### v2.10.0
 * Add support for `graphql@14` by [timsuchanek](https://github.com/timsuchanek) in [#210](https://github.com/apollographql/graphql-tag/pull/210), [#211](https://github.com/apollographql/graphql-tag/pull/211)
