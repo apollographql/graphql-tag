@@ -1,5 +1,5 @@
 import { parse } from 'graphql';
-import { FragmentDefinitionNode, Location, DocumentNode } from 'graphql/language';
+import { Location, DocumentNode } from 'graphql/language';
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -10,20 +10,16 @@ function normalize(text: string): string {
 // A map docString -> graphql document
 let docCache: { [key: string]: DocumentNode } = {};
 
-// A map fragmentName -> [normalized source]
-let fragmentSourceMap: {
-  [fragmentName: string]: {
-    [sourceKey: string]: boolean
-  }
-} = {};
-
-interface Loc {
-  end: number;
-  source: {
-    body: string;
-  };
-  start: number;
+interface Source {
+  [sourceKey: string]: boolean;
 }
+
+interface FragmentSourceMap {
+  [framentName: string]: Source;
+}
+
+// A map fragmentName -> [normalized source]
+let fragmentSourceMap: FragmentSourceMap = {};
 
 function cacheKeyFromLoc(loc?: Location): string {
   if (!loc) return '';
@@ -36,15 +32,11 @@ export function resetCaches(): void {
   fragmentSourceMap = {};
 }
 
-interface GraphQlAst {
-  definitions: Array<FragmentDefinitionNode>;
-}
-
 // Take a unstripped parsed document (query/mutation or even fragment), and
 // check all fragment definitions, checking for name->source uniqueness.
 // We also want to make sure only unique fragments exist in the document.
 let printFragmentWarnings = true;
-function processFragments(ast: GraphQlAst) {
+function processFragments(ast: DocumentNode) {
   const astFragmentMap = {};
   const definitions = [];
 
@@ -73,8 +65,8 @@ function processFragments(ast: GraphQlAst) {
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
 
-      if (!astFragmentMap[sourceKey]) {
-        astFragmentMap[sourceKey] = true;
+      if (!(astFragmentMap as any)[sourceKey]) {
+        (astFragmentMap as any)[sourceKey] = true;
         definitions.push(fragmentDefinition);
       }
     } else {
@@ -82,7 +74,8 @@ function processFragments(ast: GraphQlAst) {
     }
   }
 
-  ast.definitions = definitions;
+  // TODO: Ts won't allow us to alter this since it's read-only
+  (ast as any).definitions = definitions;
   return ast;
 }
 
@@ -91,11 +84,11 @@ export function disableFragmentWarnings(): void {
 }
 
 
-function stripLoc(doc: DocumentNode, removeLocAtThisLevel: number | boolean) {
+function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel: number | boolean) {
   const docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]') {
-    return doc.map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel));
+    return (doc as any).map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel));
   }
 
   if (docType !== '[object Object]') {
@@ -104,14 +97,16 @@ function stripLoc(doc: DocumentNode, removeLocAtThisLevel: number | boolean) {
 
   // We don't want to remove the root loc field so we can use it
   // for fragment substitution (see below)
-  if (removeLocAtThisLevel && doc.loc) {
-    delete doc.loc;
+  if (removeLocAtThisLevel && (doc as DocumentNode).loc) {
+    // TS Does not allow deleting a read-only prop
+    delete (doc as any).loc;
   }
 
   // https://github.com/apollographql/graphql-tag/issues/40
-  if (doc.loc) {
-    delete doc.loc.startToken;
-    delete doc.loc.endToken;
+  if ((doc as DocumentNode).loc) {
+    // TS Does not allow deleting a read-only prop
+    delete (doc as any).loc.startToken;
+    delete (doc as any).loc.endToken;
   }
 
   const keys = Object.keys(doc);
@@ -121,11 +116,11 @@ function stripLoc(doc: DocumentNode, removeLocAtThisLevel: number | boolean) {
 
   for (key in keys) {
     if (keys.hasOwnProperty(key)) {
-      value = doc[keys[key]];
+      value = (doc as any)[keys[key]];
       valueType = Object.prototype.toString.call(value);
 
       if (valueType === '[object Object]' || valueType === '[object Array]') {
-        doc[keys[key]] = stripLoc(value, true);
+        (doc as any)[keys[key]] = stripLoc(value, true);
       }
     }
   }
@@ -141,7 +136,8 @@ function parseDocument(doc: string) {
     return docCache[cacheKey];
   }
 
-  let parsed = parse(doc, { experimentalFragmentconstiables: experimentalFragmentconstiables });
+  // TODO: TS asked me to change this from "experimentalFragmentconstiables" to "experimentalFragmentVariables"
+  let parsed = parse(doc, { experimentalFragmentVariables: experimentalFragmentconstiables });
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
@@ -164,7 +160,7 @@ export function disableExperimentalFragmentconstiables(): void {
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
-function gql(...args: Array<DocumentNode>): DocumentNode {
+function gql(...args: Array<any>): DocumentNode {
   const literals: any = args[0];
 
   // We always get literals[0] and then matching post literals for each arg given

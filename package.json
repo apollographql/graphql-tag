@@ -5,6 +5,7 @@
   "browser": "./lib/graphql-tag.umd.js",
   "main": "./lib/index.js",
   "module": "./lib/graphql-tag.esm.js",
+  "typings": "./lib/index.d.ts",
   "scripts": {
     "bundle": "rollup -c",
     "compile": "rimraf ./lib && tsc -p ./tsconfig.cjs.json && npm run bundle && npm run move-flow-types",
