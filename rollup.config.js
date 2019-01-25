@@ -16,18 +16,20 @@ function onwarn(message) {
 
 function umd(input, output) {
   return {
-    entry: input,
-    dest: output,
-    format: 'umd',
+    input,
+    output: {
+      file: output,
+      format: 'umd',
+      name: 'graphql-tag'
+    },
     sourceMap: true,
-    moduleName: 'graphql-tag',
     onwarn,
     plugins: [
       node({
         module: true,
         only: ['tslib']
       }),
-      typescriptPlugin({ typescript, tsconfig: './tsconfig' }),
+      typescriptPlugin({ typescript, tsconfig: './tsconfig.json' }),
       filesize(),
     ]
   }
@@ -35,9 +37,11 @@ function umd(input, output) {
 
 function esm(input, output) {
   return {
-    entry: input,
-    dest: output,
-    format: 'es',
+    input,
+    output: {
+      file: output,
+      format: 'esm',
+    },
     sourceMap: true,
     onwarn,
     plugins: [
@@ -45,7 +49,7 @@ function esm(input, output) {
         module: true,
         only: ['tslib']
       }),
-      typescriptPlugin({ typescript, tsconfig: './tsconfig' }),
+      typescriptPlugin({ typescript, tsconfig: './tsconfig.json' }),
       filesize(),
     ]
   }

@@ -32,7 +32,7 @@
     "graphql": "^14.0.2",
     "mocha": "^3.4.1",
     "rimraf": "2.6.3",
-    "rollup": "^0.45.0",
+    "rollup": "1.1.2",
     "rollup-plugin-filesize": "^6.0.1",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-typescript2": "^0.19.2",
