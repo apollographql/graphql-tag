@@ -11,7 +11,11 @@ function normalize(text: string): string {
 let docCache: { [key: string]: DocumentNode } = {};
 
 // A map fragmentName -> [normalized source]
-let fragmentSourceMap: { [fragmentName: string]: boolean | { [sourceKey: string]: boolean } } = {};
+let fragmentSourceMap: {
+  [fragmentName: string]: {
+    [sourceKey: string]: boolean
+  }
+} = {};
 
 interface Loc {
   end: number;
@@ -48,8 +52,8 @@ function processFragments(ast: GraphQlAst) {
     const fragmentDefinition = ast.definitions[i];
 
     if (fragmentDefinition.kind === 'FragmentDefinition') {
-      const fragmentName = fragmentDefinition.name.value;
-      const sourceKey = cacheKeyFromLoc(fragmentDefinition.loc);
+      const fragmentName: string = fragmentDefinition.name.value;
+      const sourceKey: string = cacheKeyFromLoc(fragmentDefinition.loc);
 
       // We know something about this fragment
       if (fragmentSourceMap.hasOwnProperty(fragmentName) && !fragmentSourceMap[fragmentName][sourceKey]) {
@@ -82,7 +86,7 @@ function processFragments(ast: GraphQlAst) {
   return ast;
 }
 
-export function disableFragmentWarnings() {
+export function disableFragmentWarnings(): void {
   printFragmentWarnings = false;
 }
 
@@ -151,19 +155,19 @@ function parseDocument(doc: string) {
   return parsed;
 }
 
-export function enableExperimentalFragmentconstiables() {
+export function enableExperimentalFragmentconstiables(): void {
   experimentalFragmentconstiables = true;
 }
 
-export function disableExperimentalFragmentconstiables() {
+export function disableExperimentalFragmentconstiables(): void {
   experimentalFragmentconstiables = false;
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(...args: Array<DocumentNode>): DocumentNode {
-  const literals = args[0];
+  const literals: any = args[0];
 
-  // We always get literals[0] and then matching post literals for each arg given TODO
+  // We always get literals[0] and then matching post literals for each arg given
   let result = (typeof(literals) === "string") ? literals : literals[0];
 
   for (let i = 1; i < args.length; i++) {
@@ -172,7 +176,6 @@ function gql(...args: Array<DocumentNode>): DocumentNode {
     } else {
       result += args[i];
     }
-    // TODO
     result += (literals[i]);
   }
 
