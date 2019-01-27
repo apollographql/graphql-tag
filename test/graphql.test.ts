@@ -62,7 +62,7 @@ describe('gql', () => {
     `);
     const module = { exports: undefined };
     eval(jsSource);
-    // TODO: deep equal: expect(module.exports.definitions).deepEqual(module.exports.Q1.definitions);
+    expect((module.exports as any).definitions).toEqual((module.exports as any).Q1.definitions);
   });
 
   it('parses multiple queries through webpack loader', () => {
@@ -99,10 +99,9 @@ describe('gql', () => {
     const module = { exports: undefined };
     eval(jsSource);
 
-    // TODO
-    // assert.notExists(module.exports.Q2.Q1);
-    // assert.notExists(module.exports.Q3.Q1);
-    // assert.notExists(module.exports.Q3.Q2);
+    expect((module.exports as any).Q2).not.toHaveProperty('Q1');
+    expect((module.exports as any).Q3).not.toHaveProperty('Q2');
+    expect((module.exports as any).Q3).not.toHaveProperty('Q3');
   });
 
   it('tracks fragment dependencies from multiple queries through webpack loader', () => {
@@ -247,7 +246,7 @@ describe('gql', () => {
   });
 
   it('does not complain when presented with normal comments', (done) => {
-    try {
+    expect(() => {
       const query = `#normal comment
       query {
         author {
@@ -260,11 +259,7 @@ describe('gql', () => {
       // fails on this line
       expect((module.exports as any).kind).toEqual('Document');
       done();
-      expect(true).toBeTruthy()
-    } catch(e) {
-      console.log(e);
-      expect(false).toBeTruthy()
-    }
+    }).not.toThrow()
   });
 
   it('returns the same object for the same query', () => {
@@ -311,21 +306,20 @@ describe('gql', () => {
       ${secondFragmentAst}
     `;
 
-    // TODO: deep equal
-    // assert.deepEqual(ast, gql`
-    //   {
-    //     user(id: 5) {
-    //       ...SecondUserFragment
-    //     }
-    //   }
-    //   fragment SecondUserFragment on User {
-    //     ...UserFragment
-    //   }
-    //   fragment UserFragment on User {
-    //     firstName
-    //     lastName
-    //   }
-    // `);
+    expect(ast).toEqual(gql`
+      {
+        user(id: 5) {
+          ...SecondUserFragment
+        }
+      }
+      fragment SecondUserFragment on User {
+        ...UserFragment
+      }
+      fragment UserFragment on User {
+        firstName
+        lastName
+      }
+    `);
   });
 
   describe('fragment warnings', () => {
@@ -388,8 +382,7 @@ describe('gql', () => {
       expect(query1.definitions[1].kind).toEqual('FragmentDefinition');
       // We don't test strict equality between the two queries because the source.body parsed from the
       // document is not the same, but the set of definitions should be.
-      // TODO
-      // assert.deepEqual(query1.definitions, query2.definitions);
+      expect(query1.definitions).toEqual(query2.definitions);
     });
 
     it('ignores duplicate fragments from second-level imports when using the webpack loader', () => {
@@ -397,11 +390,11 @@ describe('gql', () => {
       const load = (_: any, query) => {
         const jsSource = loader.call({ cacheable() {} }, query);
         const module = { exports: undefined };
+        // TODO: this fails here.
         eval(jsSource);
         return module.exports;
       }
 
-      // TODO: this does not work
       const test_require = (path) => {
         switch (path) {
         case './friends.graphql':
@@ -441,27 +434,4 @@ describe('gql', () => {
       expect(fragments.some(fragment => fragment.name.value === 'person')).toBeTruthy()
     });
   });
-
-  // How to make this work?
-  // it.only('can reference a fragment passed as a document via shorthand', () => {
-  //   const ast = gql`
-  //     {
-  //       user(id: 5) {
-  //         ...${userFragmentDocument}
-  //       }
-  //     }
-  //   `;
-  //
-  //   assert.deepEqual(ast, gql`
-  //     {
-  //       user(id: 5) {
-  //         ...UserFragment
-  //       }
-  //     }
-  //     fragment UserFragment on User {
-  //       firstName
-  //       lastName
-  //     }
-  //   `);
-  // });
 });
