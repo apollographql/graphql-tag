@@ -67,10 +67,10 @@ function processFragments(ast: DocumentNode) {
 
       if (!(astFragmentMap as any)[sourceKey]) {
         (astFragmentMap as any)[sourceKey] = true;
-        definitions.push(fragmentDefinition);
+        definitions.push((fragmentDefinition as never));
       }
     } else {
-      definitions.push(fragmentDefinition);
+      definitions.push((fragmentDefinition as never));
     }
   }
 

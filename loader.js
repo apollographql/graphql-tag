@@ -1,7 +1,8 @@
 "use strict";
 
 const os = require('os');
-const gql = require('./lib/index.js');
+// TODO!
+const gql = require('./lib/index.js').default;
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
