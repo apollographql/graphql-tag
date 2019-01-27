@@ -32,12 +32,16 @@ export function resetCaches(): void {
   fragmentSourceMap = {};
 }
 
+interface FragmentMap {
+  [key: string]: boolean
+}
+
 // Take a unstripped parsed document (query/mutation or even fragment), and
 // check all fragment definitions, checking for name->source uniqueness.
 // We also want to make sure only unique fragments exist in the document.
 let printFragmentWarnings = true;
 function processFragments(ast: DocumentNode) {
-  const astFragmentMap = {};
+  const astFragmentMap: FragmentMap = {};
   const definitions: DefinitionNode[] = [];
 
   for (let i = 0; i < ast.definitions.length; i++) {
@@ -65,8 +69,8 @@ function processFragments(ast: DocumentNode) {
         fragmentSourceMap[fragmentName][sourceKey] = true;
       }
 
-      if (!(astFragmentMap as any)[sourceKey]) {
-        (astFragmentMap as any)[sourceKey] = true;
+      if (!astFragmentMap[sourceKey]) {
+        astFragmentMap[sourceKey] = true;
         definitions.push((fragmentDefinition as never));
       }
     } else {
@@ -83,12 +87,12 @@ export function disableFragmentWarnings(): void {
   printFragmentWarnings = false;
 }
 
-
-function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel: number | boolean) {
+// TODO: return type...
+function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel: number | boolean): any  {
   const docType = Object.prototype.toString.call(doc);
 
-  if (docType === '[object Array]') {
-    return (doc as any).map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel));
+  if (docType === '[object Array]' && doc instanceof Array) {
+    return doc.map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel));
   }
 
   if (docType !== '[object Object]') {
@@ -98,13 +102,13 @@ function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel:
   // We don't want to remove the root loc field so we can use it
   // for fragment substitution (see below)
   if (removeLocAtThisLevel && (doc as DocumentNode).loc) {
-    // TS Does not allow deleting a read-only prop
+    // TODO: TS Does not allow deleting a read-only prop
     delete (doc as any).loc;
   }
 
   // https://github.com/apollographql/graphql-tag/issues/40
   if ((doc as DocumentNode).loc) {
-    // TS Does not allow deleting a read-only prop
+    // TODO: TS Does not allow deleting a read-only prop
     delete (doc as any).loc.startToken;
     delete (doc as any).loc.endToken;
   }
@@ -116,6 +120,7 @@ function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel:
 
   for (key in keys) {
     if (keys.hasOwnProperty(key)) {
+      // TODO: how to type this even....
       value = (doc as any)[keys[key]];
       valueType = Object.prototype.toString.call(value);
 
@@ -137,6 +142,7 @@ function parseDocument(doc: string) {
   }
 
   // TODO: TS asked me to change this from "experimentalFragmentconstiables" to "experimentalFragmentVariables"
+  // This should be validated by someone with more knowledge than me.
   let parsed = parse(doc, { experimentalFragmentVariables: experimentalFragmentconstiables });
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
