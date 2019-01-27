@@ -13,7 +13,6 @@
     "sourceMap": true,
     "strict": true,
     "target": "es5",
-    "noImplicitAny": false,
     "esModuleInterop": true,
     "importHelpers": true
   },

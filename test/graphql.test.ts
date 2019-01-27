@@ -1,7 +1,7 @@
 /* tslint:disable:no-empty */
 /* tslint:disable:no-eval */
 import gql, { resetCaches, enableExperimentalFragmentconstiables, disableExperimentalFragmentconstiables } from '../src';
-import loader from '../loader';
+const loader = require('../loader');
 
 describe('gql', () => {
   it('parses queries', () => {
@@ -189,7 +189,7 @@ describe('gql', () => {
       }`;
     const jsSource = loader.call({ cacheable() {} }, query);
     const module = { exports: undefined };
-    const require = (path) => {
+    const require = (path: string) => {
       expect(path).toEqual('./fragment_definition.graphql');
       return gql`
         fragment authorDetails on Author {
@@ -221,7 +221,7 @@ describe('gql', () => {
       `;
     const jsSource = loader.call({ cacheable() {} }, query);
     const module = { exports: undefined };
-    const require = (path) => {
+    const require = (path: string) => {
       expect(path).toEqual('./fragment_definition.graphql');
       return gql`
         fragment F222 on F {
@@ -387,7 +387,7 @@ describe('gql', () => {
 
     it('ignores duplicate fragments from second-level imports when using the webpack loader', () => {
       // take a require function and a query string, use the webpack loader to process it
-      const load = (_: any, query) => {
+      const load = (_: any, query: string) => {
         const jsSource = loader.call({ cacheable() {} }, query);
         const module = { exports: undefined };
         // TODO: this fails here.
@@ -395,7 +395,7 @@ describe('gql', () => {
         return module.exports;
       }
 
-      const test_require = (path) => {
+      const test_require = (path: string) => {
         switch (path) {
         case './friends.graphql':
           return load(test_require, [
@@ -428,10 +428,10 @@ describe('gql', () => {
       // the rest of the definitions should be fragments and contain one of
       // each: "friends", "enemies", "person". Order does not matter
       const fragments = result.definitions.slice(1)
-      expect(fragments.every(fragment => fragment.kind === 'FragmentDefinition')).toBeTruthy()
-      expect(fragments.some(fragment => fragment.name.value === 'friends')).toBeTruthy()
-      expect(fragments.some(fragment => fragment.name.value === 'enemies')).toBeTruthy()
-      expect(fragments.some(fragment => fragment.name.value === 'person')).toBeTruthy()
+      expect(fragments.every((fragment: any) => fragment.kind === 'FragmentDefinition')).toBeTruthy()
+      expect(fragments.some((fragment: any)  => fragment.name.value === 'friends')).toBeTruthy()
+      expect(fragments.some((fragment: any)  => fragment.name.value === 'enemies')).toBeTruthy()
+      expect(fragments.some((fragment: any)  => fragment.name.value === 'person')).toBeTruthy()
     });
   });
 });

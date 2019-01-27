@@ -1,5 +1,5 @@
 import { parse } from 'graphql';
-import { Location, DocumentNode } from 'graphql/language';
+import { Location, DocumentNode, DefinitionNode } from 'graphql/language';
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -38,7 +38,7 @@ export function resetCaches(): void {
 let printFragmentWarnings = true;
 function processFragments(ast: DocumentNode) {
   const astFragmentMap = {};
-  const definitions = [];
+  const definitions: DefinitionNode[] = [];
 
   for (let i = 0; i < ast.definitions.length; i++) {
     const fragmentDefinition = ast.definitions[i];
