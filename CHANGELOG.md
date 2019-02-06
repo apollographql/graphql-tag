@@ -2,7 +2,7 @@
 
 ### vNext
 
-* Convert yarn.lock to package-lock.json, to conform to other apollo repositories by [jovidecroock](https://github.com/jovidecroock) in [#](https://github.com/apollographql/graphql-tag/pull/)
+* Convert yarn.lock to package-lock.json, to conform to other apollo repositories by [jovidecroock](https://github.com/jovidecroock) in [#238](https://github.com/apollographql/graphql-tag/pull/238)
 
 ### v2.10.1
 
