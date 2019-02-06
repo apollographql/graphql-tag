@@ -156,16 +156,23 @@ function gql(/* arguments */) {
 
   // We always get literals[0] and then matching post literals for each arg given
   var result = (typeof(literals) === "string") ? literals : literals[0];
+  var fragments = '';
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+      if (result.substring(result.length - 3) === '...') {
+        result += args[i].definitions[0].name.value
+        fragments += '\n' + args[i].loc.source.body
+      } else {
+        result += args[i].loc.source.body;
+      }
     } else {
       result += args[i];
     }
 
     result += literals[i];
   }
+  result += fragments;
 
   return parseDocument(result);
 }

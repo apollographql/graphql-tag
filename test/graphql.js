@@ -92,7 +92,7 @@ const assert = require('chai').assert;
 
       gql.disableExperimentalFragmentVariables()
     });
-    
+
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {
       const jsSource = loader.call({ cacheable() {} }, `
@@ -292,6 +292,28 @@ const assert = require('chai').assert;
       // the same document, so we can reuse `fragmentAst`
       assert.isTrue(gql`{ ...UserFragment } ${fragmentAst}` ===
         gql`{ ...UserFragment } ${fragmentAst}`);
+    });
+
+    it('can spread a fragment in place', () => {
+      const ast = gql`
+        {
+          user(id: 5) {
+            ...${fragmentAst}
+          }
+        }
+      `;
+
+      assert.deepEqual(ast, gql`
+        {
+          user(id: 5) {
+            ...UserFragment
+          }
+        }
+        fragment UserFragment on User {
+          firstName
+          lastName
+        }
+      `);
     });
 
     it('can reference a fragment that references as fragment', () => {

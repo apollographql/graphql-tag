@@ -12,7 +12,7 @@ Helpful utilities for parsing GraphQL queries. Includes:
 
 ### gql
 
-This is a template literal tag you can use to concisely write a GraphQL query that is parsed into the standard GraphQL AST:
+The `gql` template literal tag can be used to concisely write a GraphQL query that is parsed into the standard GraphQL AST:
 
 ```js
 import gql from 'graphql-tag';
@@ -25,29 +25,70 @@ const query = gql`
     }
   }
 `
+```
 
-// query is now a GraphQL syntax tree object
-console.log(query);
+The above query now contains the following syntax tree.
 
-// {
-//   "kind": "Document",
-//   "definitions": [
-//     {
-//       "kind": "OperationDefinition",
-//       "operation": "query",
-//       "name": null,
-//       "variableDefinitions": null,
-//       "directives": [],
-//       "selectionSet": {
-//         "kind": "SelectionSet",
-//         "selections": [
-//           {
-//             "kind": "Field",
-//             "alias": null,
-//             "name": {
-//               "kind": "Name",
-//               "value": "user",
-//               ...
+```json
+{
+  "kind": "Document",
+  "definitions": [
+    {
+      "kind": "OperationDefinition",
+      "operation": "query",
+      "name": null,
+      "variableDefinitions": null,
+      "directives": [],
+      "selectionSet": {
+        "kind": "SelectionSet",
+        "selections": [
+          {
+            "kind": "Field",
+            "alias": null,
+            "name": {
+              "kind": "Name",
+              "value": "user",
+              ...
+```
+
+#### Fragments
+
+The `gql` tag can also be used to define reusable fragments, which can easily be added to queries or other fragments.
+
+```js
+import gql from 'graphql-tag';
+
+const userFragment = gql`
+  fragment User_user on User {
+    firstName
+    lastName
+  }
+`
+```
+
+The above `userFragment` document can be "spread" into the selection set of another document, the `gql` tag will automatically append the fragment definition to the new document for you.
+
+```js
+const query = gql`
+  {
+    user(id: 5) {
+      ...${userFragment}
+    }
+  }
+`
+```
+
+Alternatively, you can manually include and use the fragment definition.
+
+```js
+const query = gql`
+  {
+    user(id: 5) {
+      ...User_user
+    }
+  }
+  ${userFragment}
+`
 ```
 
 You can easily explore GraphQL ASTs on [astexplorer.net](https://astexplorer.net/#/drYr8X1rnP/1).
