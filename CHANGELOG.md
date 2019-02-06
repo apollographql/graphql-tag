@@ -1,5 +1,9 @@
 # Change log
 
+### vNext
+
+* Convert yarn.lock to package-lock.json, to conform to other apollo repositories by [jovidecroock](https://github.com/jovidecroock) in [#](https://github.com/apollographql/graphql-tag/pull/)
+
 ### v2.10.1
 
 * Fix failures in IE11 by avoiding unsupported (by IE11) constructor arguments to `Set` by [rocwang](https://github.com/rocwang) in [#190](https://github.com/apollographql/graphql-tag/pull/190)
