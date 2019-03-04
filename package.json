@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/apollostack/graphql-tag.git"
+    "url": "git+https://github.com/apollographql/graphql-tag.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/apollostack/graphql-tag/issues"
+    "url": "https://github.com/apollographql/graphql-tag/issues"
   },
-  "homepage": "https://github.com/apollostack/graphql-tag#readme",
+  "homepage": "https://github.com/apollographql/graphql-tag#readme",
   "dependencies": {},
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
