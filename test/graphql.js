@@ -2,6 +2,7 @@ const gqlRequire = require('../src');
 const gqlDefault = require('../src').default;
 const loader = require('../loader');
 const assert = require('chai').assert;
+const print = require('graphql/language/printer').print;
 
 [gqlRequire, gqlDefault].forEach((gql, i) => {
   describe(`gql ${i}`, () => {
@@ -436,6 +437,22 @@ const assert = require('chai').assert;
         assert(fragments.some(fragment => fragment.name.value === 'enemies'))
         assert(fragments.some(fragment => fragment.name.value === 'person'))
       });
+    });
+
+    it('returned ast toString returns query string', () => {
+      const query = `{ user(id: 5) { firstName lastName } }`;
+      const doc = gql(query);
+
+      assert.equal(doc.toString(), print(doc));
+    });
+
+    it('returned ast toString returns updated query string after ast mutation', () => {
+      const query = `{ user(id: 5) { firstName lastName } }`;
+      const doc = gql(query);
+
+      assert.equal(doc.toString().includes('user'), true);
+      doc.definitions[0].selectionSet.selections[0].name.value = 'employee';
+      assert.equal(doc.toString().includes('employee'), true);
     });
 
     // How to make this work?
