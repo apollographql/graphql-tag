@@ -1,6 +1,7 @@
 var parser = require('graphql/language/parser');
-
+var printer = require('graphql/language/printer');
 var parse = parser.parse;
+var print = printer.print;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -159,7 +160,7 @@ function gql(/* arguments */) {
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+      result += print(args[i]);
     } else {
       result += args[i];
     }

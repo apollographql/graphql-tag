@@ -210,6 +210,37 @@ const assert = require('chai').assert;
       assert.equal(definitions[1].kind, 'FragmentDefinition');
     });
 
+    it('correctly interpolates imports of other files through the webpack loader', () => {
+      const query = `#import "./fragment_definition.graphql"
+          fragment BooksAuthor on Book {
+            author {
+              ...authorDetails
+            }
+          }
+        `;
+      const jsSource = loader.call({ cacheable() {} }, query);
+
+      const oldRequire = require;
+      const module = { exports: undefined };
+      const require = (path) => {
+        assert.equal(path, './fragment_definition.graphql');
+        return gql`
+          fragment authorDetails on Author {
+            firstName
+            lastName
+          }`;
+      };
+
+      eval(jsSource);
+
+      const document = gql`query { ...BooksAuthor } ${module.exports}`;
+      assert.equal(document.kind, 'Document');
+      assert.equal(document.definitions.length, 3);
+      assert.equal(document.definitions[0].kind, 'OperationDefinition');
+      assert.equal(document.definitions[1].kind, 'FragmentDefinition');
+      assert.equal(document.definitions[2].kind, 'FragmentDefinition');
+    });
+
     it('tracks fragment dependencies across fragments loaded via the webpack loader', () => {
       const query = `#import "./fragment_definition.graphql"
         fragment F111 on F {
