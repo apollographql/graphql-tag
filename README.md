@@ -86,7 +86,7 @@ const query = gql`
 `
 ```
 
-**Note:** _While it may seem redundant to have to both embed the `userFragment` variable in the template literal **AND** spread the `...User_user` fragment in the graphQL selection set, this requirement makes static analysis by tools such as eslint-plugin-graphql possible._
+While it may seem redundant to have to both embed the `userFragment` variable in the template literal **AND** spread the `...User_user` fragment in the graphQL selection set, this requirement makes static analysis by tools such as eslint-plugin-graphql possible. For a more concise method of embedding fragments see [Spreadable Fragments](#spreadable-fragments) below.
 
 #### Why use this?
 
@@ -210,11 +210,34 @@ You can enable / disable this with:
 import { enableExperimentalFragmentVariables, disableExperimentalFragmentVariables } from 'graphql-tag';
 ```
 
-Enabling this feature allows you declare documents of the form
+Enabling this feature allows you declare documents of the form:
+
 ```graphql
 fragment SomeFragment ($arg: String!) on SomeType {
   someField
 }
+```
+
+### Spreadable Fragments
+
+**ENABLING THIS FEATURE WILL BREAK TOOLS THAT RELY ON STATIC ANALYSIS OF GRAPHQL DOCUMENTS**
+
+The `gql` tag supports a more concise method for embedding fragments into other documents. This syntax is not enabled by default, and we **STRONGLY** discourage its use, as it breaks integration with static analysis tools such as **eslint-plugin-graphql**. If you understand the downsides of breaking static analysis and would still like to use spreadable fragments, import and call the `enableSpreadableFragmentsAndBreakStaticAnalysis` function.
+
+Enabling spreadable fragments allows you "spread" and embed fragments directly into a selection set, in a single statement. The fragment definition will automatically be appended to the end of the document and the fragment name will be inserted in the placeholder.
+
+```js
+import {enableSpreadableFragmentsAndBreakStaticAnalysis} from 'graphql-tag';
+
+enableSpreadableFragmentsAndBreakStaticAnalysis();
+
+const query = gql`
+  {
+    user(id: 5) {
+      ...${userFragment}
+    }
+  }
+`
 ```
 
 ### Resources

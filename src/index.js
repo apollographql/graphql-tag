@@ -119,6 +119,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
 }
 
 var experimentalFragmentVariables = false;
+var spreadableFragments = false;
 function parseDocument(doc) {
   var cacheKey = normalize(doc);
 
@@ -148,6 +149,14 @@ function disableExperimentalFragmentVariables() {
   experimentalFragmentVariables = false;
 }
 
+function enableSpreadableFragmentsAndBreakStaticAnalysis() {
+  spreadableFragments = true;
+}
+
+function disableSpreadableFragmentsAndBreakStaticAnalysis() {
+  spreadableFragments = false;
+}
+
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
@@ -156,16 +165,23 @@ function gql(/* arguments */) {
 
   // We always get literals[0] and then matching post literals for each arg given
   var result = (typeof(literals) === "string") ? literals : literals[0];
+  var fragments = '';
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+      if (spreadableFragments && result.substring(result.length - 3) === '...') {
+        result += args[i].definitions[0].name.value
+        fragments += '\n' + args[i].loc.source.body
+      } else {
+        result += args[i].loc.source.body;
+      }
     } else {
       result += args[i];
     }
 
     result += literals[i];
   }
+  result += fragments;
 
   return parseDocument(result);
 }
@@ -176,5 +192,6 @@ gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
 gql.enableExperimentalFragmentVariables = enableExperimentalFragmentVariables;
 gql.disableExperimentalFragmentVariables = disableExperimentalFragmentVariables;
+gql.enableSpreadableFragmentsAndBreakStaticAnalysis = enableSpreadableFragmentsAndBreakStaticAnalysis;
 
 module.exports = gql;
