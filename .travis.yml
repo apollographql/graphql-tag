@@ -3,5 +3,10 @@ node_js:
   - "10"
   - "8"
   - "6"
+cache: npm
+notifications:
+  email: false
+install:
+  - npm install
 script:
-    - yarn test
+    - npm run test
