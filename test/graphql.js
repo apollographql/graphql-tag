@@ -275,6 +275,10 @@ const assert = require('chai').assert;
       assert.isTrue(gql`{ sameQuery }` === gql`  { sameQuery,   }`);
     });
 
+    it('returns a different object for the queries with significant whitespace differences', () => {
+      assert.isFalse(gql`{ sameQuery(f: "    ") }` === gql`  { sameQuery(f: " ") }`);
+    });
+
     const fragmentAst = gql`
     fragment UserFragment on User {
       firstName
