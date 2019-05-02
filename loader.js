@@ -40,7 +40,7 @@ function expandImports(source, doc) {
 }
 
 module.exports = function(source) {
-  this.cacheable();
+  if(this.cacheable) this.cacheable();
   const doc = gql`${source}`;
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
