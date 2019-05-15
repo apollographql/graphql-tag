@@ -163,7 +163,7 @@ export function enableExperimentalFragmentVariables(): void {
 }
 
 export function disableExperimentalFragmentVariables(): void {
-  experimentalFragmentconstiables = false;
+  experimentalFragmentVariables = false;
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
