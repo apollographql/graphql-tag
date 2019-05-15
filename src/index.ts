@@ -158,7 +158,7 @@ function parseDocument(doc: string): DocumentNode {
   return parsed;
 }
 
-export function enableExperimentalFragmentconstiables(): void {
+export function enableExperimentalFragmentVariables(): void {
   experimentalFragmentconstiables = true;
 }
 
