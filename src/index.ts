@@ -134,7 +134,7 @@ function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel:
   return doc;
 }
 
-let experimentalFragmentconstiables = false;
+let experimentalFragmentVariables = false;
 function parseDocument(doc: string): DocumentNode {
   const cacheKey = normalize(doc);
 
