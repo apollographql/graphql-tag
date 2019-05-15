@@ -162,7 +162,7 @@ export function enableExperimentalFragmentVariables(): void {
   experimentalFragmentVariables = true;
 }
 
-export function disableExperimentalFragmentconstiables(): void {
+export function disableExperimentalFragmentVariables(): void {
   experimentalFragmentconstiables = false;
 }
 
