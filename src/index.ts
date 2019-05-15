@@ -159,7 +159,7 @@ function parseDocument(doc: string): DocumentNode {
 }
 
 export function enableExperimentalFragmentVariables(): void {
-  experimentalFragmentconstiables = true;
+  experimentalFragmentVariables = true;
 }
 
 export function disableExperimentalFragmentconstiables(): void {
