@@ -11,7 +11,7 @@ type DocCache = { [docString: string]: DocumentNode };
 let docCache: DocCache = {};
 
 interface FragmentSourceMap {
-  [framentName: string]: {
+  [fragmentName: string]: {
     [source: string]: boolean;
   };
 }
