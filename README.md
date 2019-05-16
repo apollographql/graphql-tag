@@ -48,6 +48,11 @@ console.log(query);
 //               "kind": "Name",
 //               "value": "user",
 //               ...
+
+// optionally, the query can be returned as a stripped string literal
+console.log(query.toStrippedString());
+
+// '{user(id:5){firstName lastName}}'
 ```
 
 You can easily explore GraphQL ASTs on [astexplorer.net](https://astexplorer.net/#/drYr8X1rnP/1).
