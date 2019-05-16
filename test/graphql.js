@@ -437,6 +437,13 @@ const assert = require('chai').assert;
         assert(fragments.some(fragment => fragment.name.value === 'person'))
       });
     });
+    
+    it('returned ast toStrippedString returns query string with insignificant characters removed', () => {
+      const query = `{ user(id: 5) { firstName lastName } }`;
+      const doc = gql(query);
+
+       assert.equal(doc.toStrippedString(), '{user(id:5){firstName lastName}}');
+    });
 
     // How to make this work?
     // it.only('can reference a fragment passed as a document via shorthand', () => {
