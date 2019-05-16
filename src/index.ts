@@ -7,7 +7,7 @@ function normalize(text: string): string {
   return text.replace(/[\s,]+/g, ' ').trim();
 }
 
-type DocCache = { [docString: string]: DocumentNode };
+type DocCache = { [docString: string]: DocumentNode | Array<DocumentNode> };
 let docCache: DocCache = {};
 
 interface FragmentSourceMap {
@@ -19,8 +19,7 @@ interface FragmentSourceMap {
 // A map fragmentName -> [normalized source]
 let fragmentSourceMap: FragmentSourceMap = {};
 
-function cacheKeyFromLoc(loc?: Location): string {
-  if (!loc) return '';
+function cacheKeyFromLoc(loc: Location): string {
   return normalize(loc.source.body.substring(loc.start, loc.end));
 }
 
@@ -38,7 +37,7 @@ interface FragmentMap {
 // check all fragment definitions, checking for name->source uniqueness.
 // We also want to make sure only unique fragments exist in the document.
 let printFragmentWarnings = true;
-function processFragments(ast: DocumentNode): DocumentNode {
+function processFragments(ast: DocumentNode): DocumentNode | Array<DocumentNode> {
   const astFragmentMap: FragmentMap = {};
   const definitions: DefinitionNode[] = [];
 
@@ -46,8 +45,8 @@ function processFragments(ast: DocumentNode): DocumentNode {
     const fragmentDefinition = ast.definitions[i];
 
     if (fragmentDefinition.kind === 'FragmentDefinition') {
-      const fragmentName: string = fragmentDefinition.name.value;
-      const sourceKey: string = cacheKeyFromLoc(fragmentDefinition.loc);
+      const fragmentName = fragmentDefinition.name.value;
+      const sourceKey = cacheKeyFromLoc(fragmentDefinition.loc!);
 
       // We know something about this fragment
       if (fragmentSourceMap.hasOwnProperty(fragmentName) && !fragmentSourceMap[fragmentName][sourceKey]) {
@@ -85,12 +84,12 @@ export function disableFragmentWarnings(): void {
   printFragmentWarnings = false;
 }
 
-function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel: number | boolean): DocumentNode  {
+function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel: number | boolean): DocumentNode | Array<DocumentNode>  {
   const docType = Object.prototype.toString.call(doc);
 
   if (docType === '[object Array]' && doc instanceof Array) {
     // This is wrong now because we return a DocumentNode... How do we approach this?
-    return doc.map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel)) as any;
+    return doc.map((d: DocumentNode) => stripLoc(d, removeLocAtThisLevel) as DocumentNode);
   }
 
   if (docType !== '[object Object]') {
@@ -135,16 +134,14 @@ function stripLoc(doc: Array<DocumentNode> | DocumentNode, removeLocAtThisLevel:
 }
 
 let experimentalFragmentVariables = false;
-function parseDocument(doc: string): DocumentNode {
+function parseDocument(doc: string): DocumentNode | Array<DocumentNode> {
   const cacheKey = normalize(doc);
 
   if (docCache[cacheKey]) {
     return docCache[cacheKey];
   }
 
-  // TODO: TS asked to change this from "experimentalFragmentconstiables" to "experimentalFragmentVariables"
-  // This should be validated by someone with more knowledge than me.
-  let parsed = parse(doc, { experimentalFragmentVariables: experimentalFragmentconstiables });
+  let parsed: DocumentNode | Array<DocumentNode> = parse(doc, { experimentalFragmentVariables });
   if (!parsed || parsed.kind !== 'Document') {
     throw new Error('Not a valid GraphQL document.');
   }
@@ -167,8 +164,8 @@ export function disableExperimentalFragmentVariables(): void {
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
-function gql(...args: Array<any>): DocumentNode {
-  const literals: any = args[0];
+function gql(...args: Array<any>): DocumentNode | Array<DocumentNode> {
+  const literals = args[0];
 
   // We always get literals[0] and then matching post literals for each arg given
   let result = (typeof(literals) === "string") ? literals : literals[0];
