@@ -1,12 +1,12 @@
 var parser = require('graphql/language/parser');
-var stripIgnoredCharacters = require('graphql/utilities/stripIgnoredCharacters');
+var stripIgnoredCharacters = require('graphql/utilities/stripIgnoredCharacters').stripIgnoredCharacters;
 
 var parse = parser.parse;
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
 function normalize(string) {
-  if (stripIgnoredCharacters && typeof stripIgnoredCharacters === 'function') {
+  if (stripIgnoredCharacters) {
     return stripIgnoredCharacters(string);
   }
   return string.replace(/[\s,]+/g, ' ').trim();
@@ -139,7 +139,7 @@ function parseDocument(doc) {
   // existing fragments of the same name
   parsed = processFragments(parsed);
   parsed = stripLoc(parsed, false);
-  if (stripIgnoredCharacters && typeof stripIgnoredCharacters === 'function') {
+  if (stripIgnoredCharacters) {
     parsed.toStrippedString = function() { return stripIgnoredCharacters(this.loc.source); };
   }
   docCache[cacheKey] = parsed;
