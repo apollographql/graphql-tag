@@ -1,5 +1,9 @@
 var parser = require('graphql/language/parser');
-var stripIgnoredCharacters = require('graphql/utilities/stripIgnoredCharacters').stripIgnoredCharacters;
+var stripIgnoredCharacters = require('graphql/utilities/stripIgnoredCharacters');
+// not available in older graphql-js versions
+if (stripIgnoredCharacters) {
+  stripIgnoredCharacters = stripIgnoredCharacters.stripIgnoredCharacters;
+}
 
 var parse = parser.parse;
 
