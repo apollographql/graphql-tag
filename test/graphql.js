@@ -92,6 +92,34 @@ const assert = require('chai').assert;
 
       gql.disableExperimentalFragmentVariables()
     });
+
+    it('appends typename when enabled', () => {
+      gql.enableTypenameInsertion();
+
+      const parsed = gql`{
+        user(id: 5) {
+          firstName
+          lastName
+        }
+      }`
+
+      assert.equal(parsed.kind, 'Document');
+      assert.equal(parsed.definitions[0].selectionSet.selections[0].selectionSet.selections.some(selection => selection.name.value === "__typename"), true);
+
+      gql.disableTypenameInsertion();
+    });
+
+    it('does not appends typename when ignored', () => {
+      const parsed = gql`{
+        user(id: 5) {
+          firstName
+          lastName
+        }
+      }`
+
+      assert.equal(parsed.kind, 'Document');
+      assert.equal(parsed.definitions[0].selectionSet.selections[0].selectionSet.selections.some(selection => selection.name.value === "__typename"), false);
+    });
     
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {

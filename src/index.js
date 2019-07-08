@@ -1,5 +1,6 @@
 var parser = require('graphql/language/parser');
-
+var { addTypenameToDocument } = require('apollo-utilities');
+var { print } = require('graphql');
 var parse = parser.parse;
 
 // Strip insignificant whitespace
@@ -118,6 +119,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
   return doc;
 }
 
+var typenameInsertion = false;
 var experimentalFragmentVariables = false;
 function parseDocument(doc) {
   var cacheKey = normalize(doc);
@@ -148,6 +150,14 @@ function disableExperimentalFragmentVariables() {
   experimentalFragmentVariables = false;
 }
 
+function enableTypenameInsertion() {
+  typenameInsertion = true;
+}
+
+function disableTypenameInsertion() {
+  typenameInsertion = false;
+}
+
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
@@ -167,7 +177,13 @@ function gql(/* arguments */) {
     result += literals[i];
   }
 
-  return parseDocument(result);
+  if (typenameInsertion) {
+    result = print(addTypenameToDocument(parse(result)));
+  }
+
+  const parsed = parseDocument(result);
+
+  return parsed;
 }
 
 // Support typescript, which isn't as nice as Babel about default exports
@@ -176,5 +192,7 @@ gql.resetCaches = resetCaches;
 gql.disableFragmentWarnings = disableFragmentWarnings;
 gql.enableExperimentalFragmentVariables = enableExperimentalFragmentVariables;
 gql.disableExperimentalFragmentVariables = disableExperimentalFragmentVariables;
+gql.enableTypenameInsertion = enableTypenameInsertion;
+gql.disableTypenameInsertion = disableTypenameInsertion;
 
 module.exports = gql;
