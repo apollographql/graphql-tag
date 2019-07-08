@@ -19,15 +19,15 @@ const assert = require("chai").assert;
         {
           kind: "OperationDefinition",
           operation: "query",
-          name: null,
-          variableDefinitions: null,
+          name: undefined,
+          variableDefinitions: [],
           directives: [],
           selectionSet: {
             kind: "SelectionSet",
             selections: [
               {
                 kind: "Field",
-                alias: null,
+                alias: undefined,
                 name: {
                   kind: "Name",
                   value: "user"
@@ -51,25 +51,25 @@ const assert = require("chai").assert;
                   selections: [
                     {
                       kind: "Field",
-                      alias: null,
+                      alias: undefined,
                       name: {
                         kind: "Name",
                         value: "firstName"
                       },
                       arguments: [],
                       directives: [],
-                      selectionSet: null
+                      selectionSet: undefined
                     },
                     {
                       kind: "Field",
-                      alias: null,
+                      alias: undefined,
                       name: {
                         kind: "Name",
                         value: "lastName"
                       },
                       arguments: [],
                       directives: [],
-                      selectionSet: null
+                      selectionSet: undefined
                     }
                   ]
                 }
@@ -108,25 +108,25 @@ const assert = require("chai").assert;
             selections: [
               {
                 kind: "Field",
-                alias: null,
+                alias: undefined,
                 name: {
                   kind: "Name",
                   value: "firstName"
                 },
                 arguments: [],
                 directives: [],
-                selectionSet: null
+                selectionSet: undefined
               },
               {
                 kind: "Field",
-                alias: null,
+                alias: undefined,
                 name: {
                   kind: "Name",
                   value: "lastName"
                 },
                 arguments: [],
                 directives: [],
-                selectionSet: null
+                selectionSet: undefined
               }
             ]
           }

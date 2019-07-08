@@ -8,6 +8,7 @@
   "scripts": {
     "bundle": "rollup -c && cp src/index.js.flow lib/graphql-tag.umd.js.flow",
     "test": "mocha test/graphql.js test/graphql-v0.12.js && tav --ci --compat",
+    "test:watch": "mocha test/graphql.js test/*.js -w",
     "prepublish": "npm run bundle"
   },
   "repository": {
@@ -22,6 +23,7 @@
   "homepage": "https://github.com/apollographql/graphql-tag#readme",
   "dependencies": {},
   "devDependencies": {
+    "apollo-utilities": "^1.3.2",
     "babel-preset-es2015": "^6.9.0",
     "babel-register": "^6.9.0",
     "chai": "^4.0.2",

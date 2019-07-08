@@ -162,3 +162,13 @@ fragment SomeFragment ($arg: String!) on SomeType {
   someField
 }
 ```
+
+### Typename Inclusion
+
+This package exports an `typenameInsertion` variable flag that allows you to include `__typename` into your calls. Calls that have `__typename` defined already are ignored when flag enabled. Flag disabled by default.
+
+You can enable / disable this with:
+```js
+gql.enableTypenameInsertion();
+gql.disableTypenameInsertion();
+```
