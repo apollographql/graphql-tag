@@ -1,6 +1,7 @@
-const gql = require('../src');
-const loader = require('../loader');
-const assert = require('chai').assert;
+import { assert } from 'chai';
+
+import gql from '../src';
+import loader from '../loader';
 
 describe('gql', () => {
   it('parses queries', () => {

@@ -1,11 +1,22 @@
 export default {
   input: 'src/index.js',
-  output: {
-    file: 'lib/graphql-tag.umd.js',
-    format: 'umd',
-    name: 'graphql-tag',
-    sourcemap: true
-  },
+  output: [
+    {
+      file: 'lib/graphql-tag.js',
+      format: 'esm',
+      sourcemap: true
+    },
+    {
+      file: 'lib/graphql-tag.umd.js',
+      format: 'umd',
+      globals: {
+        'graphql/language': 'language'
+      },
+      name: 'graphql-tag',
+      sourcemap: true,
+      exports: 'named'
+    }
+  ],
   onwarn
 };
 
