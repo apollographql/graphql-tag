@@ -159,7 +159,9 @@ function gql(/* arguments */) {
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+      var body = args[i].loc.source.body;
+      // Dont add body's that where already added by other documents
+      if (result.indexOf(body) === -1) result += body;
     } else {
       result += args[i];
     }
