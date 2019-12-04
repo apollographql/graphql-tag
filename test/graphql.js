@@ -327,6 +327,59 @@ const assert = require('chai').assert;
       `);
     });
 
+    it('can include fragments sources only once if they are nested and used multiple times', () => {
+      const fragmentB = gql`
+        fragment FragmentB on Other {
+          number
+        }
+      `;
+
+      const fragmentA = gql`
+        fragment FragmentA on Something {
+          value
+          other {
+            ...FragmentB
+          }
+        }
+        ${fragmentB}
+      `;
+
+      const ast = gql`
+        query Query {
+          a {
+            ...FragmentA
+          }
+          b {
+            ...FragmentB
+          }
+        }
+        ${fragmentA}
+        ${fragmentB}
+      `;
+
+      assert.deepEqual(ast, gql`
+        query Query {
+          a {
+            ...FragmentA
+          }          
+          b {
+            ...FragmentB
+          }
+        }
+
+        fragment FragmentA on Something {
+          value
+          other {
+            ...FragmentB
+          }
+        }
+
+        fragment FragmentB on Other {
+          number
+        }
+      `);
+    });
+
     describe('fragment warnings', () => {
       let warnings = [];
       const oldConsoleWarn = console.warn;
