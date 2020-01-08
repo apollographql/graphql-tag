@@ -161,8 +161,8 @@ module.exports = function(source) {
 
       return newDoc;
     }
-
-    module.exports = doc;
+    
+    module.exports = Object.assign({default: doc}, doc);
     `
 
     for (const op of doc.definitions) {

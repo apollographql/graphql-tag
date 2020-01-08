@@ -117,9 +117,12 @@ console.log(query);
 
 Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
 
-#### Support for multiple operations
+#### Support for multiple operations per file
 
-With the webpack loader, you can also import operations by name:
+With the webpack loader, the default export from a graphql file contains all the operations found in
+the original file.  Typically a GraphQL client library expects to find only one operation, so if
+you want to put multiple operations in the same file, you should import individual operations
+by name:
 
 In a file called `query.gql`:
 ```graphql
@@ -136,7 +139,7 @@ And in your JavaScript:
 ```javascript
 import { MyQuery1, MyQuery2 } from 'query.gql'
 ```
-
+ 
 ### Warnings
 
 This package will emit a warning if you have multiple fragments of the same name. You can disable this with:

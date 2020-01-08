@@ -65,6 +65,7 @@ const assert = require('chai').assert;
       eval(jsSource);
 
       assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
+      assert.deepEqual(module.exports.default.definitions, module.exports.Q1.definitions);
     });
 
     it('parses multiple queries through webpack loader', () => {
@@ -81,6 +82,9 @@ const assert = require('chai').assert;
       assert.equal(module.exports.Q2.kind, 'Document');
       assert.equal(module.exports.Q1.definitions.length, 1);
       assert.equal(module.exports.Q2.definitions.length, 1);
+      assert.equal(module.exports.default.definitions.length, 2);
+      assert.equal(module.exports.default.definitions[0], module.exports.Q1.definitions[0]);
+      assert.equal(module.exports.default.definitions[1], module.exports.Q2.definitions[0]);
     });
 
     it('parses fragments with variable definitions', () => {
@@ -92,7 +96,7 @@ const assert = require('chai').assert;
 
       gql.disableExperimentalFragmentVariables()
     });
-    
+
     // see https://github.com/apollographql/graphql-tag/issues/168
     it('does not nest queries needlessly in named exports', () => {
       const jsSource = loader.call({ cacheable() {} }, `
