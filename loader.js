@@ -41,10 +41,23 @@ function expandImports(source, doc) {
 
 module.exports = function(source) {
   this.cacheable();
-  const doc = gql`${source}`;
+  const doc = gql(source, true);
+  
+  if (doc.definitions) {
+    for (var i = 0; i < doc.definitions.length; i++) {
+      if (doc.definitions[i].loc) {
+        doc.definitions[i].loc = {
+          start: doc.definitions[i].loc.start,
+          end: doc.definitions[i].loc.end,
+          source: doc.definitions[i].loc.source
+        }
+      }
+    }
+  }
+  
   let headerCode = `
-    var doc = ${JSON.stringify(doc)};
-    doc.loc.source = ${JSON.stringify(doc.loc.source)};
+    var doc = ${JSON.stringify(doc, null, 4)};
+    doc.loc.source = ${JSON.stringify(doc.loc.source, null, 4)};
   `;
 
   let outputCode = "";

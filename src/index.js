@@ -119,7 +119,7 @@ function stripLoc(doc, removeLocAtThisLevel) {
 }
 
 var experimentalFragmentVariables = false;
-function parseDocument(doc) {
+function parseDocument(doc, asImport) {
   var cacheKey = normalize(doc);
 
   if (docCache[cacheKey]) {
@@ -134,7 +134,11 @@ function parseDocument(doc) {
   // check that all "new" fragments inside the documents are consistent with
   // existing fragments of the same name
   parsed = processFragments(parsed);
-  parsed = stripLoc(parsed, false);
+  if (asImport) {
+    parsed.definitions = stripLoc(parsed.definitions, false);
+  } else {
+    parsed = stripLoc(parsed, false);
+  }
   docCache[cacheKey] = parsed;
 
   return parsed;
@@ -151,23 +155,40 @@ function disableExperimentalFragmentVariables() {
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
+  var asImport = args[args.length - 1] === true;
+  if (asImport) {
+    args = args.slice(0, -1);
+  }
 
   var literals = args[0];
 
   // We always get literals[0] and then matching post literals for each arg given
   var result = (typeof(literals) === "string") ? literals : literals[0];
+  var definitions = [];
 
   for (var i = 1; i < args.length; i++) {
     if (args[i] && args[i].kind && args[i].kind === 'Document') {
       result += args[i].loc.source.body;
+      definitions = definitions.concat(args[i].definitions)
     } else {
       result += args[i];
     }
 
     result += literals[i];
   }
+  
+  definitions = definitions.filter(function (def) {
+    return def.kind === 'FragmentDefinition' && def.loc
+  })
+  
+  var doc = parseDocument(result, asImport || definitions.length);
+  
+  if (definitions.length > 0) {
+    doc.definitions = doc.definitions.concat(definitions)
+    doc = processFragments(doc)
+  }
 
-  return parseDocument(result);
+  return doc;
 }
 
 // Support typescript, which isn't as nice as Babel about default exports
