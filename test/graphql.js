@@ -250,6 +250,38 @@ const assert = require('chai').assert;
 
       assert.equal(Q2.length, 1);
     });
+    
+    it('correctly interpolates imports of other files through the webpack loader', () => {
+      const query = `#import "./fragment_definition.graphql"
+
+          fragment BooksAuthor on Book {
+            author {
+              ...AuthorDetails
+            }
+          }
+        `;
+      const jsSource = loader.call({ cacheable() {} }, query);
+
+      const oldRequire = require;
+      const module = { exports: undefined };
+      const require = (path) => {
+        assert.equal(path, './fragment_definition.graphql');
+        return gql(`
+          fragment AuthorDetails on Author {
+            firstName
+            lastName
+          }`, true);
+      };
+
+      eval(jsSource);
+
+      const document = gql`query { ...BooksAuthor } ${module.exports}`;
+      assert.equal(document.kind, 'Document');
+      assert.equal(document.definitions.length, 3);
+      assert.equal(document.definitions[0].kind, 'OperationDefinition');
+      assert.equal(document.definitions[1].kind, 'FragmentDefinition');
+      assert.equal(document.definitions[2].kind, 'FragmentDefinition');
+    });
 
     it('does not complain when presented with normal comments', (done) => {
       assert.doesNotThrow(() => {
