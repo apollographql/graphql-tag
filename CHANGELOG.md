@@ -1,6 +1,6 @@
 # Change log
 
-### vNext
+### v2.10.2 (2020-02-04)
 
 * Update/fix the existing TS `index.d.ts` declaration file.  <br/>
   [@hwillson](https://github.com/hwillson) in [#285](https://github.com/apollographql/graphql-tag/pull/285)
