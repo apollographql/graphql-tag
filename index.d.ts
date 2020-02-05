@@ -1,8 +1,8 @@
 declare module "graphql-tag" {
   function gql(
-    literals: ReadonlyArray<string>,
+    literals: ReadonlyArray<string> | Readonly<string>,
     ...placeholders: any[]
-  ): import("graphql").DocumentNode
+  ): import("graphql").DocumentNode;
 
   namespace gql {
     function resetCaches(): void;
