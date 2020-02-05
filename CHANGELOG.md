@@ -1,5 +1,10 @@
 # Change log
 
+### v2.10.3 (2020-02-05)
+
+* Further adjustments to the TS `index.d.ts` declaration file. <br/>
+  [@Guillaumez](https://github.com/Guillaumez) in [#289](https://github.com/apollographql/graphql-tag/pull/289)
+
 ### v2.10.2 (2020-02-04)
 
 * Update/fix the existing TS `index.d.ts` declaration file.  <br/>
