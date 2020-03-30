@@ -12,7 +12,7 @@ Helpful utilities for parsing GraphQL queries. Includes:
 
 ### gql
 
-The `gql` template literal tag can be used to concisely write a GraphQL query that is parsed into the standard GraphQL AST. It is the recommended method for passing queries to [Apollo Client](https://github.com/apollographql/apollo-client). While it is primarily built for the Apollo client, it generates generic graphQL AST which could, potentially be used by any graphQL client.
+The `gql` template literal tag can be used to concisely write a GraphQL query that is parsed into a standard GraphQL AST. It is the recommended method for passing queries to [Apollo Client](https://github.com/apollographql/apollo-client). While it is primarily built for Apollo Client, it generates a generic GraphQL AST which can be used by any GraphQL client.
 
 ```js
 import gql from 'graphql-tag';
@@ -86,7 +86,7 @@ const query = gql`
 `
 ```
 
-**Note:** _While it may seem redundant to have to both embed the `userFragment` variable in the template literal **AND** spread the `...User_user` fragment in the graphQL selection set, this requirement makes static analysis by tools such as eslint-plugin-graphql possible._
+**Note:** _While it may seem redundant to have to both embed the `userFragment` variable in the template literal **AND** spread the `...User_user` fragment in the graphQL selection set, this requirement makes static analysis by tools such as `eslint-plugin-graphql` possible._
 
 #### Why use this?
 
@@ -132,26 +132,29 @@ query MyQuery2 {
 ```
 
 And in your JavaScript:
+
 ```javascript
 import { MyQuery1, MyQuery2 } from 'query.graphql'
 ```
 
 ### Preprocessing queries and fragments
 
-Preprocessing graphQL queries and fragments to ASTs at built time can greatly improve load times.
+Preprocessing GraphQL queries and fragments into ASTs at build time can greatly improve load times.
 
 #### Babel preprocessing
 
-GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling queries decreases the script initialization time and reduces the bundle size by potentially removing the need for `graphql-tag` at runtime.
+GraphQL queries can be compiled at build time using [babel-plugin-graphql-tag](https://github.com/gajus/babel-plugin-graphql-tag). Pre-compiling queries decreases script initialization time and reduces bundle sizes by potentially removing the need for `graphql-tag` at runtime.
 
 #### TypeScript preprocessing
+
 Try this custom transformer to pre-compile your GraphQL queries in TypeScript: [ts-transform-graphql-tag](https://github.com/firede/ts-transform-graphql-tag).
 
 #### React Native and Next.js preprocessing
 
-Additionally, in certain situations, preprocessing queries via the webpack loader is not possible. [babel-plugin-import-graphql](https://www.npmjs.com/package/babel-plugin-import-graphql) will allow one to import graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
+Preprocessing queries via the webpack loader is not always possible. [babel-plugin-import-graphql](https://www.npmjs.com/package/babel-plugin-import-graphql) supports importing graphql files directly into your JavaScript by preprocessing GraphQL queries into ASTs at compile-time.
 
 E.g.:
+
 ```javascript
 import myImportedQuery from './productsQuery.graphql'
 
@@ -162,7 +165,7 @@ class ProductsPage extends React.Component {
 
 #### Webpack loading and preprocessing
 
-Using the included graphql-tag/loader it is possible to maintain query logic, separate from the rest of your applications logic. With the loader configured, imported graphQL files will be converted to AST during the webpack build process.
+Using the included `graphql-tag/loader` it is possible to maintain query logic that is separate from the rest of your application logic. With the loader configured, imported graphQL files will be converted to AST during the webpack build process.
 
 _**Example webpack configuration**_
 
@@ -180,12 +183,11 @@ _**Example webpack configuration**_
 }
 ```
 
-#### Create-React-App
+#### Create React App
 
-Preprocessing graphQL imports is supported in **create-react-app** v2 using [evenchange4/graphql.macro](https://github.com/evenchange4/graphql.macro).
+Preprocessing GraphQL imports is supported in **create-react-app** >= v2 using [evenchange4/graphql.macro](https://github.com/evenchange4/graphql.macro).
 
-For versions **create-react-app** before v2, you'll either need to eject or use [react-app-rewire-inline-import-graphql-ast](https://www.npmjs.com/package/react-app-rewire-inline-import-graphql-ast).
-
+For **create-react-app** < v2, you'll either need to eject or use [react-app-rewire-inline-import-graphql-ast](https://www.npmjs.com/package/react-app-rewire-inline-import-graphql-ast).
 
 #### Testing
 
@@ -206,11 +208,13 @@ disableFragmentWarnings()
 This package exports an `experimentalFragmentVariables` flag that allows you to use experimental support for [parameterized fragments](https://github.com/facebook/graphql/issues/204).
 
 You can enable / disable this with:
+
 ```js
 import { enableExperimentalFragmentVariables, disableExperimentalFragmentVariables } from 'graphql-tag';
 ```
 
 Enabling this feature allows you declare documents of the form
+
 ```graphql
 fragment SomeFragment ($arg: String!) on SomeType {
   someField
@@ -219,4 +223,4 @@ fragment SomeFragment ($arg: String!) on SomeType {
 
 ### Resources
 
-You can easily generate and explore GraphQL AST on [astexplorer.net](https://astexplorer.net/#/drYr8X1rnP/1).
+You can easily generate and explore a GraphQL AST on [astexplorer.net](https://astexplorer.net/#/drYr8X1rnP/1).
