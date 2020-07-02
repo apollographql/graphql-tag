@@ -18,7 +18,7 @@ function removeDescriptions(doc) {
   }
 
   if (isSDL(doc)) {
-    return visit(doc, {
+    return graphql.visit(doc, {
       ScalarTypeDefinition: transformNode,
       ObjectTypeDefinition: transformNode,
       InterfaceTypeDefinition: transformNode,
