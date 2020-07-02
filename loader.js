@@ -1,7 +1,38 @@
 "use strict";
 
 const os = require('os');
+const graphql = require('graphql')
 const gql = require('./src');
+
+function isSDL(doc) {
+  return !doc.definitions.some(def => graphql.isExecutableDefinitionNode(def));
+}
+
+function removeDescriptions(doc) {
+  function transformNode(node) {
+    if (node.description) {
+      node.description = undefined;
+    }
+
+    return node;
+  }
+
+  if (isSDL(doc)) {
+    return visit(doc, {
+      ScalarTypeDefinition: transformNode,
+      ObjectTypeDefinition: transformNode,
+      InterfaceTypeDefinition: transformNode,
+      UnionTypeDefinition: transformNode,
+      EnumTypeDefinition: transformNode,
+      EnumValueDefinition: transformNode,
+      InputObjectTypeDefinition: transformNode,
+      InputValueDefinition: transformNode,
+      FieldDefinition: transformNode,
+    });
+  }
+
+  return doc;
+}
 
 // Takes `source` (the source GraphQL query string)
 // and `doc` (the parsed GraphQL document) and tacks on
@@ -41,11 +72,30 @@ function expandImports(source, doc) {
 
 module.exports = function(source) {
   this.cacheable();
-  const doc = gql`${source}`;
+  /**
+   * @type {{
+   *   noDescription?: boolean;
+   *   noSource?: boolean;
+   * }}
+   */
+  const options = this.query || {};
+  let doc = gql`${source}`;
+
+  // Removes descriptions from Nodes
+  if (options.noDescription) {
+    doc = removeDescriptions(doc);
+  }
+
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
-    doc.loc.source = ${JSON.stringify(doc.loc.source)};
   `;
+
+  // Skip Sources on demand
+  if (!options.noSource) {
+    headerCode += `
+      doc.loc.source = ${JSON.stringify(doc.loc.source)};
+    `
+  }
 
   let outputCode = "";
 
