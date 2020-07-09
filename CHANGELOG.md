@@ -1,5 +1,10 @@
 # Change log
 
+### v2.10.4 (2020-07-08)
+
+* Bump dev/peer deps to accommodate `graphql` 15.  <br/>
+  [@adriencohen](https://github.com/adriencohen) in [#299](https://github.com/apollographql/graphql-tag/pull/299)
+
 ### v2.10.3 (2020-02-05)
 
 * Further adjustments to the TS `index.d.ts` declaration file. <br/>
