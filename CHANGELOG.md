@@ -1,5 +1,10 @@
 # Change log
 
+### v2.11.0 (2020-07-28)
+
+* `package.json` `sideEffects` changes to clearly identify that `graphql-tag` doesn't have side effects.  <br/>
+  [@hwillson](http://github.com/hwillson) in [#313](https://github.com/apollographql/graphql-tag/pull/313)
+
 ### v2.10.4 (2020-07-08)
 
 * Bump dev/peer deps to accommodate `graphql` 15.  <br/>
