@@ -8,7 +8,7 @@ Helpful utilities for parsing GraphQL queries. Includes:
 - `gql` A JavaScript template literal tag that parses GraphQL query strings into the standard GraphQL AST.
 - `/loader` A webpack loader to preprocess queries
 
-`graphql-tag` uses [the reference `graphql` library](https://github.com/graphql/graphql-js) under the hood as a peer dependency, so in addition to installing this module, you'll also have to install `graphql-js`.
+`graphql-tag` uses [the reference `graphql` library](https://github.com/graphql/graphql-js) under the hood as a peer dependency, so in addition to installing this module, you'll also have to install `graphql`.
 
 ### gql
 
