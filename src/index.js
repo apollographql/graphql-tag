@@ -1,6 +1,4 @@
-var parser = require('graphql/language/parser');
-
-var parse = parser.parse;
+import { parse } from 'graphql/language';
 
 // Strip insignificant whitespace
 // Note that this could do a lot more, such as reorder fields etc.
@@ -177,4 +175,4 @@ gql.disableFragmentWarnings = disableFragmentWarnings;
 gql.enableExperimentalFragmentVariables = enableExperimentalFragmentVariables;
 gql.disableExperimentalFragmentVariables = disableExperimentalFragmentVariables;
 
-module.exports = gql;
+export default gql;
