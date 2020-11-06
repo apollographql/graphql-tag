@@ -1,9 +1,11 @@
 export default {
-  entry: 'src/index.js',
-  dest: 'lib/graphql-tag.umd.js',
-  format: 'umd',
-  sourceMap: true,
-  moduleName: 'graphql-tag',
+  input: 'src/index.js',
+  output: {
+    file: 'lib/graphql-tag.umd.js',
+    format: 'umd',
+    name: 'graphql-tag',
+    sourcemap: true
+  },
   onwarn
 };
 
