@@ -23,13 +23,13 @@
   "homepage": "https://github.com/apollographql/graphql-tag#readme",
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/register": "^7.12.1",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
     "chai": "^4.2.0",
     "graphql": "^15.4.0",
     "mocha": "^8.2.1",
-    "rollup": "^2.33.1",
+    "rollup": "^2.37.0",
     "test-all-versions": "^5.0.1"
   },
   "peerDependencies": {
