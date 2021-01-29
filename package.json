@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/apollographql/graphql-tag#readme",
   "dependencies": {
-    "tslib": "^1.14.1"
+    "tslib": "^2.0.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
