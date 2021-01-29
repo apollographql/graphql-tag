@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.0
+
+* The `graphql-tag` repository has been converted to TypeScript, adding type safety and enabling both ECMAScript and CommonJS module exports. While these changes are intended to be as backwards-compatible as possible, we decided to bump the minor version to reflect the significant refactoring. <br/>
+  [@PowerKiKi](http://github.com/PowerKiKi) and [@benjamn](http://github.com/benjamn) in [#325](https://github.com/apollographql/graphql-tag/pull/325)
+
 ### v2.11.0 (2020-07-28)
 
 * `package.json` `sideEffects` changes to clearly identify that `graphql-tag` doesn't have side effects.  <br/>
