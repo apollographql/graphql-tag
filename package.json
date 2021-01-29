@@ -2,14 +2,18 @@
   "name": "graphql-tag",
   "version": "2.11.0",
   "description": "A JavaScript template literal tag that parses GraphQL queries",
-  "main": "./lib/graphql-tag.umd.js",
-  "module": "./src/index.js",
-  "jsnext:main": "./src/index.js",
+  "main": "./main.js",
+  "module": "./lib/index.js",
+  "jsnext:main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "bundle": "rollup -c && cp src/index.js.flow lib/graphql-tag.umd.js.flow",
-    "test": "mocha test/graphql.js",
-    "prepublish": "npm run bundle"
+    "prebuild": "rimraf lib",
+    "build": "tsc && rollup -c && npm run flow",
+    "flow": "cp src/index.js.flow lib/graphql-tag.umd.js.flow",
+    "pretest": "npm run build",
+    "test": "mocha lib/tests.cjs.js",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -21,15 +25,22 @@
     "url": "https://github.com/apollographql/graphql-tag/issues"
   },
   "homepage": "https://github.com/apollographql/graphql-tag#readme",
-  "dependencies": {},
+  "dependencies": {
+    "tslib": "^1.14.1"
+  },
   "devDependencies": {
-    "babel-preset-es2015": "^6.9.0",
-    "babel-register": "^6.9.0",
-    "chai": "^4.0.2",
-    "graphql": "^15.0.0",
-    "mocha": "^3.4.1",
-    "rollup": "^0.45.0",
-    "test-all-versions": "^3.3.2"
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.22",
+    "chai": "^4.2.0",
+    "graphql": "^15.4.0",
+    "mocha": "^8.2.1",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.33.1",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "source-map-support": "^0.5.19",
+    "test-all-versions": "^5.0.1",
+    "typescript": "^4.1.3"
   },
   "peerDependencies": {
     "graphql": "^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
