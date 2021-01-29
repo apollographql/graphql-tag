@@ -1,7 +1,10 @@
-import { assert } from 'chai';
+import 'source-map-support/register';
 
-import gql from '../src';
-import loader from '../loader';
+import { assert } from 'chai';
+import type { DocumentNode, FragmentDefinitionNode } from 'graphql';
+
+import gql from './index';
+const loader = require('../loader');
 
 describe('gql', () => {
   it('parses queries', () => {
@@ -13,7 +16,7 @@ describe('gql', () => {
   });
 
   it('parses queries with weird substitutions', () => {
-    const obj = {};
+    const obj = Object.create(null);
     assert.equal(gql`{ field(input: "${obj.missing}") }`.kind, 'Document');
     assert.equal(gql`{ field(input: "${null}") }`.kind, 'Document');
     assert.equal(gql`{ field(input: "${0}") }`.kind, 'Document');
@@ -24,9 +27,9 @@ describe('gql', () => {
 
     const jsSource = loader.call(
       { cacheable() {} },
-      "fragment SomeFragmentName on SomeType { someField }"
+      sameFragment,
     );
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     const document = gql`query { ...SomeFragmentName } ${module.exports}`;
@@ -38,7 +41,7 @@ describe('gql', () => {
 
   it('parses queries through webpack loader', () => {
     const jsSource = loader.call({ cacheable() {} }, '{ testQuery }');
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
     assert.equal(module.exports.kind, 'Document');
   });
@@ -47,7 +50,7 @@ describe('gql', () => {
     const jsSource = loader.call({ cacheable() {} }, `
       query Q1 { testQuery }
     `);
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.equal(module.exports.kind, 'Document');
@@ -60,7 +63,7 @@ describe('gql', () => {
     const jsSource = loader.call({ cacheable() {} }, `
       query Q1 { testQuery }
     `);
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
@@ -71,7 +74,7 @@ describe('gql', () => {
       query Q1 { testQuery }
       query Q2 { testQuery2 }
     `);
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.exists(module.exports.Q1);
@@ -85,7 +88,7 @@ describe('gql', () => {
   it('parses fragments with variable definitions', () => {
     gql.enableExperimentalFragmentVariables();
 
-    const parsed = gql`fragment A ($arg: String!) on Type { testQuery }`;
+    const parsed: any = gql`fragment A ($arg: String!) on Type { testQuery }`;
     assert.equal(parsed.kind, 'Document');
     assert.exists(parsed.definitions[0].variableDefinitions);
 
@@ -99,7 +102,7 @@ describe('gql', () => {
       query Q2 { testQuery2 }
       query Q3 { test Query3 }
     `);
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.notExists(module.exports.Q2.Q1);
@@ -119,7 +122,7 @@ describe('gql', () => {
         ...F2
       }
     `);
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.exists(module.exports.Q1);
@@ -165,7 +168,7 @@ describe('gql', () => {
       }
     `);
 
-    const module = { exports: undefined };
+    const module = { exports: Object.create(null) };
     eval(jsSource);
 
     assert.exists(module.exports.Q1);
@@ -191,9 +194,8 @@ describe('gql', () => {
         }
       }`;
     const jsSource = loader.call({ cacheable() {} }, query);
-    const oldRequire = require;
-    const module = { exports: undefined };
-    const require = (path) => {
+    const module = { exports: Object.create(null) };
+    const require = (path: string) => {
       assert.equal(path, './fragment_definition.graphql');
       return gql`
         fragment authorDetails on Author {
@@ -201,6 +203,7 @@ describe('gql', () => {
           lastName
         }`;
     };
+    assert.equal(typeof require, 'function');
     eval(jsSource);
     assert.equal(module.exports.kind, 'Document');
     const definitions = module.exports.definitions;
@@ -224,9 +227,8 @@ describe('gql', () => {
       }
       `;
     const jsSource = loader.call({ cacheable() {} }, query);
-    const oldRequire = require;
-    const module = { exports: undefined };
-    const require = (path) => {
+    const module = { exports: Object.create(null) };
+    const require = (path: string) => {
       assert.equal(path, './fragment_definition.graphql');
       return gql`
         fragment F222 on F {
@@ -234,6 +236,7 @@ describe('gql', () => {
           f2
         }`;
     };
+    assert.equal(typeof require, 'function');
     eval(jsSource);
 
     assert.exists(module.exports.Q1);
@@ -259,7 +262,7 @@ describe('gql', () => {
           }
         }`;
       const jsSource = loader.call({ cacheable() {} }, query);
-      const module = { exports: undefined };
+      const module = { exports: Object.create(null) };
       eval(jsSource);
       assert.equal(module.exports.kind, 'Document');
       done();
@@ -332,7 +335,7 @@ describe('gql', () => {
     beforeEach(() => {
       gql.resetCaches();
       warnings = [];
-      console.warn = (w) => warnings.push(w);
+      console.warn = (w: string) => warnings.push(w);
     });
     afterEach(() => {
       console.warn = oldConsoleWarn;
@@ -365,8 +368,8 @@ describe('gql', () => {
 
     it('does not warn if you use the same fragment name for embedded and non-embedded fragments', () => {
       const frag1 = gql`fragment TestEmbeddedTwo on Bar { field }`;
-      const query1 = gql`{ bar { ...TestEmbedded } } ${frag1}`;
-      const query2 = gql`{ bar { ...TestEmbedded } } fragment TestEmbeddedTwo on Bar { field }`;
+      gql`{ bar { ...TestEmbedded } } ${frag1}`;
+      gql`{ bar { ...TestEmbedded } } fragment TestEmbeddedTwo on Bar { field }`;
 
       assert.equal(warnings.length, 0);
     });
@@ -391,14 +394,17 @@ describe('gql', () => {
 
     it('ignores duplicate fragments from second-level imports when using the webpack loader', () => {
       // take a require function and a query string, use the webpack loader to process it
-      const load = (require, query) => {
+      const load = (
+        require: (path: string) => DocumentNode | null,
+        query: string,
+      ): DocumentNode | null => {
         const jsSource = loader.call({ cacheable() {} }, query);
-        const module = { exports: undefined };
+        const module = { exports: Object.create(null) };
         eval(jsSource);
         return module.exports;
       }
 
-      const test_require = (path) => {
+      const test_require = (path: string) => {
         switch (path) {
         case './friends.graphql':
           return load(test_require, [
@@ -421,7 +427,7 @@ describe('gql', () => {
         '#import "./friends.graphql"',
         '#import "./enemies.graphql"',
         'query { hero { ...friends ...enemies } }',
-      ].join('\n'));
+      ].join('\n'))!;
 
       assert.equal(result.kind, 'Document');
       assert.equal(result.definitions.length, 4, 'after deduplication, only 4 fragments should remain');
@@ -429,7 +435,7 @@ describe('gql', () => {
 
       // the rest of the definitions should be fragments and contain one of
       // each: "friends", "enemies", "person". Order does not matter
-      const fragments = result.definitions.slice(1)
+      const fragments = result.definitions.slice(1) as FragmentDefinitionNode[];
       assert(fragments.every(fragment => fragment.kind === 'FragmentDefinition'))
       assert(fragments.some(fragment => fragment.name.value === 'friends'))
       assert(fragments.some(fragment => fragment.name.value === 'enemies'))

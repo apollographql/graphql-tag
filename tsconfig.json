@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "module": "es2015",
+    "esModuleInterop": true,
+    "lib": ["es2015", "dom"],
+    "types": ["node", "chai", "mocha"]
+  },
+  "include": ["src/**/*.ts"]
+}
