@@ -30,7 +30,8 @@ describe('gql', () => {
       sameFragment,
     );
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+
+    Function("module", jsSource)(module);
 
     const document = gql`query { ...SomeFragmentName } ${module.exports}`;
     assert.equal(document.kind, 'Document');
@@ -42,7 +43,7 @@ describe('gql', () => {
   it('parses queries through webpack loader', () => {
     const jsSource = loader.call({ cacheable() {} }, '{ testQuery }');
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
     assert.equal(module.exports.kind, 'Document');
   });
 
@@ -51,7 +52,7 @@ describe('gql', () => {
       query Q1 { testQuery }
     `);
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
 
     assert.equal(module.exports.kind, 'Document');
     assert.exists(module.exports.Q1);
@@ -64,8 +65,7 @@ describe('gql', () => {
       query Q1 { testQuery }
     `);
     const module = { exports: Object.create(null) };
-    eval(jsSource);
-
+    Function("module", jsSource)(module);
     assert.deepEqual(module.exports.definitions, module.exports.Q1.definitions);
   });
 
@@ -75,7 +75,7 @@ describe('gql', () => {
       query Q2 { testQuery2 }
     `);
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
 
     assert.exists(module.exports.Q1);
     assert.exists(module.exports.Q2);
@@ -103,7 +103,7 @@ describe('gql', () => {
       query Q3 { test Query3 }
     `);
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
 
     assert.notExists(module.exports.Q2.Q1);
     assert.notExists(module.exports.Q3.Q1);
@@ -123,7 +123,7 @@ describe('gql', () => {
       }
     `);
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
 
     assert.exists(module.exports.Q1);
     assert.exists(module.exports.Q2);
@@ -169,7 +169,7 @@ describe('gql', () => {
     `);
 
     const module = { exports: Object.create(null) };
-    eval(jsSource);
+    Function("module", jsSource)(module);
 
     assert.exists(module.exports.Q1);
     assert.exists(module.exports.Q2);
@@ -203,8 +203,7 @@ describe('gql', () => {
           lastName
         }`;
     };
-    assert.equal(typeof require, 'function');
-    eval(jsSource);
+    Function("module,require", jsSource)(module, require);
     assert.equal(module.exports.kind, 'Document');
     const definitions = module.exports.definitions;
     assert.equal(definitions.length, 2);
@@ -236,8 +235,7 @@ describe('gql', () => {
           f2
         }`;
     };
-    assert.equal(typeof require, 'function');
-    eval(jsSource);
+    Function("module,require", jsSource)(module, require);
 
     assert.exists(module.exports.Q1);
     assert.exists(module.exports.Q2);
@@ -263,7 +261,7 @@ describe('gql', () => {
         }`;
       const jsSource = loader.call({ cacheable() {} }, query);
       const module = { exports: Object.create(null) };
-      eval(jsSource);
+      Function("module", jsSource)(module);
       assert.equal(module.exports.kind, 'Document');
       done();
     });
@@ -400,7 +398,7 @@ describe('gql', () => {
       ): DocumentNode | null => {
         const jsSource = loader.call({ cacheable() {} }, query);
         const module = { exports: Object.create(null) };
-        eval(jsSource);
+        Function("require,module", jsSource)(require, module);
         return module.exports;
       }
 
