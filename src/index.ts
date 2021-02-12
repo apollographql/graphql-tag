@@ -1,6 +1,6 @@
 import { parse } from 'graphql';
 
-import type {
+import {
   DocumentNode,
   DefinitionNode,
   Location,
