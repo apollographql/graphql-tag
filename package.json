@@ -15,6 +15,11 @@
     "test": "mocha lib/tests.cjs.js",
     "prepublish": "npm run build"
   },
+  "files": [
+    "lib/",
+    "loader.js",
+    "main.js"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/apollographql/graphql-tag.git"
