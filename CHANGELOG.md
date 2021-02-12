@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.1
+
+* To accommodate older versions of TypeScript, usage of the `import type ...` syntax (introduced by [#325](https://github.com/apollographql/graphql-tag/pull/325)) has been removed, fixing issue [#345](https://github.com/apollographql/graphql-tag/issues/345). <br/>
+  [@benjamn](http://github.com/benjamn) in [#352](https://github.com/apollographql/graphql-tag/pull/352)
+
 ### v2.12.0
 
 * The `graphql-tag` repository has been converted to TypeScript, adding type safety and enabling both ECMAScript and CommonJS module exports. While these changes are intended to be as backwards-compatible as possible, we decided to bump the minor version to reflect the significant refactoring. <br/>
