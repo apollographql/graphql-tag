@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 
 import { assert } from 'chai';
-import type { DocumentNode, FragmentDefinitionNode } from 'graphql';
+import { DocumentNode, FragmentDefinitionNode } from 'graphql';
 
 import gql from './index';
 const loader = require('../loader');
