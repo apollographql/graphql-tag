@@ -11,8 +11,10 @@
     "prebuild": "rimraf lib",
     "build": "tsc && rollup -c && npm run flow",
     "flow": "cp src/index.js.flow lib/graphql-tag.umd.js.flow",
-    "pretest": "npm run build",
-    "test": "mocha lib/tests.cjs.js",
+    "test": "npm run test:ts3 && npm run test:ts4",
+    "test:ts3": "npm i typescript@3.7.x && npm run build && npm run test:mocha",
+    "test:ts4": "npm i typescript@4.x && npm run build && npm run test:mocha",
+    "test:mocha": "mocha lib/tests.cjs.js",
     "prepublish": "npm run build"
   },
   "files": [
