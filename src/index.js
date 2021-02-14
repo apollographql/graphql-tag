@@ -148,6 +148,11 @@ function disableExperimentalFragmentVariables() {
   experimentalFragmentVariables = false;
 }
 
+function resolveThunk(maybeFn) {
+  if (typeof maybeFn === 'function') return maybeFn()
+  return maybeFn
+}
+
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
 function gql(/* arguments */) {
   var args = Array.prototype.slice.call(arguments);
@@ -158,10 +163,13 @@ function gql(/* arguments */) {
   var result = (typeof(literals) === "string") ? literals : literals[0];
 
   for (var i = 1; i < args.length; i++) {
-    if (args[i] && args[i].kind && args[i].kind === 'Document') {
-      result += args[i].loc.source.body;
+    // Support thunks for circular dependencies when colocating fragments
+    var arg = resolveThunk(args[i])
+
+    if (arg && arg.kind && arg.kind === 'Document') {
+      result += arg.loc.source.body;
     } else {
-      result += args[i];
+      result += arg;
     }
 
     result += literals[i];
