@@ -149,9 +149,7 @@ function disableExperimentalFragmentVariables() {
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
-function gql(/* arguments */) {
-  var args = Array.prototype.slice.call(arguments);
-
+function gql(...args) {
   var literals = args[0];
 
   // We always get literals[0] and then matching post literals for each arg given
