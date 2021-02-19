@@ -94,10 +94,60 @@ GraphQL strings are the right way to write queries in your code, because they ca
 
 That's where this package comes in - it lets you write your queries with [ES2015 template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) and compile them into an AST with the `gql` tag.
 
-#### Caching parse results
+### Caching
 
 This package only has one feature - it caches previous parse results in a simple dictionary. This means that if you call the tag on the same query multiple times, it doesn't waste time parsing it again. It also means you can use `===` to compare queries to check if they are identical.
 
+By default, this cache client is an unbounded `Map`. If you're dynamically assembling graphQL 
+queries, this can lead to a memory leak as the number of cached documents grows.
+
+#### Changing the Cache Client - LRU
+
+This package comes with support for [`lru-cache`](https://github.com/isaacs/node-lru-cache) 
+out of the box, but any custom synchronous cache client can also be added. You can adopt
+lru-cache, replacing the defualt `Map`, by calling the `useLRUCache` method. 
+
+__NOTE:__ You must `npm install lru-cache` as this package does not bundle `lru-cache`
+with its dependencies.
+
+```js
+import gql from 'graphql-tag';
+
+gql.useLRUCache({
+    /**
+     * Size of cache to use in memory. In bytes.
+     * @default (64 * 1024 * 1024) = 64Mb
+     */
+    sizeInBytes: 128 * 1024 * 1024, // 128Mb
+
+    /**
+     * Max length of time to leave a document in the cache. In milliseconds.
+     * @default: undefined (indefinite)
+     */
+    maxAgeMs: 1000 * 60 * 60 // 1 hour
+});
+```
+
+#### Changing the Cache Client - Custom
+
+If you want to use your own custom cache client, you can use the `setCacheClient` method and pass it a client that implements the `DocCacheClient` interface.
+
+```ts
+import gql from 'graphql-tag';
+import type { DocCacheClient } from 'graphql-tag';
+
+const myCache = {};
+const myCacheClient: DocCacheClient = {
+  has: (key) => !!myCache[key],
+  set: (key, val) => myCache[key] = val,
+  get: (key) => myCache[key],
+  delete: (key) => delete myCache[key],
+  clear: Object.keys(myCache).forEach((k) => delete myCache[k])
+};
+
+gql.setCacheClient(myCacheClient);
+
+```
 
 ### Importing graphQL files
 

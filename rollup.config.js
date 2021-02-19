@@ -4,6 +4,7 @@ const globals = {
   tslib: 'tslib',
   graphql: 'graphql',
   chai: 'chai',
+  'lru-cache': 'LRU',
   'source-map-support/register': 'sourceMapSupport',
 };
 

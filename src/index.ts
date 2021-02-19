@@ -6,8 +6,7 @@ import {
   Location,
 } from 'graphql/language/ast';
 
-// A map docString -> graphql document
-const docCache = new Map<string, DocumentNode>();
+import { docCache, setCacheClient, useLRUCache } from './documentCache';
 
 // A map fragmentName -> [normalized source]
 const fragmentSourceMap = new Map<string, Set<string>>();
@@ -157,4 +156,6 @@ export default Object.assign(gql, {
   disableFragmentWarnings,
   enableExperimentalFragmentVariables,
   disableExperimentalFragmentVariables,
+  setCacheClient,
+  useLRUCache
 });
