@@ -1,5 +1,4 @@
-import LRU from 'lru-cache';
-
+import type { default as LRUCache } from 'lru-cache';
 import { DocumentNode } from 'graphql/language/ast';
 
 interface CacheClient<K, V> {
@@ -45,7 +44,9 @@ interface LRUCacheOptions {
  * in for the default unbounded Map
  * @param options 
  */
-function useLRUCache(lruOptions: LRUCacheOptions): void {
+async function useLRUCache(lruOptions: LRUCacheOptions): Promise<void> {
+    const LRU = require('lru-cache') as typeof LRUCache;
+
     const lru = new LRU<string, DocumentNode>({
         max: lruOptions.sizeInBytes || 64 * 1024 * 1024,
         maxAge: lruOptions.maxAgeMs,
