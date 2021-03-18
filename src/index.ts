@@ -150,11 +150,24 @@ export function disableExperimentalFragmentVariables() {
   experimentalFragmentVariables = false;
 }
 
-export default Object.assign(gql, {
+const extras = {
   gql,
-  default: gql,
   resetCaches,
   disableFragmentWarnings,
   enableExperimentalFragmentVariables,
   disableExperimentalFragmentVariables,
-});
+};
+
+export namespace gql {
+  export const {
+    gql,
+    resetCaches,
+    disableFragmentWarnings,
+    enableExperimentalFragmentVariables,
+    disableExperimentalFragmentVariables,
+  } = extras;
+}
+
+gql.default = gql;
+
+export default gql;
