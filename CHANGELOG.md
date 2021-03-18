@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.2
+
+* Avoid using `Object.assign` to attach extra properties to `gql`. <br/>
+  [@benjamn](http://github.com/benjamn) in [#380](https://github.com/apollographql/graphql-tag/pull/380)
+
 ### v2.12.1
 
 * To accommodate older versions of TypeScript, usage of the `import type ...` syntax (introduced by [#325](https://github.com/apollographql/graphql-tag/pull/325)) has been removed, fixing issue [#345](https://github.com/apollographql/graphql-tag/issues/345). <br/>
