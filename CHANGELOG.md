@@ -1,6 +1,6 @@
 # Change log
 
-### v2.12.3 (TBD)
+### v2.12.4 (2021-04-29)
 
 * Allow fragments to be imported by name when using the webpack loader. <br/>
   [@dobesv](https://github.com/dobesv) in [#257](https://github.com/apollographql/graphql-tag/pull/257)
