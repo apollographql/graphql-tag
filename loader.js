@@ -53,7 +53,7 @@ module.exports = function(source) {
   // at compile time, and then uses those at load time to create minimal query documents
   // We cannot do the latter at compile time due to how the #import code works.
   let operationCount = doc.definitions.reduce(function(accum, op) {
-    if (op.kind === "OperationDefinition") {
+    if (op.kind === "OperationDefinition" || op.kind === "FragmentDefinition") {
       return accum + 1;
     }
 
@@ -161,12 +161,12 @@ module.exports = function(source) {
 
       return newDoc;
     }
-
+    
     module.exports = doc;
     `
 
     for (const op of doc.definitions) {
-      if (op.kind === "OperationDefinition") {
+      if (op.kind === "OperationDefinition" || op.kind === "FragmentDefinition") {
         if (!op.name) {
           if (operationCount > 1) {
             throw "Query/mutation names are required for a document with multiple definitions";

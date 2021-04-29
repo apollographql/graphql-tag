@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.3 (TBD)
+
+* Allow fragments to be imported by name when using the webpack loader. <br/>
+  [@dobesv](https://github.com/dobesv) in [#257](https://github.com/apollographql/graphql-tag/pull/257)
+
 ### v2.12.2
 
 * Avoid using `Object.assign` to attach extra properties to `gql`. <br/>

@@ -193,6 +193,31 @@ For **create-react-app** < v2, you'll either need to eject or use [react-app-rew
 
 Testing environments that don't support Webpack require additional configuration. For [Jest](https://facebook.github.io/jest/) use [jest-transform-graphql](https://github.com/remind101/jest-transform-graphql).
 
+#### Support for fragments
+
+With the webpack loader, you can import fragments by name:
+
+In a file called `query.gql`:
+
+```graphql
+fragment MyFragment1 on MyType1 {
+  ...
+}
+
+fragment MyFragment2 on MyType2 {
+  ...
+}
+```
+
+And in your JavaScript:
+
+```javascript
+import { MyFragment1, MyFragment2 } from 'query.gql'
+```
+
+Note: If your fragment references other fragments, the resulting document will
+have multiple fragments in it. In this case you must still specify the fragment name when using the fragment. For example, with `@apollo/client` you would specify the `fragmentName` option when using the fragment for cache operations.
+
 ### Warnings
 
 This package will emit a warning if you have multiple fragments of the same name. You can disable this with:

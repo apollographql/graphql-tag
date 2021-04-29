@@ -145,7 +145,18 @@ describe('gql', () => {
     assert.equal(Q3[1].name.value, 'F1');
     assert.equal(Q3[2].name.value, 'F2');
 
-  });
+      const F1 = module.exports.F1.definitions;
+      const F2 = module.exports.F2.definitions;
+      const F3 = module.exports.F3.definitions;
+
+      assert.equal(F1.length, 1);
+      assert.equal(F1[0].name.value, 'F1');
+      assert.equal(F2.length, 1);
+      assert.equal(F2[0].name.value, 'F2');
+      assert.equal(F3.length, 1);
+      assert.equal(F3[0].name.value, 'F3');
+
+    });
 
   it('tracks fragment dependencies across nested fragments', () => {
     const jsSource = loader.call({ cacheable() {} }, `
@@ -183,8 +194,22 @@ describe('gql', () => {
     assert.equal(Q1[2].name.value, 'F22');
     assert.equal(Q1[3].name.value, 'F11');
 
-    assert.equal(Q2.length, 1);
-  });
+      assert.equal(Q2.length, 1);
+
+      const F11 = module.exports.F11.definitions;
+      const F22 = module.exports.F22.definitions;
+      const F33 = module.exports.F33.definitions;
+
+      assert.equal(F11.length, 1);
+      assert.equal(F11[0].name.value, 'F11');
+      assert.equal(F22.length, 2);
+      assert.equal(F22[0].name.value, 'F22');
+      assert.equal(F22[1].name.value, 'F11');
+      assert.equal(F33.length, 3);
+      assert.equal(F33[0].name.value, 'F33');
+      assert.equal(F33[1].name.value, 'F22');
+      assert.equal(F33[2].name.value, 'F11');
+    });
 
   it('correctly imports other files through the webpack loader', () => {
     const query = `#import "./fragment_definition.graphql"
