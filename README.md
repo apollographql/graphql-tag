@@ -198,6 +198,7 @@ Testing environments that don't support Webpack require additional configuration
 With the webpack loader, you can import fragments by name:
 
 In a file called `query.gql`:
+
 ```graphql
 fragment MyFragment1 on MyType1 {
   ...
@@ -215,9 +216,7 @@ import { MyFragment1, MyFragment2 } from 'query.gql'
 ```
 
 Note: If your fragment references other fragments, the resulting document will
-have multiple fragments in it.  In this case you must still specify the fragment
-name when using the fragment.  For example, with `apollo-client` you would specify
-the `fragmentName` option when using the fragment for cache operations. 
+have multiple fragments in it. In this case you must still specify the fragment name when using the fragment. For example, with `@apollo/client` you would specify the `fragmentName` option when using the fragment for cache operations.
 
 ### Warnings
 
