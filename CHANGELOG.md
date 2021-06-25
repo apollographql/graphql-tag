@@ -1,6 +1,6 @@
 # Change log
 
-### v2.12.5 (not yet released)
+### v2.12.5
 
 * Also publish `src/` directory to npm, enabling source maps. <br/>
   [@maclockard](https://github.com/maclockard) in [#403](https://github.com/apollographql/graphql-tag/pull/403)
