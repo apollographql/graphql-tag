@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.5 (not yet released)
+
+* Also publish `src/` directory to npm, enabling source maps. <br/>
+  [@maclockard](https://github.com/maclockard) in [#403](https://github.com/apollographql/graphql-tag/pull/403)
+
 ### v2.12.4 (2021-04-29)
 
 * Allow fragments to be imported by name when using the webpack loader. <br/>
