@@ -169,7 +169,7 @@ module.exports = function(source) {
       if (op.kind === "OperationDefinition" || op.kind === "FragmentDefinition") {
         if (!op.name) {
           if (operationCount > 1) {
-            throw "Query/mutation names are required for a document with multiple definitions";
+            throw new Error("Query/mutation names are required for a document with multiple definitions");
           } else {
             continue;
           }
