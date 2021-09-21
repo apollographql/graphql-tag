@@ -113,7 +113,7 @@ query MyQuery {
 
 If you have configured [the webpack graphql-tag/loader](#webpack-loading-and-preprocessing), you can import modules containing graphQL queries. The imported value will be the pre-built AST.
 
-```graphql
+```js
 import MyQuery from 'query.graphql'
 ```
 
