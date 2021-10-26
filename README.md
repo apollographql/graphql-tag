@@ -238,7 +238,7 @@ You can enable / disable this with:
 import { enableExperimentalFragmentVariables, disableExperimentalFragmentVariables } from 'graphql-tag';
 ```
 
-Enabling this feature allows you declare documents of the form
+Enabling this feature allows you to declare documents of the form.
 
 ```graphql
 fragment SomeFragment ($arg: String!) on SomeType {
