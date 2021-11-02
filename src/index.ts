@@ -95,7 +95,8 @@ function parseDocument(source: string) {
   if (!docCache.has(cacheKey)) {
     const parsed = parse(source, {
       experimentalFragmentVariables,
-    });
+      allowLegacyFragmentVariables: experimentalFragmentVariables,
+    } as any);
     if (!parsed || parsed.kind !== 'Document') {
       throw new Error('Not a valid GraphQL document.');
     }
