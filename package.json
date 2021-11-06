@@ -12,8 +12,8 @@
     "build": "tsc && rollup -c && npm run flow",
     "flow": "cp src/index.js.flow lib/graphql-tag.umd.js.flow",
     "test": "npm run test:ts3 && npm run test:ts4",
-    "test:ts3": "npm i typescript@3.7.x && npm run test:mocha",
-    "test:ts4": "npm i typescript@4.x && npm run test:mocha",
+    "test:ts3": "npm i typescript@3.7.x graphql@15.x.x && npm run test:mocha",
+    "test:ts4": "npm i typescript@4.x.x graphql@16.x.x && npm run test:mocha",
     "test:mocha": "npm run build && mocha lib/tests.cjs.js",
     "prepublish": "npm run build"
   },
@@ -41,17 +41,17 @@
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.22",
     "chai": "^4.2.0",
-    "graphql": "^15.4.0",
+    "graphql": "^16.0.1",
     "mocha": "^9.0.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.33.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "source-map-support": "^0.5.19",
     "test-all-versions": "^5.0.1",
-    "typescript": "^4.3.4"
+    "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "graphql": "^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+    "graphql": "^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "engines": {
     "node": ">=10"
