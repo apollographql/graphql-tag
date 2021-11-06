@@ -1,5 +1,10 @@
 # Change log
 
+### v2.12.6
+
+* Update peer dependencies to allow `graphql` ^16.0.0. <br/>
+  [@brainkim](https://github.com/brainkim) in [#530](https://github.com/apollographql/graphql-tag/pull/530)
+
 ### v2.12.5
 
 * Also publish `src/` directory to npm, enabling source maps. <br/>
