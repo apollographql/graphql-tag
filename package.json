@@ -6,6 +6,13 @@
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./main.js",
+      "import": "./lib/index.js"
+    },
+    "./*": "./*"
+  },
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf lib",
