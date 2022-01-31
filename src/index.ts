@@ -6,6 +6,8 @@ import {
   Location,
 } from 'graphql/language/ast';
 
+import { TypedDocumentNode, ResultOf, VariablesOf } from "@graphql-typed-document-node/core";
+
 // A map docString -> graphql document
 const docCache = new Map<string, DocumentNode>();
 
@@ -111,10 +113,11 @@ function parseDocument(source: string) {
 }
 
 // XXX This should eventually disallow arbitrary string interpolation, like Relay does
-export function gql(
+
+export function gql<Result = ResultOf<TypedDocumentNode>, Variables = VariablesOf<TypedDocumentNode>  >(
   literals: string | readonly string[],
   ...args: any[]
-) {
+): TypedDocumentNode<Result, Variables> {
 
   if (typeof literals === 'string') {
     literals = [literals];
