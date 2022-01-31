@@ -163,8 +163,10 @@ interface QueryVars {
 }
 
 interface QueryResult {
-  firstName: string
-  lastName: string
+  user {
+    firstName: string
+    lastName: string
+  }
 }
 
 const query = gql<QueryResult, QueryVars>`
