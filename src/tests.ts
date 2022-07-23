@@ -236,6 +236,31 @@ describe('gql', () => {
     assert.equal(definitions[1].kind, 'FragmentDefinition');
   });
 
+  it('importing files also works with a space between `#` and `import`', () => {
+    const query = `# import "./fragment_definition.graphql"
+      query {
+        author {
+          ...authorDetails
+        }
+      }`;
+    const jsSource = loader.call({ cacheable() {} }, query);
+    const module = { exports: Object.create(null) };
+    const require = (path: string) => {
+      assert.equal(path, './fragment_definition.graphql');
+      return gql`
+        fragment authorDetails on Author {
+          firstName
+          lastName
+        }`;
+    };
+    Function("module,require", jsSource)(module, require);
+    assert.equal(module.exports.kind, 'Document');
+    const definitions = module.exports.definitions;
+    assert.equal(definitions.length, 2);
+    assert.equal(definitions[0].kind, 'OperationDefinition');
+    assert.equal(definitions[1].kind, 'FragmentDefinition');
+  });
+
   it('tracks fragment dependencies across fragments loaded via the webpack loader', () => {
     const query = `#import "./fragment_definition.graphql"
       fragment F111 on F {
