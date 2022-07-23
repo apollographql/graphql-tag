@@ -1,5 +1,10 @@
 # Change log
 
+### vNEXT
+
+* Loader: allow a space between `#` and `import` word in gql files. <br/>
+  [@kidroca](https://github.com/kidroca) in [#458](https://github.com/apollographql/graphql-tag/pull/458)
+
 ### v2.12.6
 
 * Update peer dependencies to allow `graphql` ^16.0.0. <br/>
