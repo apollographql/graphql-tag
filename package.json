@@ -38,11 +38,11 @@
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
-    "@types/mocha": "^8.2.0",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.0.6",
     "chai": "^4.2.0",
     "graphql": "^16.0.1",
-    "mocha": "^9.0.1",
+    "mocha": "^10.2.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.33.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
