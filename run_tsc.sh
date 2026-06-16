@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 set -euo pipefail
 TS_VERSION=$(node -e "console.log(require('typescript').version)" | cut -d. -f1)
 PATH="./node_modules/.bin:$PATH"
