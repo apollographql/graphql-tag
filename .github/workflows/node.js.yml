@@ -27,3 +27,5 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - run: npm run test:ts6
+      if: matrix.node-version == '22.x' || matrix.node-version == '24.x'
