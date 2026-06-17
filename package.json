@@ -16,7 +16,10 @@
     "test:ts4": "npm i --no-save typescript@4.x.x graphql@16.5.0 && npm run test:mocha",
     "test:ts6": "npm i --no-save typescript@6.x.x graphql@17.x.x && npm run test:mocha",
     "test:mocha": "npm run build && mocha lib/tests.cjs.js",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "changeset": "changeset",
+    "changeset-version": "changeset version && npm install --package-lock-only",
+    "changeset-publish": "changeset publish"
   },
   "files": [
     "lib/",
@@ -38,6 +41,8 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
+    "@changesets/cli": "^2.31.0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "@types/node": "^18.0.6",

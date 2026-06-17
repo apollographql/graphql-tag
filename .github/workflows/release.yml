@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+permissions: {}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # write releases etc.
+      pull-requests: write # create pull requests for changesets
+      id-token: write # OIDC token for npm publish
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+            # required to tag releases and push to the repository
+            persist-credentials: true
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+          # deliberately not using a cache for action with elevated permissions, see https://tanstack.com/blog/npm-supply-chain-compromise-postmortem
+          package-manager-cache: false
+
+      - run: npm ci
+
+      # shim around npm to convert `npm publish` to `npm stage publish` for staged publishing until changesets adds direct support for staged publishing.
+      - run: echo "${{ github.workspace }}/scripts/changesets-wrapper" >> "$GITHUB_PATH"
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1
+        with:
+          version: npm run changeset-version
+          publish: npm run changeset-publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ""
+
