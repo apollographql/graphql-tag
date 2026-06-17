@@ -9,11 +9,12 @@
   "sideEffects": false,
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "tsc && rollup -c && npm run flow",
+    "build": "./run_tsc.sh && rollup -c && npm run flow",
     "flow": "cp src/index.js.flow lib/graphql-tag.umd.js.flow",
     "test": "npm run test:ts3 && npm run test:ts4",
-    "test:ts3": "npm i typescript@3.7.x graphql@15.x.x && npm run test:mocha",
-    "test:ts4": "npm i typescript@4.x.x graphql@16.x.x && npm run test:mocha",
+    "test:ts3": "npm i --no-save typescript@3.7.x graphql@15.x.x && npm run test:mocha",
+    "test:ts4": "npm i --no-save typescript@4.x.x graphql@16.5.0 && npm run test:mocha",
+    "test:ts6": "npm i --no-save typescript@6.x.x graphql@17.x.x && npm run test:mocha",
     "test:mocha": "npm run build && mocha lib/tests.cjs.js",
     "prepublish": "npm run build"
   },
@@ -48,10 +49,10 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "source-map-support": "^0.5.19",
     "test-all-versions": "^5.0.1",
-    "typescript": "^4.4.4"
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
-    "graphql": "^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
+    "graphql": "^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
   },
   "engines": {
     "node": ">=10"
