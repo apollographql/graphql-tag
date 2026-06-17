@@ -6,8 +6,7 @@
 
 - [#823](https://github.com/apollographql/graphql-tag/pull/823) [`bc285e5`](https://github.com/apollographql/graphql-tag/commit/bc285e5fc7d8f46fb3e567dadde8ed396e8fda7e) Thanks [@phryneas](https://github.com/phryneas)! - add support for `graphql` 17
 
-- Loader: allow a space between `#` and `import` word in gql files. <br/>
-  [@kidroca](https://github.com/kidroca) in [#458](https://github.com/apollographql/graphql-tag/pull/458)
+- [#458](https://github.com/apollographql/graphql-tag/pull/458) [`fd82f1c`](https://github.com/apollographql/graphql-tag/commit/fd82f1c176a4a13e7fed82708b19ef8e25bc578d) Thanks [@kidroca](https://github.com/kidroca) - loader: allow a space between `#` and `import` word in gql files. 
 
 ## v2.12.6
 
