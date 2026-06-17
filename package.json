@@ -5,6 +5,10 @@
   "main": "./main.js",
   "module": "./lib/index.js",
   "jsnext:main": "./lib/index.js",
+  "exports": {
+    "require": "./main.js",
+    "import": "./lib/index.js"
+  },
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
