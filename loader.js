@@ -42,6 +42,10 @@ function expandImports(source, doc) {
 
 module.exports = function(source) {
   this.cacheable();
+  // can be simplified later to this.options?.esm
+  // options is optional here as that breaks where a fake webpack context is used
+  // that doesn't have options
+  const esm = (this.options || {}).esm;
   const doc = gql`${source}`;
   let headerCode = `
     var doc = ${JSON.stringify(doc)};
@@ -63,7 +67,7 @@ module.exports = function(source) {
 
   if (operationCount < 1) {
     outputCode += `
-      module.exports = doc;
+      ${esm ? "export default doc;" : "module.exports = doc;"}
     `
   } else {
     outputCode += `
@@ -162,8 +166,8 @@ module.exports = function(source) {
 
       return newDoc;
     }
-    
-    module.exports = doc;
+
+    ${esm ? "export default doc;" : "module.exports = doc;"}
     `
 
     for (const op of doc.definitions) {
@@ -178,7 +182,7 @@ module.exports = function(source) {
 
         const opName = op.name.value;
         outputCode += `
-        module.exports["${opName}"] = oneQuery(doc, "${opName}");
+          ${esm ? `export const ${opName}` : `module.exports[${JSON.stringify(opName)}]`} = oneQuery(doc, ${JSON.stringify(opName)});
         `
       }
     }
